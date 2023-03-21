@@ -1,6 +1,8 @@
 name: eclipse dash ip-check
 
 on: workflow_dispatch
+    pull_request:
+      branches: [ "main" ]
 
 jobs:
   build:
