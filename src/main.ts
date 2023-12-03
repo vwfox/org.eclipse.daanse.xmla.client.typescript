@@ -54,7 +54,6 @@ import "vuestic-ui/styles/reset.css";
 import "vuestic-ui/styles/typography.css";
 import './scss/main.scss';
 import {router} from "@/router/router";
-
 import VueSmartWidget from 'vue-smart-widget'
 
 
@@ -66,6 +65,8 @@ app.use(pinia);
 console.log(router)
 app.use(router);
 app.use(VueSmartWidget);
+
+
 const fonts = [{
   name: 'mdi-{icon}',
   resolve: ({ icon }) => ({

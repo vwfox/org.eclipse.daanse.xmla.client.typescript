@@ -36,6 +36,14 @@ Contributors: Smart City Jena
         </va-sidebar-item-title>
       </va-sidebar-item-content>
       </va-sidebar-item>
+      <va-sidebar-item :active="$route.name==='editor'" @click="$router.push('/editor')" class="pointer">
+        <va-sidebar-item-content >
+          <va-icon :color="($route.name==='editor')?'#ffffff':'primary'"  class="material-icons">draw</va-icon>
+          <va-sidebar-item-title >
+            Files
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
     </va-sidebar>
   </div>
 

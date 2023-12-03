@@ -46,7 +46,9 @@ export const useAppSettingsStore = defineStore("appSettingsStore", {
       await this.api.startSession();
     },
     getApi(): XMLAApi {
+
       if (!this.api) {
+        console.warn('XMLA api is not inited')
         throw new Error("XMLA api is not inited");
       }
       return this.api as XMLAApi;

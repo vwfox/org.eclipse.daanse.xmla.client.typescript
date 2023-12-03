@@ -34,15 +34,21 @@ const DEFAULT_ROW_HEIGHT_CSS = `${DEFAULT_ROW_HEIGHT}px`;
 
 export default {
   setup() {
+
+
     const pivotTableStore = usePivotTableStore();
     const { mdx } = storeToRefs(pivotTableStore);
     const appSettings = useAppSettingsStore();
+
     const api = appSettings.getApi();
+
     const metadataStorage = useMetadataStorage();
     const queryDesignerState = useQueryDesignerStore();
+
     const chartStore = useChartStore('Chart')();
     const rowsContainer = ref(null) as Ref<any>;
     const { width: rowsWidth } = useElementSize(rowsContainer);
+    console.log('hier')
 
     const colStyles = ref([...pivotTableStore.state.styles.columns] as any[]);
     const rowsStyles = ref([...pivotTableStore.state.styles.rows] as any[]);

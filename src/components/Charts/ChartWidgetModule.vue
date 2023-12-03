@@ -56,7 +56,7 @@ export default defineComponent({
   },
   setup(props) {
     let chartStore = null;
-
+    console.log('setup Chart')
     let chartStoreUse = toRef(props, 'chartStore')
     let _mdx = toRef(props, 'mdx')
     //let tableStoreUse = toRef(props, 'tableStore')

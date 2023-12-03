@@ -52,8 +52,7 @@ import {ref} from "vue";
 import {useDashboardStore} from "@/stores/DashboardStore";
 
 
-const dashboardStore = useDashboardStore();
-dashboardStore.fetchDashboardAllCategories();
+
 
 const layout = [
   { x: 0, y: 0, w: 2, h: 3, i: '0' },
