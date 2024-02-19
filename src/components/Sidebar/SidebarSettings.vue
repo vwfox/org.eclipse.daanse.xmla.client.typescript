@@ -9,9 +9,12 @@ defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-  <va-sidebar :modelValue="modelValue" animated="right" width="500px">
+  <va-sidebar  color="#ffffff" :modelValue="modelValue" animated="right" width="500px">
+
     <div class="settings-sidebar">
+
       <div class="settings-sidebar-content">
+
         <template v-if="props.settingsSection?.type === 'Stores'">
           <StoreList></StoreList>
         </template>
@@ -28,20 +31,25 @@ defineEmits(["update:modelValue"]);
             :key="props.settingsSection.id"
           />
         </template>
+
       </div>
+
+
       <div class="settings-sidebar-actions">
         <va-button @click="$emit('update:modelValue', !modelValue)">
           Close
         </va-button>
       </div>
     </div>
+
   </va-sidebar>
 </template>
 
 <style lang="css">
+
 .settings-sidebar {
-  background-color: white;
-  height: 100%;
+
+  height: auto;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -61,5 +69,10 @@ defineEmits(["update:modelValue"]);
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+</style>
+<style scoped>
+.sidebar{
+  background-color: white;
 }
 </style>
