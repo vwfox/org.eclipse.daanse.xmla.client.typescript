@@ -10556,6 +10556,13 @@ vue3-moveable@^0.26.2:
     framework-utils "^1.1.0"
     moveable "~0.51.2"
 
+vue3-selecto@^1.12.3:
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/vue3-selecto/-/vue3-selecto-1.12.3.tgz#d0367d15ca3c5bd26766649d820c2f164f25585c"
+  integrity sha512-zIQLwuvjTNaivITLbBAnm6Sh8BFRG8QocNZLzKvqRIqnpRa2lvlIw9+l1wdI/84msh8cSNIdiWsgote62cgtHA==
+  dependencies:
+    selecto "~1.26.3"
+
 vue@^3.2.25, vue@^3.2.45, vue@^3.2.6, vue@^3.3.11:
   version "3.4.15"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.4.15.tgz#91f979844ffca9239dff622ba4c79c5d5524b88c"

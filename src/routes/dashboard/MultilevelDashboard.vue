@@ -378,26 +378,31 @@
                     fullscreen
                     class="widget-content"
                   > -->
+
                   <Suspense>
                     <template #fallback>
                       <div>Loading...</div>
                     </template>
                     <!-- :storeId="widget.storeId" -->
-                    <WidgetWrapper :ref="`${widget.id}_wrapper`">
+
+                    <!--<WidgetWrapper :ref="`${widget.id}_wrapper`">-->
+
                       <component
                         :is="enabledWidgets[widget.component]"
-                        :ref="`${widget.id}_component`"
+                        :ref="widgetRegistry.register"
+                        :id="widget.id"
+                        :component="widget.component"
                         :initialState="widget.state"
+                        :children="widget.children"
                       ></component>
-                    </WidgetWrapper>
+                    <!--</WidgetWrapper>-->
                   </Suspense>
                   <!-- </smart-widget> -->
                   <DashboardControls
                     v-if="editEnabled"
                     @openSettings="
                       openSettings(
-                        `${widget.id}_component`,
-                        `${widget.id}_wrapper`,
+                        `${widget.id}`,
                         'Widget',
                       )
                     "
@@ -435,9 +440,21 @@
             :snapGridHeight="20"
             :ref="`${widget.id}_control`"
             :style="getMovableControlStyles(widget.id)"
-          >
-          </Moveable>
+          />
+
         </template>
+        <Selecto
+            ref="selectoRef"
+            :dragContainer="'.elements'"
+            :selectableTargets="['.id_122_group_wrapper']"
+            :hitRate="1"
+            :selectByClick="true"
+            :selectFromInside="false"
+            :toggleContinueSelect="['shift']"
+            :ratio="0"
+            @dragStart="onDragStart"
+            @selectEnd="onSelectEnd"
+            />
 
         <div
           class="d_3 dashboard-item-container"
@@ -487,55 +504,6 @@
           :style="getMovableControlStyles('d_3')"
         >
         </Moveable>
-
-        <!-- <div
-          class="d_7 dashboard-item-container"
-          :style="getInitialStyle('d_7')"
-          ref="d_7"
-        >
-          <va-dropdown
-            :trigger="editEnabled ? 'right-click' : 'none'"
-            :auto-placement="false"
-            placement="right-start"
-            cursor
-          >
-            <template #anchor>
-              <div class="dashboard-item">
-                <DashboardControls
-                  @openSettings="openSettings('test1')"
-                  v-if="editEnabled"
-                />
-                <InputControl class="widget-content" ref="test1" />
-              </div>
-            </template>
-
-            <va-dropdown-content>
-              <div class="dropdown-buttons-container">
-                <va-button @click="moveUp('d_7')">Move up</va-button>
-                <va-button @click="moveDown('d_7')">Move down</va-button>
-                <va-button @click="moveToTop('d_7')">Move to top</va-button>
-                <va-button @click="moveToBottom('d_7')">
-                  Move to bottom
-                </va-button>
-              </div>
-            </va-dropdown-content>
-          </va-dropdown>
-        </div>
-        <Moveable
-          v-bind:target="['.d_7']"
-          v-bind:draggable="editEnabled"
-          v-bind:resizable="editEnabled"
-          v-bind:useResizeObserver="true"
-          v-bind:useMutationObserver="true"
-          @drag="drag('d_7', $event)"
-          @resize="resize('d_7', $event)"
-          :snappable="true"
-          :snapGridWidth="20"
-          :snapGridHeight="20"
-          ref="d_7_control"
-          :style="getMovableControlStyles('d_7')"
-        >
-        </Moveable> -->
       </div>
     </div>
     <SidebarSettings
@@ -557,7 +525,7 @@ import {
   getCurrentInstance,
   onMounted,
   inject,
-  nextTick,
+  nextTick, type Ref,
 } from "vue";
 import ButtonControl from "@/components/Controls/Button/ButtonControl.vue";
 import InputControl from "@/components/Controls/Input/InputControl.vue";
@@ -566,46 +534,22 @@ import ImageWidget from "@/components/Widgets/Image/ImageWidget.vue";
 import TextWidget from "@/components/Widgets/Text/TextWidget.vue";
 import ListWidget from "@/components/Widgets/List/ListWidget.vue";
 import SvgWidget from "@/components/Widgets/Svg/SvgWidget.vue";
+import Group from "@/components/Widgets/Group/GroupWidget.vue";
 import RepeatableSvgWidget from "@/components/Widgets/RepeatableSvg/RepeatableSvgWidget.vue";
 import { useStoreManager } from "@/composables/storeManager";
 import Moveable from "vue3-moveable";
 import SidebarSettings from "@/components/Sidebar/SidebarSettings.vue";
 import { useDatasourceManager } from "@/composables/datasourceManager";
 import WidgetWrapper from "@/components/Widgets/WidgetWrapper/WidgetWrapper.vue";
+import Extended, {type Widget} from "@/components/Widgets/Extended/ExtendedWidget.vue";
+import {useWidgetRegistry} from "@/composables/WidgetRegistry";
 
+
+import Selecto from "vue3-selecto";
 const storeManager = useStoreManager();
 const dsManager = useDatasourceManager();
+const widgetRegistry = useWidgetRegistry();
 
-const mdx = ref(`SELECT
-Hierarchize(AddCalculatedMembers({[Geschlecht.Geschlecht (m/w/d)].[(All)].members})) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME ON 1,
-Hierarchize(AddCalculatedMembers({[Jahr].[Jahr].members})) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME ON 0
-FROM [Bevölkerung] CELL PROPERTIES VALUE, FORMAT_STRING, LANGUAGE, BACK_COLOR, FORE_COLOR, FONT_FLAGS`);
-
-const mdx2 = ref(`SELECT
-
-        Hierarchize(
-            DrilldownLevel({[Alter.Altersgruppen (10-Jahres-Gruppen)].[(All)]},,,INCLUDE_CALC_MEMBERS)
-        ) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME ON 1,
-
-
-        Hierarchize(
-          AddCalculatedMembers
-          (
-
-            DrilldownMember({{
-              DrilldownLevel({[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[(All)]},,,INCLUDE_CALC_MEMBERS)
-            }}, {[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Jena]})
-
-          )
-        ) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME,[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Stadt].[GeoJson],[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Planungsraum].[uuid],[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Planungsraum].[GeoJson],[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Statistischer Bezirk].[uuid],[statistischer Bezirk.Stadt - Planungsraum - statistischer Bezirk].[Statistischer Bezirk].[GeoJson] ON 0
-FROM [Bevölkerung] CELL PROPERTIES VALUE, FORMAT_STRING, LANGUAGE, BACK_COLOR, FORE_COLOR, FONT_FLAGS`);
-
-const mdx3 = ref(`
-SELECT
-Hierarchize(AddCalculatedMembers({[Alter.Altersgruppen (Kinder)].[(All)].members})) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME ON 1,
-
-Hierarchize(AddCalculatedMembers({[Jahr].[Jahr].members})) DIMENSION PROPERTIES PARENT_UNIQUE_NAME,HIERARCHY_UNIQUE_NAME ON 0
-FROM [Bevölkerung] CELL PROPERTIES VALUE, FORMAT_STRING, LANGUAGE, BACK_COLOR, FORE_COLOR, FONT_FLAGS`);
 
 const customWidgets = ref([] as any[]);
 const editEnabled = ref(false);
@@ -623,6 +567,8 @@ const enabledWidgets = {
   PlainTextWidget,
   SvgWidget,
   RepeatableSvgWidget,
+  Extended,
+  Group
 };
 
 let layout = {
@@ -695,6 +641,7 @@ const addPlainTextWidget = async () => {
   });
 };
 
+
 const addPlainListWidget = async () => {
   const stores = Array.from(
     storeManager.getStoreList().value,
@@ -732,7 +679,7 @@ onMounted(() => {
 
 const getInitialStyle = (id) => {
   timestamp.value;
-
+  if(!layout[id])return {}
   return {
     width: `${layout[id].width}px`,
     height: `${layout[id].height}px`,
@@ -969,23 +916,15 @@ const openStoreList = () => {
   showSidebar.value = true;
 };
 
-const openSettings = (id, wrapperId, type = "Control") => {
-  const refArr = refs.ctx.$refs[id];
-  const ref = Array.isArray(refArr) ? refArr[0] : refArr;
+const openSettings = (id, type = "Control") => {
+  //console.log(id)
+  //const refArr = refs.ctx.$refs[id];
+  //const ref1 = ref(Array.isArray(refArr) ? refArr[0] : refArr);
 
-  let wrapperRef = null;
-  if (wrapperId) {
-    const wrapperRefArr = refs.ctx.$refs[wrapperId];
-    console.log(wrapperRefArr);
-    wrapperRef = Array.isArray(wrapperRefArr)
-      ? wrapperRefArr[0]
-      : wrapperRefArr;
-  }
-
+  const ref1 = widgetRegistry.getById(id);
   settingsSection.value = markRaw({
     type,
-    component: ref,
-    wrapper: wrapperRef,
+    component:ref1,
     id,
   });
   showSidebar.value = true;
@@ -999,8 +938,47 @@ const deleteWidget = (id) => {
 };
 
 const addImageWidget = () => {
-  const id = `id_${Date.now()}`;
-  layout[id] = {
+  //const id = `id_${Date.now()}`;
+  const id = `id_122`;
+
+
+  layout[id+'_group'] = {
+    x: 0,
+    y: 700,
+    width: 300,
+    height: 150,
+    z: 3005,
+  };
+  layout[id+'_group_wrapper'] = {
+    x: 0,
+    y: 700,
+    width: 350,
+    height: 250,
+    z: 3005,
+  };
+
+  layout[id+'_wrapper'] = {
+    x: 0,
+    y: 700,
+    width: 300,
+    height: 150,
+    z: 3005,
+  };
+  layout[id+'_component'] = {
+    x: 0,
+    y: 700,
+    width: 300,
+    height: 150,
+    z: 3005,
+  };
+  layout[id+'_2_'+'_wrapper'] = {
+    x: 0,
+    y: 700,
+    width: 300,
+    height: 150,
+    z: 3005,
+  };
+  layout[id+'_2_'+'_component'] = {
     x: 0,
     y: 700,
     width: 300,
@@ -1008,9 +986,51 @@ const addImageWidget = () => {
     z: 3005,
   };
 
+  customWidgets.value.push(
+      {id: id+"_group_wrapper",
+        component: "Extended",
+        children:[
+      {id: id+"_group",
+        component: "Group",
+        children:[
+
+          {id: id+"_wrapper",
+          component: "Extended",
+          children:[
+            {
+              id: id+"_component",
+              component: "Image",
+              // storeId: store.id,
+              caption: "Test",
+            }
+          ]
+
+  },
+          {id: id+'_2_'+"_wrapper",
+            component: "Extended",
+            children:[
+              {
+                id: id+'_2_'+"_component",
+                component: "Image",
+                // storeId: store.id,
+                caption: "Test",
+              }
+            ]
+
+          }]}
+  ]}
+  );
+};
+
+const addGroupWidget = () => {
+  const id = `id_${Date.now()}`;
+  layout[id] = {
+    z: 3005,
+  };
+
   customWidgets.value.push({
     id: id,
-    component: "ImageWidget",
+    component: "Group",
     // storeId: store.id,
     caption: "Test",
   });
@@ -1065,6 +1085,26 @@ const addRepeatableSvgWidget = () => {
     component: "RepeatableSvgWidget",
     caption: "Test",
   });
+};
+const targets = ref([]);
+const moveableRef = ref(null);
+const selectoRef = ref(null);
+const onDragStart = (e) => {
+  const target = e.inputEvent.target;
+  if (moveableRef.value!.isMoveableElement(target)
+      || targets.value.some(t => t === target || t.contains(target))
+  ) {
+    e.stop();
+  }
+};
+const onSelectEnd = e => {
+  if (e.isDragStartEnd) {
+    e.inputEvent.preventDefault();
+    moveableRef.value!.waitToChangeTarget().then(() => {
+      moveableRef.value!.dragStart(e.inputEvent);
+    });
+  }
+  targets.value = e.selected;
 };
 </script>
 

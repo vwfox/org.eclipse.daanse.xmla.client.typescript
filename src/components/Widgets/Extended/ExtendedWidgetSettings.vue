@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
-const props = defineProps(["wrapper"]) as any;
+const props = defineProps(["component"]) as any;
 const opened = ref(false);
+console.log(props)
 </script>
 
 <template>
@@ -11,9 +12,9 @@ const opened = ref(false);
       <VaDivider class="pad_bottom" orientation="left">
         <span class="px-2">Title</span>
       </VaDivider>
-      <va-input v-model="props.wrapper.title" label="Title" />
-      <va-input v-model="props.wrapper.titleFontSize" label="Title Font Size" />
-      <va-color-input v-model="props.wrapper.titleColor" label="Title Font Color" />
+      <va-input v-model="props.component.title" label="Title" />
+      <va-input v-model="props.component.titleFontSize" label="Title Font Size" />
+      <va-color-input v-model="props.component.titleColor" label="Title Font Color" />
 
       <VaDivider class="pad_bottom" orientation="center">
         <span class="px-2">Background</span>
@@ -23,15 +24,15 @@ const opened = ref(false);
           autofocus
           label="Background Color"
           class="color-fill"
-          v-model="props.wrapper.backgroundColor"
+          v-model="props.component.backgroundColor"
       />
-      <VaSlider v-model="props.wrapper.backgroundColor_transparence"
+      <VaSlider v-model="props.component.backgroundColor_transparence"
                 label="Shadow Color Transparency"
                 :min="0"
                 :max="255">
         <template #append>
           <VaCounter
-              v-model="props.wrapper.backgroundColor_transparence"
+              v-model="props.component.backgroundColor_transparence"
               :min="0"
               :max="255"
               class="w-[110px]"
@@ -41,41 +42,41 @@ const opened = ref(false);
       <VaDivider class="pad_bottom" orientation="center">
         <span class="px-2">Border</span>
       </VaDivider>
-      <va-input v-model="props.wrapper.borderSize" label="Border Size" />
+      <va-input v-model="props.component.borderSize" label="Border Size" />
       <va-color-input
           autofocus
           label="Border Color"
           class="color-fill"
-          v-model="props.wrapper.borderColor"
+          v-model="props.component.borderColor"
       />
-      <va-input v-model="props.wrapper.borderRadius" label="Border Radius" />
+      <va-input v-model="props.component.borderRadius" label="Border Radius" />
 
       <VaDivider class="pad_bottom" orientation="left">
         <span class="px-2">FullScreen</span>
       </VaDivider>
       <va-checkbox
-        v-model="props.wrapper.fullscreen"
+        v-model="props.component.fullscreen"
         label="Show fullscreen button"
       />
       <VaDivider class="pad_bottom" orientation="left">
         <span class="px-2">Shaddow</span>
       </VaDivider>
-    <va-input v-model="props.wrapper.shadow_x" label="Shadow x" />
-    <va-input v-model="props.wrapper.shadow_y" label="Shadow y" />
-    <va-input v-model="props.wrapper.shadow_blur" label="Shadow Blur" />
+    <va-input v-model="props.component.shadow_x" label="Shadow x" />
+    <va-input v-model="props.component.shadow_y" label="Shadow y" />
+    <va-input v-model="props.component.shadow_blur" label="Shadow Blur" />
     <va-color-input
         autofocus
         label="Shadow Color"
         class="color-fill"
-        v-model="props.wrapper.shadow_color"
+        v-model="props.component.shadow_color"
     />
-      <VaSlider v-model="props.wrapper.shadow_transparence"
+      <VaSlider v-model="props.component.shadow_transparence"
                 label="Shadow Color Transparency"
                 :min="0"
                 :max="255">
         <template #append>
           <VaCounter
-              v-model="props.wrapper.shadow_transparence"
+              v-model="props.component.shadow_transparence"
               :min="0"
               :max="255"
               class="w-[110px]"
@@ -85,14 +86,14 @@ const opened = ref(false);
       <VaDivider class="pad_bottom" orientation="left">
         <span class="px-2">Transparence</span>
       </VaDivider>
-      <VaSlider v-model="props.wrapper.transparency"
+      <VaSlider v-model="props.component.transparency"
                 label="Transparency"
                 :min="0"
                 :max="1"
                 :step="0.1">
         <template #append>
           <VaCounter
-              v-model="props.wrapper.transparency"
+              v-model="props.component.transparency"
               :min="0"
               :max="255"
               class="w-[110px]"

@@ -4,7 +4,7 @@ import SidebarControl from "@/components/Sidebar/SidebarControl.vue";
 import SidebarWidget from "@/components/Sidebar/SidebarWidget.vue";
 
 const props = defineProps(["modelValue", "settingsSection"]);
-
+console.log(props.settingsSection);
 defineEmits(["update:modelValue"]);
 </script>
 
@@ -25,11 +25,15 @@ defineEmits(["update:modelValue"]);
           />
         </template>
         <template v-if="props.settingsSection?.type === 'Widget'">
+          <div class="sidebar-settings-title">
+            <h2 class="mb-2">Widget settings</h2>
+          </div>
+          <div class="sidebar-settings">
           <SidebarWidget
             :component="props.settingsSection.component"
-            :wrapper="props.settingsSection.wrapper"
             :key="props.settingsSection.id"
           />
+          </div>
         </template>
 
       </div>

@@ -13,6 +13,8 @@ const props = defineProps({
     required: false,
     default: "",
   },
+  component: String,
+  id: String,
 });
 const { initialState, imgSrc } = props;
 
@@ -86,6 +88,7 @@ defineExpose({
   setState,
   images,
   imageSettings,
+  props
 });
 </script>
 

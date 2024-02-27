@@ -1,8 +1,15 @@
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, defineAsyncComponent, getCurrentInstance, onMounted, type Ref, ref} from "vue";
+import {useWidgetRegistry} from "@/composables/WidgetRegistry";
+export interface Widget {
+  component: string;
+  id: string;
+  children?: Array<Widget>;
+  initialState?: any;
+}
 
 const fullscreenEnabled = ref(false);
-
+const widgetRegistry = useWidgetRegistry();
 const props = defineProps({
   title: {
     type: String,
@@ -79,8 +86,21 @@ const props = defineProps({
     required: false,
     default: 1,
   },
+  component: String,
+  id: String,
+  children:{
+    type:Array<Widget>
+  }
+
 
 });
+const is = computed(
+    () => {
+      if (!props.children || !props.children[0]) return null;
+      const part = props.children[0].component;
+      return defineAsyncComponent<any>(() => import(`@/components/Widgets/${part}/${part}Widget.vue`))
+    }
+);
 
 const innerTitle = ref(props.title);
 const innerBackgroundColor = ref(props.backgroundColor);
@@ -155,6 +175,7 @@ defineExpose({
   shadow_y:innerShadow_y,
   shadow_transparence:innerShadowTransparence,
   transparency:innerTransparency,
+  props,
   getState,
   setState
 });
@@ -199,7 +220,15 @@ const getBackground = computed(()=>{
       />
     </div>
     <div v-if="innerTitle" class="wrapper-title">{{ innerTitle }}</div>
-    <slot></slot>
+    <!--:ref="`${props.children[0].id}`"-->
+    <component v-if="props.children && props.children[0]"
+               :is="is"
+               :id="props.children[0].id"
+               :component="props.children[0].component"
+               :children="props.children[0].children??null"
+               :ref="widgetRegistry.register"
+               :initialState="props.children[0].initialState"
+    ></component>
   </div>
   <template v-if="fullscreenEnabled">
     <Teleport to="body">
@@ -212,7 +241,14 @@ const getBackground = computed(()=>{
           />
         </div>
         <div v-if="innerTitle" class="wrapper-title">{{ innerTitle }}</div>
-        <slot></slot>
+        <component v-if="props.children && props.children[0]"
+                   draggable
+                   :is="is"
+                   :id="props.children[0].id"
+                   :component="props.children[0].component"
+                   :ref="widgetRegistry.register"
+                   :initialState="props.children[0].initialState"
+        ></component>
       </div>
     </Teleport>
   </template>

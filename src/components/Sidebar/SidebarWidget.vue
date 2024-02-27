@@ -1,22 +1,48 @@
 <script lang="ts" setup>
 import WidgetWrapperSettings from '../Widgets/WidgetWrapper/WidgetWrapperSettings.vue';
+import {computed, defineAsyncComponent, getCurrentInstance, type Ref, ref} from "vue";
+import type {Widget} from "@/components/Widgets/Extended/ExtendedWidget.vue";
+import {useWidgetRegistry} from "@/composables/WidgetRegistry";
 
-const props = defineProps(["component", "wrapper"]);
+const props = defineProps(["component"]);
+const widgetRegistry = useWidgetRegistry();
+
+const is = computed(
+    () => {
+      if (!props.component.props || !props.component.props.component) return null;
+      const part = props.component.props.component;
+      console.log(part)
+      return defineAsyncComponent<any>(() => import(`@/components/Widgets/${part}/${part}WidgetSettings.vue`))
+    }
+);
+const aref = (id)=>{
+  const refArr  = getCurrentInstance()?.vnode.key as string;
+  //console.log(widgetRegistry.getAll())
+  const wr = widgetRegistry.getById(id);
+
+
+  console.log(refArr)
+  const ref = Array.isArray(refArr) ? refArr[0] : refArr;
+  return wr;
+};
+
 </script>
 
 <template>
-  <div class="sidebar-settings">
-    <div class="sidebar-settings-title">
-      <h2 class="mb-2">Widget settings</h2>
-    </div>
+
+
     <div class="sidebar-settings-content">
-      <WidgetWrapperSettings :wrapper="props.wrapper"></WidgetWrapperSettings>
       <component
-        :is="props.component.settings"
-        :component="props.component"
+        :is="is"
+        :component="aref(props.component.props.id)"
       ></component>
+      <SidebarWidget
+      v-for="sprops in props.component.props.children"
+      :component="aref(sprops.id)"
+      :key = "sprops.id"
+      ></SidebarWidget>
     </div>
-  </div>
+
 </template>
 
 <style lang="css">
