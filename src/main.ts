@@ -60,7 +60,7 @@ import {
   VaCollapse,
   VaColorInput,
   VaCounter,
-    VaSlider
+  VaSlider, VaTabs, VaTab
 } from "vuestic-ui";
 import "vuestic-ui/css";
 
@@ -132,7 +132,9 @@ app.use(
       VaCollapse,
       VaColorInput,
       VaCounter,
-      VaSlider
+      VaSlider,
+      VaTabs,
+      VaTab
     },
     config: {
       colors: {

@@ -6,6 +6,7 @@ export interface Widget {
   id: string;
   children?: Array<Widget>;
   initialState?: any;
+  props:any;
 }
 
 const fullscreenEnabled = ref(false);
@@ -154,7 +155,7 @@ const setState = (state) => {
   innerShadow_y.value = state.shadow_y;
   innerShadowTransparence.value = state.shadow_transparence;
   innerTransparency.value = state.transparency;
-  getData();
+  //getData();
 };
 
 const getData=function(){

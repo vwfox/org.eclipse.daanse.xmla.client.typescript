@@ -14,17 +14,25 @@ import {getCurrentInstance, reactive, type Ref, ref, watch} from "vue";
 import type {Widget} from "@/components/Widgets/Extended/ExtendedWidget.vue";
 
 
-const widgetRegister = ref(new Map<string, Ref<Widget>>());
+const widgetRegister = ref(new Map<string,Widget>());
+const tree = ref(new Map<string,string[]>);
+
+
+
 export function useWidgetRegistry() {
-    const register=(el:Ref<Widget>):string|null=>{
+    const register=(el:Widget):string|null=>{
+
         console.log(el);
         if(!el || ! el.props || !el.props.id) return null
+        addFamilyTree(el);
         widgetRegister.value.set(el.props.id,el);
         console.log('registed:'+el.props.id)
         return el.props.id; // this is to use in Component :ref=()=>useWidgetRegistery.register
     }
-    const registerWithID = (el:Ref<Widget>,id:string):string|null=>{
+    const registerWithID = (el:Widget,id:string):string|null=>{
+        addFamilyTree(el);
         widgetRegister.value.set(id,el);
+        console.log('registed:'+id)
         return id
     }
 
@@ -37,8 +45,38 @@ export function useWidgetRegistry() {
         return
     }
     const getAll = ()=>{
-        return widgetRegister
+        return widgetRegister.value
     }
+    const getAllParentIds = (id:string):string[]=>{
+        let parents:string[] = [];
+        for (const [key, value] of tree.value) {
+            if(value.includes(id)){
+                parents.push(key);
+                const moreParents = getAllParentIds(key);
+                if(moreParents!= undefined)
+                    parents = parents.concat(...moreParents);
+            }
+        }
+        return parents;
+    }
+    const getSiblingIds = (id:string):string[]=>{
+        for (const [key, value] of tree.value) {
+            if(value.includes(id)){
+                return value;
+            }
+        }
+        return [];
+    }
+    const addFamilyTree = (el:Widget)=>{
+        if(el.props?.children && el.props?.children.length>0){
+            const ids:string[]= [];
+            el.props!.children.forEach(key=>{
+                ids.push(key.id);
+            })
+            tree.value.set(el.props.id,ids);
+        }
+    }
+
 
 
 
@@ -46,7 +84,9 @@ export function useWidgetRegistry() {
         getById,
         register,
         getAll,
-        getElementById,registerWithID
-
+        getElementById,
+        registerWithID,
+        getAllParentIds,
+        getSiblingIds
     };
 }

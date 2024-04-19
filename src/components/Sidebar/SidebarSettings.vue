@@ -3,21 +3,18 @@ import StoreList from "@/components/Sidebar/StoreList.vue";
 import SidebarControl from "@/components/Sidebar/SidebarControl.vue";
 import SidebarWidget from "@/components/Sidebar/SidebarWidget.vue";
 
-const props = defineProps(["modelValue", "settingsSection"]);
-console.log(props.settingsSection);
-defineEmits(["update:modelValue"]);
+const props = defineProps([ "settingsSection"]);
+
+
 </script>
 
 <template>
-  <va-sidebar  color="#ffffff" :modelValue="modelValue" animated="right" width="500px">
+
 
     <div class="settings-sidebar">
 
       <div class="settings-sidebar-content">
 
-        <template v-if="props.settingsSection?.type === 'Stores'">
-          <StoreList></StoreList>
-        </template>
         <template v-if="props.settingsSection?.type === 'Control'">
           <SidebarControl
             :component="props.settingsSection.component"
@@ -25,28 +22,27 @@ defineEmits(["update:modelValue"]);
           />
         </template>
         <template v-if="props.settingsSection?.type === 'Widget'">
-          <div class="sidebar-settings-title">
-            <h2 class="mb-2">Widget settings</h2>
-          </div>
-          <div class="sidebar-settings">
-          <SidebarWidget
+
+
+            <SidebarWidget
             :component="props.settingsSection.component"
             :key="props.settingsSection.id"
           />
-          </div>
+
+
         </template>
 
       </div>
 
 
-      <div class="settings-sidebar-actions">
+      <!--<div class="settings-sidebar-actions">
         <va-button @click="$emit('update:modelValue', !modelValue)">
           Close
         </va-button>
-      </div>
+      </div>-->
     </div>
 
-  </va-sidebar>
+
 </template>
 
 <style lang="css">

@@ -12,7 +12,7 @@ const addNew = () => {
   });
 };
 
-const opened = ref(false);
+const opened = ref(true);
 </script>
 
 <template>

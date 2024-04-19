@@ -19,7 +19,14 @@ const is =
       return defineAsyncComponent<any>(() => import(`@/components/Widgets/${part}/${part}Widget.vue`))
     };
 
-defineExpose({props});
+const getState = ()=>{
+
+}
+const setState = ()=>{
+
+}
+
+defineExpose({props,setState,getState});
 onMounted(()=>{
   console.log('Mounted')
 })
@@ -29,16 +36,16 @@ const maxWidth = "auto";
         const maxHeight = "auto";
         const minWidth = "auto";
         const minHeight = "auto";
-        const draggable = true;
+        const draggable = false;
         const throttleDrag = 1;
         const edgeDraggable = false;
         const startDragRotate = 0;
         const throttleDragRotate = 0;
-        const resizable = true;
+        const resizable = false;
         const keepRatio = false;
         const throttleResize = 1;
         const renderDirections = ["nw","n","ne","w","e","sw","s","se"];
-        const rotatable = true;
+        const rotatable = false;
         const throttleRotate = 0;
         const rotationPosition = "top";
         const targetRef = ref(null);
@@ -57,7 +64,7 @@ const maxWidth = "auto";
 </script>
 
 <template>
-  <div>
+  <div class="group" v-bind:class="id" v-bind:id="id">
     <h1>TEST</h1>
 
 
@@ -75,26 +82,27 @@ const maxWidth = "auto";
           :children="child.children"
       ></component>
       </div>
-    <Moveable
-                   :ref="child.id+'_control'"
-                  :target="'.'+child.id"
-                   :draggable="draggable"
-                                   :throttleDrag="throttleDrag"
-                                   :edgeDraggable="edgeDraggable"
-                                   :startDragRotate="startDragRotate"
-                                   :throttleDragRotate="throttleDragRotate"
-                                   :resizable="resizable"
-                                   :keepRatio="keepRatio"
-                                   :throttleResize="throttleResize"
-                                   :renderDirections="renderDirections"
-                                   :rotatable="rotatable"
-                                   :throttleRotate="throttleRotate"
-                                   :rotationPosition="rotationPosition"
-                                   @drag="onDrag"
-                                 @resize="onResize"
-                                   @rotate="onRotate"/>
+
     </div>
   </div>
+  <Moveable
+    :ref="(el)=>widgetRegistry.registerWithID(el as any,id+'_control')"
+    :target="'.'+id"
+    :draggable="draggable"
+    :throttleDrag="throttleDrag"
+    :edgeDraggable="edgeDraggable"
+    :startDragRotate="startDragRotate"
+    :throttleDragRotate="throttleDragRotate"
+    :resizable="resizable"
+    :keepRatio="keepRatio"
+    :throttleResize="throttleResize"
+    :renderDirections="renderDirections"
+    :rotatable="rotatable"
+    :throttleRotate="throttleRotate"
+    :rotationPosition="rotationPosition"
+    @drag="onDrag"
+    @resize="onResize"
+    @rotate="onRotate"/>
 
 </template>
 

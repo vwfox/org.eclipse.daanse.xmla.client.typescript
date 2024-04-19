@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import WidgetWrapperSettings from '../Widgets/WidgetWrapper/WidgetWrapperSettings.vue';
 import {computed, defineAsyncComponent, getCurrentInstance, type Ref, ref} from "vue";
-import type {Widget} from "@/components/Widgets/Extended/ExtendedWidget.vue";
 import {useWidgetRegistry} from "@/composables/WidgetRegistry";
 
 const props = defineProps(["component"]);
@@ -36,11 +34,11 @@ const aref = (id)=>{
         :is="is"
         :component="aref(props.component.props.id)"
       ></component>
-      <SidebarWidget
+      <!--<SidebarWidget
       v-for="sprops in props.component.props.children"
       :component="aref(sprops.id)"
       :key = "sprops.id"
-      ></SidebarWidget>
+      ></SidebarWidget>-->
     </div>
 
 </template>

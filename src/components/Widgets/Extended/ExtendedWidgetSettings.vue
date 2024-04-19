@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 const props = defineProps(["component"]) as any;
-const opened = ref(false);
+const opened = ref(true);
 console.log(props)
 </script>
 
