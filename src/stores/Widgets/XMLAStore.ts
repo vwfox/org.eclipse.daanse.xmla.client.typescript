@@ -1,14 +1,3 @@
-/*
-Copyright (c) 2023 Contributors to the  Eclipse Foundation.
-This program and the accompanying materials are made
-available under the terms of the Eclipse Public License 2.0
-which is available at https://www.eclipse.org/legal/epl-2.0/
-SPDX-License-Identifier: EPL-2.0
-
-Contributors: Smart City Jena
-
-*/
-
 import { useDatasourceManager } from "@/composables/datasourceManager";
 import { getMdxRequest } from "@/utils/MdxRequests/MdxRequestConstructor";
 import BaseStore from "@/stores/Widgets/BaseStore";
@@ -23,7 +12,7 @@ export class XMLAStore extends BaseStore implements IStore{
   public static readonly TYPE = "XMLA";
   public readonly type = XMLAStore.TYPE;
 
-  public datasourceId: string | null = null;
+  public datasourceIds = [] as string[];
   private datasourceManager: any;
   public data = null;
   private eventBus = null as unknown as EventBus;
@@ -47,6 +36,7 @@ export class XMLAStore extends BaseStore implements IStore{
     this.eventBus = eventBus;
 
     this.eventBus.on(`EXPAND:${this.id}`, ({ value, area }) => {
+      console.log("EXPAND", value, area);
       if (area === "rows") {
         this.expandOnRows(value);
       } else if (area === "columns") {
@@ -56,6 +46,7 @@ export class XMLAStore extends BaseStore implements IStore{
     });
 
     this.eventBus.on(`DRILLDOWN:${this.id}`, ({ value, area }) => {
+      console.log("DRILLDOWN", value, area);
       if (area === "rows") {
         this.drilldownOnRows(value);
       } else if (area === "columns") {
@@ -65,16 +56,20 @@ export class XMLAStore extends BaseStore implements IStore{
     });
 
     this.eventBus.on(`DRILLUP:${this.id}`, ({ value, area }) => {
+      console.log("DRILLUP", value, area);
       if (area === "rows") {
         this.drillupOnRows(value);
       } else if (area === "columns") {
         this.drillupOnColumns(value);
       }
 
+      console.log(this.rowsDrilldownMembers);
+      console.log(this.columnsDrilldownMembers);
       this.eventBus.emit(`UPDATE:${this.id}`);
     });
 
     this.eventBus.on(`COLLAPSE:${this.id}`, ({ value, area }) => {
+      console.log("COLLAPSE", value, area);
       if (area === "rows") {
         this.collapseOnRows(value);
       } else if (area === "columns") {
@@ -83,6 +78,7 @@ export class XMLAStore extends BaseStore implements IStore{
       this.eventBus.emit(`UPDATE:${this.id}`);
     });
   }
+
 
   drilldownOnRows(member) {
     const expandedIndex = this.rowsExpandedMembers.findIndex(
@@ -107,7 +103,9 @@ export class XMLAStore extends BaseStore implements IStore{
   }
 
   async drillupOnRows(member) {
-    const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+    const datasource = this.datasourceManager.getDatasource(
+      this.datasourceIds[0],
+    );
 
     const levels = datasource.getLevels();
 
@@ -145,7 +143,9 @@ export class XMLAStore extends BaseStore implements IStore{
   }
 
   async drillupOnColumns(member) {
-    const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+    const datasource = this.datasourceManager.getDatasource(
+      this.datasourceIds[0],
+    );
 
     const levels = datasource.getLevels();
 
@@ -350,13 +350,19 @@ export class XMLAStore extends BaseStore implements IStore{
     });
   }
 
-  setDatasource(datasourceIds) {
-    this.datasourceId = datasourceIds;
+  addDatasource(datasourceId) {
+    this.datasourceIds.push(datasourceId);
+  }
+
+  setDatasources(datasourceIds) {
+    this.datasourceIds = [...datasourceIds];
     this.eventBus.emit(`UPDATE:${this.id}`);
   }
 
   async getData() {
-    const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+    const datasource = this.datasourceManager.getDatasource(
+      this.datasourceIds[0],
+    );
 
     this.flushDrilldowns();
     this.flushExpands();
@@ -364,22 +370,29 @@ export class XMLAStore extends BaseStore implements IStore{
       showEmpty: true,
       alignContent: "right",
     });
+    console.log();
 
     const responce = await datasource.getData(body);
+    console.log(responce);
     return responce;
   }
 
-  setOptions({ caption, column, row, measure }:IStoreParams) {
+  setOptions({ caption, column, row, measure }) {
     this.caption = caption || this.caption;
     this.row = row || this.row;
     this.column = column || this.column;
     this.measure = measure || this.measure;
 
+    // if (this.row && this.column && this.measure) {
+    //   this.getData();
+    // }
+
+    console.log("EMITED UPDATE", this.id);
     this.eventBus.emit(`UPDATE:${this.id}`);
   }
 
   getDatasource() {
-    return this.datasourceManager.getDatasource(this.datasourceId);
+    return this.datasourceManager.getDatasource(this.datasourceIds[0]);
   }
 
   getState() {
@@ -387,7 +400,7 @@ export class XMLAStore extends BaseStore implements IStore{
       caption: this.caption,
       id: this.id,
       events: this.events,
-      datasourceIds: this.datasourceId,
+      datasourceIds: this.datasourceIds,
     };
   }
 
@@ -395,12 +408,19 @@ export class XMLAStore extends BaseStore implements IStore{
     this.caption = state.caption;
     this.id = state.id;
     this.events = state.events;
-    this.datasourceId = state.datasourceId;
+    this.datasourceIds = state.datasourceIds;
   }
 
   async getMDXRequest(pivotTableSettings) {
-    const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+    const datasource = this.datasourceManager.getDatasource(
+      this.datasourceIds[0],
+    );
 
+    console.log(this.measure);
+    console.log(this.row);
+    console.log(this.column);
+
+    console.log(datasource.cube);
     const mdxRequest = await getMdxRequest(
       datasource.cube.CUBE_NAME,
       this.rowsDrilldownMembers,

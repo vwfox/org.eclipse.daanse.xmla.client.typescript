@@ -9,39 +9,26 @@ Contributors: Smart City Jena
 
 -->
 <script setup lang="ts">
-export interface IColorSettingsProps {
-  label?: string;
-  availableEvents?: string[];
-  events?: EventItem[];
-}
-
-import { inject, ref, type Ref } from "vue";
-import { useSettings } from "@/composables/widgets/settings";
-import { useSerialization } from "@/composables/widgets/serialization";
+import { inject, ref, type Ref, type Component} from "vue";
 import ColorSettings from "@/components/Controls/ColorInput/ColorSettings.vue";
-import type { EventItem } from "@/@types/controls";
+import type { EventItem, ComponentProps } from "@/@types/controls";
 
 const EventBus = inject("customEventBus") as any;
-const settingsComponent = ColorSettings;
+const settings: Component = ColorSettings;
 
-const props = withDefaults(defineProps<IColorSettingsProps>(), {
-  label: "Test",
-  availableEvents: (): string[] => ["Click"],
-  events: (): EventItem[] => [
-    {
-      name: "Next page",
-      trigger: "Click",
-    },
-  ],
-});
-
-const { settings, setSetting } = useSettings<typeof props>(props);
-const { getState } = useSerialization(settings);
-
+const label: Ref<string> = ref('Test');
 const selectValue: Ref<string> = ref("#FF00FF");
+const availableEvents: string[] = ["Click"];
+
+const events: Ref<EventItem[]> = ref([
+  {
+    name: "Next page",
+    trigger: "Click",
+  },
+]);
 
 const click = () => {
-  settings.value.events.forEach((e: EventItem) => {
+  events.value.forEach((e: EventItem) => {
     if (e.trigger === "Click") {
       console.log(`${e.name} emited`);
       EventBus.emit(e.name, selectValue.value);
@@ -49,14 +36,14 @@ const click = () => {
   });
 };
 
-defineExpose({ setSetting, settings, settingsComponent, getState });
+defineExpose({ label, events, availableEvents, settings }) as unknown as ComponentProps;
 </script>
 
-<template>
+<template> 
   <va-color-input
     class="color-control"
     v-model="selectValue"
-    :label="settings.label"
+    :label="label"
     @update:modelValue="click"
   />
 </template>

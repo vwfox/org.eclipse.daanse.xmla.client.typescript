@@ -9,7 +9,7 @@ Contributors: Smart City Jena
 
 -->
 <script lang="ts" setup>
-export interface ITextSettings {
+interface ITextSettings {
   text: string;
   fontSize: number;
   fontColor: string;
@@ -19,12 +19,11 @@ export interface ITextSettings {
   verticalAlign: string;
 }
 
-export interface ITextSettingsProps {
+interface ITextSettingsProps {
   text?: string;
   fontSize?: number;
   fontColor?: string;
   fontWeight?: string;
-  fontStyle?: string;
   textDecoration?: string;
   horizontalAlign?: string;
   verticalAlign?: string;
@@ -44,7 +43,6 @@ const props = withDefaults(defineProps<ITextSettingsProps>(), {
   fontSize: 12,
   fontColor: "#000",
   fontWeight: "normal",
-  fontStyle: "normal",
   textDecoration: "None",
   horizontalAlign: "Left",
   verticalAlign: "Top",
@@ -61,6 +59,23 @@ defineExpose({
   store,
   setStore,
   getState,
+});
+
+const textDecorationStyle = computed(() => {
+  switch (settings.value.textDecoration) {
+    case "Underline solid":
+      return "underline solid";
+    case "Underline dashed":
+      return "underline dashed";
+    case "Underline wavy":
+      return "underline wavy";
+    case "Line-through":
+      return "line-through";
+    case "Overline":
+      return "overline";
+    default:
+      return "none";
+  }
 });
 
 const parsedText = computed(() => {
@@ -119,8 +134,7 @@ const parsedText = computed(() => {
   color: v-bind(settings.fontColor);
   text-align: v-bind(settings.horizontalAlign);
   font-weight: v-bind(settings.fontWeight);
-  font-style: v-bind(settings.fontStyle);
-  text-decoration: v-bind(settings.textDecoration);
+  text-decoration: v-bind(textDecorationStyle);
   overflow: hidden;
 }
 </style>

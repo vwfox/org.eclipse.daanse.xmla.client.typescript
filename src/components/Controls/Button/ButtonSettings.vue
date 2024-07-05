@@ -9,24 +9,12 @@ Contributors: Smart City Jena
 
 -->
 <script lang="ts" setup>
-export interface IButtonSettings {
-  title: string;
-  availableEvents: string[];
-  events: EventItem[];
-}
-
-export interface IButtonComponent {
-  settings: IButtonSettings;
-  setSetting: (key: string, value: any) => void;
-}
-
 import { ref, type Ref } from "vue";
-import type { EventItem } from "@/@types/controls";
+import type { ButtonComponentProps, EventItem } from "@/@types/controls";
 
-const { component } = defineProps<{ component: IButtonComponent }>();
-
-const options: Ref<string[]> = ref(component.settings.availableEvents);
-const events: Ref<EventItem[]> = ref(component.settings.events);
+const props = defineProps(["component"]) as ButtonComponentProps;
+const options: Ref<string[]> = ref(props.component.availableEvents);
+const events: Ref<EventItem[]> = ref(props.component.events);
 
 const addEvent = () => {
   events.value.push({
@@ -43,9 +31,8 @@ const deleteEvent = (id: number) => {
 <template>
   <va-input
     class="event-input"
-    :model-value="component.settings.title"
+    v-model="props.component.title"
     label="Button text"
-    @update:model-value="component.setSetting('title', $event)"
   />
   <div class="events-list">
     <div class="events-list-title">
@@ -59,11 +46,7 @@ const deleteEvent = (id: number) => {
         :columns="[{ key: 'name' }, { key: 'trigger' }, { key: 'actions' }]"
       >
         <template #cell(name)="{ rowIndex }">
-          <va-input
-            class="name-input"
-            v-model="events[rowIndex].name"
-            @update:model-value="component.setSetting('name', $event)"
-          >
+          <va-input class="name-input" v-model="events[rowIndex].name">
           </va-input>
         </template>
         <template #cell(trigger)="{ rowIndex }">
@@ -71,7 +54,6 @@ const deleteEvent = (id: number) => {
             class="trigger-input"
             v-model="events[rowIndex].trigger"
             :options="options"
-            @update:model-value="component.setSetting('trigger', $event)"
           />
         </template>
         <template #cell(actions)="{ rowIndex }">

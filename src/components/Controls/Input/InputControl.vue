@@ -9,39 +9,28 @@ Contributors: Smart City Jena
 
 -->
 <script setup lang="ts">
-export interface IInputSettingsProps {
-  label?: string;
-  availableEvents?: string[];
-  events?: EventItem[];
-}
-
 import { inject, ref, type Ref } from "vue";
-import { useSettings } from "@/composables/widgets/settings";
-import { useSerialization } from "@/composables/widgets/serialization";
 import InputSettings from "./InputSettings.vue";
-import type { EventItem } from "@/@types/controls";
+import type { Component } from 'vue';
+import type { ComponentProps, EventItem } from "@/@types/controls";
 
-const settingsComponent = InputSettings;
+const settings: Component = InputSettings;
+
 const EventBus = inject("customEventBus") as any;
 
+const label: Ref<string> = ref("Sample input");
+const availableEvents: string[] = ["Blur", "Input"];
 const inputVal: Ref<string> = ref("");
-
-const props = withDefaults(defineProps<IInputSettingsProps>(), {
-  label: "Next page",
-  availableEvents: (): string[] => ["Blur", "Input"],
-  events: (): EventItem[] => [
-    {
-      name: "Next page",
-      trigger: "Input",
-    },
-  ],
-});
-
-const { settings, setSetting } = useSettings<typeof props>(props);
-const { getState } = useSerialization(settings);
+  
+const events: Ref<EventItem[]> = ref([
+  {
+    name: "Next page",
+    trigger: "Input",
+  },
+]);
 
 const input = () => {
-  settings.value.events.forEach((e: EventItem) => {
+  events.value.forEach((e: EventItem) => {
     if (e.trigger === "Input") {
       console.log(`${e.name} emited`);
       EventBus.emit(e.name);
@@ -50,7 +39,7 @@ const input = () => {
 };
 
 const blur = () => {
-  settings.value.events.forEach((e: EventItem) => {
+  events.value.forEach((e: EventItem) => {
     if (e.trigger === "Blur") {
       console.log(`${e.name} emited`);
       EventBus.emit(e.name, inputVal.value);
@@ -58,13 +47,13 @@ const blur = () => {
   });
 };
 
-defineExpose({ setSetting, settings, settingsComponent, getState });
+defineExpose({ label, events, availableEvents, settings }) as unknown as ComponentProps;
 </script>
 
 <template>
   <va-input
     class="input-control"
-    :label="settings.label"
+    :label="label"
     @blur="blur"
     v-model="inputVal"
     @update:modelValue="input"

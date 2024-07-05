@@ -9,40 +9,23 @@ Contributors: Smart City Jena
 
 -->
 <script lang="ts" setup>
-export interface ISelectSettings {
-  label: string;
-  options: string[];
-  selectedValue: string;
-  availableEvents: string[];
-  events: EventItem[];
-}
-
-export interface ISelectComponent {
-  settings: ISelectSettings;
-  setSetting: (key: string, value: any) => void;
-}
-
-import type { EventItem } from "@/@types/controls";
+import type { SelectComponentProps, EventItem } from "@/@types/controls";
 import { ref, type Ref } from "vue";
 
-const { component } = defineProps<{ component: ISelectComponent }>();
-
-const options: Ref<string[]> = ref(component.settings.availableEvents);
-const events: Ref<EventItem[]> = ref(component.settings.events);
-const selectOptions: Ref<string[]> = ref(component.settings.options);
+const props = defineProps(["component"]) as SelectComponentProps;
+const options: Ref<string[]> = ref(props.component.availableEvents);
+const selectOptions: Ref<string[]> = ref(props.component.options);
+const events: Ref<EventItem[]> = ref(props.component.events);
 
 const addEvent = () => {
-  const events = component.settings.events;
-
-  events.push({
+  events.value.push({
     name: "",
     trigger: "",
   });
 };
 
 const addOption = () => {
-  const options = component.settings.options;
-  options.push("");
+  selectOptions.value.push('');
 };
 
 const deleteEvent = (id: number) => {
@@ -50,8 +33,8 @@ const deleteEvent = (id: number) => {
 };
 
 const deleteOption = (id: number, option: string) => {
-  if (component.settings.selectedValue === option) {
-    component.settings.selectedValue = "";
+  if (props.component.selectValue === option) {
+    props.component.selectValue = '';
   }
   selectOptions.value.splice(id, 1);
 };
@@ -60,27 +43,22 @@ const deleteOption = (id: number, option: string) => {
 <template>
   <va-input
     class="event-input"
-    :model-value="component.settings.label"
+    v-model="props.component.label"
     label="Label text"
-    @update:model-value="component.setSetting('label', $event)"
   />
   <div class="events-list-label">
     <h3>Options list</h3>
     <va-button @click="addOption">Add</va-button>
   </div>
   <!-- <div> -->
-  <div
-    class="options-list"
-    v-for="(option, index) in selectOptions"
-    :key="index"
-  >
-    <va-input v-model="selectOptions[index]" label="Option" />
-    <va-button
-      preset="plain"
-      icon="delete"
-      @click="deleteOption(index, option)"
-    />
-  </div>
+    <div class="options-list" v-for="(option, index) in selectOptions" :key="option.index">
+      <va-input v-model="selectOptions[index]" label="Option" />
+      <va-button
+        preset="plain"
+        icon="delete"
+        @click="deleteOption(index, option)"
+      />
+    </div>
   <!-- </div> -->
   <div class="events-list">
     <div class="events-list-label">
@@ -94,11 +72,7 @@ const deleteOption = (id: number, option: string) => {
         :columns="[{ key: 'name' }, { key: 'trigger' }, { key: 'actions' }]"
       >
         <template #cell(name)="{ rowIndex }">
-          <va-input
-            class="name-input"
-            v-model="events[rowIndex].name"
-            @update:model-value="component.setSetting('name', $event)"
-          >
+          <va-input class="name-input" v-model="events[rowIndex].name">
           </va-input>
         </template>
         <template #cell(trigger)="{ rowIndex }">
@@ -106,7 +80,6 @@ const deleteOption = (id: number, option: string) => {
             class="trigger-input"
             v-model="events[rowIndex].trigger"
             :options="options"
-            @update:model-value="component.setSetting('trigger', $event)"
           />
         </template>
         <template #cell(actions)="{ rowIndex }">

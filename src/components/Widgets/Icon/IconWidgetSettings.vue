@@ -55,12 +55,13 @@ function filterUniqueIcons(icons: MaterialIcon[]) {
 
 const filteredIcons = computed(() => {
   return iconsList.value.filter((icon: MaterialIcon) =>
-    icon.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+      icon.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
 
 const handleIconClick = (icon: MaterialIcon) => {
-  if (icon) component.settings.currentIcon = icon.name;
+  if (icon)
+    //component.settings.currentIcon = icon.name;
   component.setSetting("currentIcon", icon.name);
 };
 
@@ -73,13 +74,13 @@ onMounted(() => {
   <va-collapse v-model="opened.widgetSection" header="Icon widget settings">
     <div class="settings-container">
       <va-input
-        v-model="searchQuery"
-        placeholder="Search icon..."
-        label="Search icons"
+          v-model="searchQuery"
+          placeholder="Search icon..."
+          label="Search icons"
       />
       <div
-        class="icons-container"
-        style="
+          class="icons-container"
+          style="
           font-variation-settings:
             &quot;FILL&quot; 0,
             &quot;wght&quot; 200,
@@ -88,65 +89,65 @@ onMounted(() => {
         "
       >
         <span
-          v-for="icon in filteredIcons"
-          :key="icon.name + icon.version"
-          @click="handleIconClick(icon)"
-          :class="{
+            v-for="icon in filteredIcons"
+            :key="icon.name + icon.version"
+            @click="handleIconClick(icon)"
+            :class="{
             'active-icon': icon.name === component.settings.currentIcon,
           }"
-          class="material-symbols-outlined"
+            class="material-symbols-outlined"
         >
           {{ icon.name }}
         </span>
       </div>
       <va-checkbox
-        :model-value="component.settings.isIconFilled"
-        label="Icon filled"
-        @update:model-value="component.setSetting('isIconFilled', $event)"
+          :model-value="component.settings.isIconFilled"
+          label="Icon filled"
+          @update:model-value="component.setSetting('isIconFilled', $event)"
       />
       <va-color-input
-        :model-value="component.settings.iconColor"
-        label="Icon color"
-        @update:model-value="component.setSetting('iconColor', $event)"
+          :model-value="component.settings.iconColor"
+          label="Icon color"
+          @update:model-value="component.setSetting('iconColor', $event)"
       />
       <va-input
-        :model-value="component.settings.iconSize"
-        label="Icon size"
-        @update:model-value="component.setSetting('iconSize', $event)"
+          :model-value="component.settings.iconSize"
+          label="Icon size"
+          @update:model-value="component.setSetting('iconSize', $event)"
       />
       <va-slider
-        class="slider"
-        :model-value="component.settings.strokeWeight"
-        track-label-visible
-        :min="100"
-        :max="700"
-        :step="100"
-        label="Stroke weight"
-        @update:model-value="component.setSetting('strokeWeight', $event)"
+          class="slider"
+          :model-value="component.settings.strokeWeight"
+          track-label-visible
+          :min="100"
+          :max="700"
+          :step="100"
+          label="Stroke weight"
+          @update:model-value="component.setSetting('strokeWeight', $event)"
       />
       <va-slider
-        class="slider"
-        :model-value="component.settings.opticSize"
-        track-label-visible
-        :min="20"
-        :max="48"
-        label="Optic size"
-        @update:model-value="component.setSetting('opticSize', $event)"
+          class="slider"
+          :model-value="component.settings.opticSize"
+          track-label-visible
+          :min="20"
+          :max="48"
+          label="Optic size"
+          @update:model-value="component.setSetting('opticSize', $event)"
       />
       <va-slider
-        class="slider"
-        :model-value="component.settings.grade"
-        track-label-visible
-        :min="-25"
-        :max="200"
-        :step="15"
-        label="Grade"
-        @update:model-value="component.setSetting('grade', $event)"
+          class="slider"
+          :model-value="component.settings.grade"
+          track-label-visible
+          :min="-25"
+          :max="200"
+          :step="15"
+          label="Grade"
+          @update:model-value="component.setSetting('grade', $event)"
       />
     </div>
   </va-collapse>
-  <!-- <va-collapse 
-    v-model="opened.storeSection" 
+  <va-collapse
+    v-model="opened.storeSection"
     header="Store settings"
   >
     <div class="settings-container">
@@ -154,7 +155,7 @@ onMounted(() => {
         <h3 class="mb-2">Select store</h3>
       </div>
     </div>
-  </va-collapse> -->
+  </va-collapse>
 </template>
 <style lang="scss" scoped>
 .settings-container {
@@ -191,8 +192,8 @@ onMounted(() => {
   border: 2px solid transparent;
   border-radius: 5px;
   transition:
-    border-color 0.5s ease,
-    transform 0.5s ease;
+      border-color 0.5s ease,
+      transform 0.5s ease;
 
   &:hover {
     transform: scale(1.1);

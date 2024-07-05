@@ -45,10 +45,10 @@ const { getState } = useSerialization(settings);
 
 const iconStyle = computed(() => {
   return `
-    font-variation-settings: 
-      'FILL' ${+settings.value.isIconFilled}, 
-      'wght' ${settings.value.strokeWeight}, 
-      'GRAD' ${settings.value.grade}, 
+    font-variation-settings:
+      'FILL' ${+settings.value.isIconFilled},
+      'wght' ${settings.value.strokeWeight},
+      'GRAD' ${settings.value.grade},
       'opsz' ${settings.value.opticSize};
   `;
 });
@@ -65,8 +65,8 @@ defineExpose({
 
 <template>
   <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
   />
   <div class="icon">
     <div :style="iconStyle">

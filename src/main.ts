@@ -12,7 +12,6 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import SOAPClient from "./plugins/SOAPClient";
 import EventBus from "./plugins/EventBus";
-import 'reflect-metadata';
 
 import App from "./App.vue";
 // import router from './router'
@@ -65,7 +64,7 @@ import {
   VaCounter,
   VaSwitch,
   VaDateInput,
-  VaTimeInput,
+  VaTimeInput, VaForm,
 
 } from "vuestic-ui";
 import "vuestic-ui/css";
@@ -74,6 +73,7 @@ import "./scss/main.scss";
 import { router } from "@/router/router";
 
 import VueSmartWidget from "vue-smart-widget";
+import TestPlugin from "@/plugins/TestPlugin";
 import {useDatasourceManager} from "@/composables/datasourceManager";
 import XMLADatasource from "@/dataSources/XmlaDatasource";
 import RESTDatasource from "@/dataSources/RestDatasource";
@@ -85,9 +85,9 @@ import {Store} from "@/stores/Widgets/Store";
 const app = createApp(App);
 
 const pinia = createPinia();
-// @ts-ignore
 pinia.use(SOAPClient);
 app.use(pinia);
+console.log(router);
 app.use(router);
 app.use(VueSmartWidget);
 
@@ -104,7 +104,6 @@ const fonts = [
   },
 ];
 
-// @ts-ignore
 app.use(
   createVuesticEssential({
     components: {
@@ -153,6 +152,7 @@ app.use(
       VaSwitch,
       VaDateInput,
       VaTimeInput,
+      VaForm
     },
     config: {
       colors: {
@@ -168,9 +168,10 @@ useDatasourceManager().registerDataSource(XMLADatasource);
 useDatasourceManager().registerDataSource(RESTDatasource);
 useDatasourceManager().registerDataSource(MQTTDatasource);
 
-
+//useStoreManager().registerStoreType(MQTTStore);
 useStoreManager().registerStoreType(XMLAStore);
 useStoreManager().registerStoreType(Store);
 
+app.use(TestPlugin);
 app.mount("#app");
 export default app;

@@ -289,7 +289,7 @@
     chalk "^2.4.2"
     js-tokens "^4.0.0"
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.7", "@babel/parser@^7.21.4", "@babel/parser@^7.23.0", "@babel/parser@^7.23.9", "@babel/parser@^7.24.0", "@babel/parser@^7.6.0", "@babel/parser@^7.9.6":
+"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.7", "@babel/parser@^7.21.4", "@babel/parser@^7.23.0", "@babel/parser@^7.23.5", "@babel/parser@^7.23.9", "@babel/parser@^7.24.0", "@babel/parser@^7.6.0", "@babel/parser@^7.9.6":
   version "7.24.0"
   resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.24.0.tgz"
   integrity sha512-QuP/FxEAzMSjXygs8v4N9dvdXzEHN4W1oF3PxuWAtPo08UdM17u89RDMgjLn/mlc56iM0HlLmVkO/wgR+rDgHg==
@@ -1155,12 +1155,12 @@
 
 "@esbuild/darwin-arm64@0.18.20":
   version "0.18.20"
-  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.18.20.tgz"
+  resolved "https://registry.yarnpkg.com/@esbuild/darwin-arm64/-/darwin-arm64-0.18.20.tgz#08172cbeccf95fbc383399a7f39cfbddaeb0d7c1"
   integrity sha512-bxRHW5kHU38zS2lPTPOyuyTm+S+eobPUnTNkdJEfAddYgEcll4xkT8DB9d2008DtTbl7uJag2HuE5NZAZgnNEA==
 
 "@esbuild/darwin-arm64@0.19.12":
   version "0.19.12"
-  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.19.12.tgz"
+  resolved "https://registry.yarnpkg.com/@esbuild/darwin-arm64/-/darwin-arm64-0.19.12.tgz#cbee41e988020d4b516e9d9e44dd29200996275e"
   integrity sha512-B6IeSgZgtEzGC42jsI+YYu9Z3HKRxp8ZT3cqhvliEHovq8HSX2YX8lNocDn79gCKJXOSaEot9MVYky7AKjCs8g==
 
 "@esbuild/darwin-x64@0.18.20":
@@ -1280,12 +1280,12 @@
 
 "@esbuild/linux-x64@0.18.20":
   version "0.18.20"
-  resolved "https://registry.yarnpkg.com/@esbuild/linux-x64/-/linux-x64-0.18.20.tgz#c7690b3417af318a9b6f96df3031a8865176d338"
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.18.20.tgz"
   integrity sha512-UYqiqemphJcNsFEskc73jQ7B9jgwjWrSayxawS6UVFZGWrAAtkzjxSqnoclCXxWtfwLdzU+vTpcNYhpn43uP1w==
 
 "@esbuild/linux-x64@0.19.12":
   version "0.19.12"
-  resolved "https://registry.yarnpkg.com/@esbuild/linux-x64/-/linux-x64-0.19.12.tgz#5f37cfdc705aea687dfe5dfbec086a05acfe9c78"
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.19.12.tgz"
   integrity sha512-B71g1QpxfwBvNrfyJdVDexenDIt1CiDN1TIXLbhOw0KhJzE78KIFGX6OJ9MrtC0oOqMWf+0xop4qEU8JrJTwCg==
 
 "@esbuild/netbsd-x64@0.18.20":
@@ -1985,7 +1985,7 @@
 
 "@rollup/rollup-darwin-arm64@4.13.0":
   version "4.13.0"
-  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.13.0.tgz"
+  resolved "https://registry.yarnpkg.com/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.13.0.tgz#ef02d73e0a95d406e0eb4fd61a53d5d17775659b"
   integrity sha512-Ovf2evVaP6sW5Ut0GHyUSOqA6tVKfrTHddtmxGQc1CTQa1Cw3/KMCDEEICZBbyppcwnhMwcDce9ZRxdWRpVd6g==
 
 "@rollup/rollup-darwin-x64@4.13.0":
@@ -2015,12 +2015,12 @@
 
 "@rollup/rollup-linux-x64-gnu@4.13.0":
   version "4.13.0"
-  resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.13.0.tgz#f672f6508f090fc73f08ba40ff76c20b57424778"
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.13.0.tgz"
   integrity sha512-yUD/8wMffnTKuiIsl6xU+4IA8UNhQ/f1sAnQebmE/lyQ8abjsVyDkyRkWop0kdMhKMprpNIhPmYlCxgHrPoXoA==
 
 "@rollup/rollup-linux-x64-musl@4.13.0":
   version "4.13.0"
-  resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.13.0.tgz#d2f34b1b157f3e7f13925bca3288192a66755a89"
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.13.0.tgz"
   integrity sha512-9RyNqoFNdF0vu/qqX63fKotBh43fJQeYC98hCaf89DYQpv+xu0D8QFSOS0biA7cGuqJFOc1bJ+m2rhhsKcw1hw==
 
 "@rollup/rollup-win32-arm64-msvc@4.13.0":
@@ -2973,6 +2973,106 @@
   resolved "https://registry.npmjs.org/@tsconfig/node18/-/node18-18.2.2.tgz"
   integrity sha512-d6McJeGsuoRlwWZmVIeE8CUA27lu6jLjvv1JzqmpsytOYYbVi1tHZEnwCNVOXnj4pyLvneZlFlpXUK+X9wBWyw==
 
+"@turf/bbox@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/bbox/-/bbox-7.0.0.tgz"
+  integrity sha512-IyXG5HAsn6IZLdAtQo7aWYccjU5WsV+uzIzhGaXrh/qTVylSYmRiWgLdiekHZVED9nv9r7D/EJUMOT4zyA6POA==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    "@turf/meta" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/boolean-point-in-polygon@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/boolean-point-in-polygon/-/boolean-point-in-polygon-7.0.0.tgz"
+  integrity sha512-Z9swETfICqUJ8iVLZimvIOh8r4Wrlu9/X/c/5vIEeVvG4Lu78Ztmgu1KaobZJFC93/ntOAjMBavc9aNgw7TXgQ==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    "@turf/invariant" "^7.0.0"
+    point-in-polygon-hao "^1.1.0"
+    tslib "^2.6.2"
+
+"@turf/center@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/center/-/center-7.0.0.tgz"
+  integrity sha512-5RZia9uuWxz2oCyd1vsNkBeraBNdwCsIo4UGRQdyswBeLFVbRwIUa7M7+2z2D7B1YIgovuLIRVfk6FeWUQXDtQ==
+  dependencies:
+    "@turf/bbox" "^7.0.0"
+    "@turf/helpers" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/clone@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/clone/-/clone-7.0.0.tgz"
+  integrity sha512-bQBx/wbQoGNtZzuHetLt44NMqOCnjSXcvTWm+LJ7YTmwrqZVAjISDhFxgawY/L+G3p+ya5WoxQwZWak80uYg3A==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/distance@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/distance/-/distance-7.0.0.tgz"
+  integrity sha512-DBPKhHABpPZ0KRduRpEaoi8MB6r1DVuyyps68VFH2Qi5H0ZnFtJFj7nQxBPZR3bVpbUq4zzu7I+MiNAd3ujFWQ==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    "@turf/invariant" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/explode@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/explode/-/explode-7.0.0.tgz"
+  integrity sha512-q7KZ/PxY9zHN4UGXaADUpsHGkj8lbexVZxdBnp0nEfTHm/ziLTAfpI15CdAknoz4Ee8k8tx7ldosVjjg7YJ3/g==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    "@turf/meta" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/helpers@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/helpers/-/helpers-7.0.0.tgz"
+  integrity sha512-vwZvxRuyjGpGXvhXSbT9mX6FK92dBMLWbMbDJ/MXQUPx17ReVPFc+6N6IcxAzZfkiCnqy7vpuq0c+/TTrQxIiA==
+  dependencies:
+    deep-equal "^2.2.3"
+    tslib "^2.6.2"
+
+"@turf/invariant@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/invariant/-/invariant-7.0.0.tgz"
+  integrity sha512-Kayszfz3W8yJ1/cIA3/aNSzAuw7QgSp+IwsSmhLAfp4DbjV0o6sjxRZXRY2gRstZHqkNHSSEeir8V/icdO8sjA==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/meta@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/meta/-/meta-7.0.0.tgz"
+  integrity sha512-cEXr13uFwhXq5mFBy0IK1U/QepE5qgk3zXpBYsla3lYV7cB83Vh+NNUR+r0/w/QoJqest1TG4H20F9tGYWPi/g==
+  dependencies:
+    "@turf/helpers" "^7.0.0"
+
+"@turf/nearest-point@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/nearest-point/-/nearest-point-7.0.0.tgz"
+  integrity sha512-h3uLUoeo6JWTirpI499SRooqEoDxia2C/kDqAwAeXFqwxzGqGprtNA/C0bMgHfxE1M2rxORGzvgywKirpLu1dA==
+  dependencies:
+    "@turf/clone" "^7.0.0"
+    "@turf/distance" "^7.0.0"
+    "@turf/helpers" "^7.0.0"
+    "@turf/meta" "^7.0.0"
+    tslib "^2.6.2"
+
+"@turf/point-on-feature@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@turf/point-on-feature/-/point-on-feature-7.0.0.tgz"
+  integrity sha512-KTvYrQJEw62GLivd5LfCRt9z/4ZFdz29+3HxW9/RHhb8nrjLU8M8j7fJTQ+/Q+pPunWPK0Fvjv8LZAh0c30/oA==
+  dependencies:
+    "@turf/boolean-point-in-polygon" "^7.0.0"
+    "@turf/center" "^7.0.0"
+    "@turf/explode" "^7.0.0"
+    "@turf/helpers" "^7.0.0"
+    "@turf/nearest-point" "^7.0.0"
+    tslib "^2.6.2"
+
 "@types/aria-query@^5.0.1":
   version "5.0.4"
   resolved "https://registry.npmjs.org/@types/aria-query/-/aria-query-5.0.4.tgz"
@@ -3088,6 +3188,11 @@
   resolved "https://registry.npmjs.org/@types/find-cache-dir/-/find-cache-dir-3.2.1.tgz"
   integrity sha512-frsJrz2t/CeGifcu/6uRo4b+SzAwT4NYCVPu1GN8IB9XTzrpPkGuV0tmh9mN+/L0PklAlsC3u5Fxt0ju00LXIw==
 
+"@types/geojson@*":
+  version "7946.0.14"
+  resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.14.tgz"
+  integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.9"
   resolved "https://registry.npmjs.org/@types/graceful-fs/-/graceful-fs-4.1.9.tgz"
@@ -3137,6 +3242,13 @@
   version "0.0.29"
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
+
+"@types/leaflet@^1.9.12":
+  version "1.9.12"
+  resolved "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.9.12.tgz"
+  integrity sha512-BK7XS+NyRI291HIo0HCfE18Lp8oA30H1gpi1tf0mF3TgiCEzanQjOqNZ4x126SXzzi2oNSZhZ5axJp1k0iM6jg==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/lodash@^4.14.161", "@types/lodash@^4.14.167":
   version "4.17.0"
@@ -3586,6 +3698,17 @@
   dependencies:
     "@vue/compiler-core" "3.4.21"
     "@vue/shared" "3.4.21"
+
+"@vue/compiler-sfc@2.7.16":
+  version "2.7.16"
+  resolved "https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-2.7.16.tgz"
+  integrity sha512-KWhJ9k5nXuNtygPU7+t1rX6baZeqOYLEforUPjgNDBnLicfHCoi48H87Q8XyLZOrNNsmhuwKqtpDQWjEFe6Ekg==
+  dependencies:
+    "@babel/parser" "^7.23.5"
+    postcss "^8.4.14"
+    source-map "^0.6.1"
+  optionalDependencies:
+    prettier "^1.18.2 || ^2.0.0"
 
 "@vue/compiler-sfc@3.4.21", "@vue/compiler-sfc@^3.2.0":
   version "3.4.21"
@@ -5022,7 +5145,7 @@ cssstyle@^4.0.1:
   dependencies:
     rrweb-cssom "^0.6.0"
 
-csstype@^3.0.2, csstype@^3.1.3:
+csstype@^3.0.2, csstype@^3.1.0, csstype@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
@@ -5112,7 +5235,7 @@ deep-eql@^4.1.3:
   dependencies:
     type-detect "^4.0.0"
 
-deep-equal@^2.0.5:
+deep-equal@^2.0.5, deep-equal@^2.2.3:
   version "2.2.3"
   resolved "https://registry.npmjs.org/deep-equal/-/deep-equal-2.2.3.tgz"
   integrity sha512-ZIwpnevOurS8bpT4192sqAowWM76JDKSHYzMLty3BZGSswgq6pBaH3DhCSW5xVAZICZyKdOBPjwww5wfgT/6PA==
@@ -5567,7 +5690,7 @@ esbuild-darwin-64@0.15.18:
 
 esbuild-darwin-arm64@0.15.18:
   version "0.15.18"
-  resolved "https://registry.npmjs.org/esbuild-darwin-arm64/-/esbuild-darwin-arm64-0.15.18.tgz"
+  resolved "https://registry.yarnpkg.com/esbuild-darwin-arm64/-/esbuild-darwin-arm64-0.15.18.tgz#b6dfc7799115a2917f35970bfbc93ae50256b337"
   integrity sha512-tKPSxcTJ5OmNb1btVikATJ8NftlyNlc8BVNtyT/UAr62JFOhwHlnoPrhYWz09akBLHI9nElFVfWSTSRsrZiDUA==
 
 esbuild-freebsd-64@0.15.18:
@@ -5587,7 +5710,7 @@ esbuild-linux-32@0.15.18:
 
 esbuild-linux-64@0.15.18:
   version "0.15.18"
-  resolved "https://registry.yarnpkg.com/esbuild-linux-64/-/esbuild-linux-64-0.15.18.tgz#532738075397b994467b514e524aeb520c191b6c"
+  resolved "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.15.18.tgz"
   integrity sha512-hNSeP97IviD7oxLKFuii5sDPJ+QHeiFTFLoLm7NZQligur8poNOWGIgpQ7Qf8Balb69hptMZzyOBIPtY09GZYw==
 
 esbuild-linux-arm64@0.15.18:
@@ -6371,7 +6494,7 @@ fs.realpath@^1.0.0:
 
 fsevents@^2.3.2, fsevents@~2.3.2, fsevents@~2.3.3:
   version "2.3.3"
-  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 fstream@^1.0.12:
@@ -6861,18 +6984,6 @@ invariant@^2.2.4:
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
   dependencies:
     loose-envify "^1.0.0"
-
-inversify-props@^2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/inversify-props/-/inversify-props-2.2.6.tgz#4c4981487630b3039d6805251c8d1a347b48828a"
-  integrity sha512-ImLafUgM1Me4Xa7hcdo9DRt0Ca139JUa9byX9vzb4ihXkJtzWoxSqSw6hpBL45w4wqtFD3IPC/ldC1HqdaLQUA==
-  dependencies:
-    inversify "^5.0.1"
-
-inversify@^5.0.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
-  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
 
 ip-regex@^4.1.0:
   version "4.3.0"
@@ -7522,7 +7633,12 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-leaflet@^1.9.4:
+leaflet.markercluster@^1.4.1:
+  version "1.5.3"
+  resolved "https://registry.npmjs.org/leaflet.markercluster/-/leaflet.markercluster-1.5.3.tgz"
+  integrity sha512-vPTw/Bndq7eQHjLBVlWpnGeLa3t+3zGiuM7fJwCkiMFq+nmRuG3RI3f7f4N4TDX7T4NpbAXpR2+NTRSEGfCSeA==
+
+leaflet@^1.9.4, leaflet@^1.x:
   version "1.9.4"
   resolved "https://registry.npmjs.org/leaflet/-/leaflet-1.9.4.tgz"
   integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
@@ -8783,6 +8899,11 @@ pkg-types@^1.0.3:
     mlly "^1.2.0"
     pathe "^1.1.0"
 
+point-in-polygon-hao@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/point-in-polygon-hao/-/point-in-polygon-hao-1.1.0.tgz"
+  integrity sha512-3hTIM2j/v9Lio+wOyur3kckD4NxruZhpowUbEgmyikW+a2Kppjtu1eN+AhnMQtoHW46zld88JiYWv6fxpsDrTQ==
+
 polished@^4.2.2:
   version "4.3.1"
   resolved "https://registry.npmjs.org/polished/-/polished-4.3.1.tgz"
@@ -8803,7 +8924,7 @@ postcss-selector-parser@^6.0.15:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
-postcss@^8.4.27, postcss@^8.4.35:
+postcss@^8.4.14, postcss@^8.4.27, postcss@^8.4.35:
   version "8.4.35"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.35.tgz"
   integrity sha512-u5U8qYpBCpN13BsiEB0CbR1Hhh4Gc0zLFuedrHJKMctHCHAGrMdG0PRM/KErzAL3CU6/eckEtmHNB3x6e3c0vA==
@@ -8824,7 +8945,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.8.0:
+"prettier@^1.18.2 || ^2.0.0", prettier@^2.8.0:
   version "2.8.8"
   resolved "https://registry.npmjs.org/prettier/-/prettier-2.8.8.tgz"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -9474,11 +9595,6 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
-
-reflect-metadata@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.2.2.tgz#400c845b6cba87a21f2c65c4aeb158f4fa4d9c5b"
-  integrity sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==
 
 regenerate-unicode-properties@^10.1.0:
   version "10.1.1"
@@ -11027,6 +11143,22 @@ vue-inbrowser-compiler-independent-utils@^4.69.0:
   resolved "https://registry.npmjs.org/vue-inbrowser-compiler-independent-utils/-/vue-inbrowser-compiler-independent-utils-4.71.1.tgz"
   integrity sha512-K3wt3iVmNGaFEOUR4JIThQRWfqokxLfnPslD41FDZB2ajXp789+wCqJyGYlIFsvEQ2P61PInw6/ph5iiqg51gg==
 
+vue-leaflet-custom-marker@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/vue-leaflet-custom-marker/-/vue-leaflet-custom-marker-1.0.0.tgz"
+  integrity sha512-Y7sV/xHhdvsUbu6W68KxV7O+j9ueQTnBB4Ja56+LNBosr9qSrBW56HWZHVQCQFep5ozt+H3+ZIpKNMi1hu0Yew==
+  dependencies:
+    leaflet "^1.x"
+    vue "^2.x"
+    vue2-leaflet "^2.x"
+
+vue-leaflet-markercluster@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/vue-leaflet-markercluster/-/vue-leaflet-markercluster-0.6.1.tgz#aa717b5c63b5c0691eac7c256700c57567990223"
+  integrity sha512-jdU1k7qRb7R4o7kNjcH6hQkw9P0UPUdXcfGcpvFIpWPCeVbkTMo2vK2wIHtZexScw2Pa+tYjsZlYxrOHOR6+gA==
+  dependencies:
+    vue "^3.3.4"
+
 vue-router@^4.2.5:
   version "4.3.0"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.3.0.tgz"
@@ -11061,6 +11193,18 @@ vue-tsc@^1.8.25:
     "@vue/language-core" "1.8.27"
     semver "^7.5.4"
 
+vue2-leaflet-markercluster@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/vue2-leaflet-markercluster/-/vue2-leaflet-markercluster-3.1.0.tgz"
+  integrity sha512-v94tns6/PmBlFaPY2XvCUL69yUwRO43qYAP7T9hLmPDdu3Vgl15SDcC1qara8M56aNzWMPAcfP/uy4toUE5wcA==
+  dependencies:
+    leaflet.markercluster "^1.4.1"
+
+vue2-leaflet@^2.x:
+  version "2.7.1"
+  resolved "https://registry.npmjs.org/vue2-leaflet/-/vue2-leaflet-2.7.1.tgz"
+  integrity sha512-K7HOlzRhjt3Z7+IvTqEavIBRbmCwSZSCVUlz9u4Rc+3xGCLsHKz4TAL4diAmfHElCQdPPVdZdJk8wPUt2fu6WQ==
+
 vue3-moveable@^0.26.2:
   version "0.26.2"
   resolved "https://registry.npmjs.org/vue3-moveable/-/vue3-moveable-0.26.2.tgz"
@@ -11069,7 +11213,15 @@ vue3-moveable@^0.26.2:
     framework-utils "^1.1.0"
     moveable "~0.51.2"
 
-vue@^3.2.25, vue@^3.2.45, vue@^3.2.6, vue@^3.3.11:
+vue@^2.x:
+  version "2.7.16"
+  resolved "https://registry.npmjs.org/vue/-/vue-2.7.16.tgz"
+  integrity sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==
+  dependencies:
+    "@vue/compiler-sfc" "2.7.16"
+    csstype "^3.1.0"
+
+vue@^3.2.25, vue@^3.2.45, vue@^3.2.6, vue@^3.3.11, vue@^3.3.4:
   version "3.4.21"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.21.tgz"
   integrity sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==

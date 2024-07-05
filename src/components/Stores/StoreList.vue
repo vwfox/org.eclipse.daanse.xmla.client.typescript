@@ -13,6 +13,7 @@ import { useStoreManager } from "../../composables/storeManager";
 import { onMounted, ref, watch } from "vue";
 import StoreListItem from "./ListItems/StoreListItem.vue";
 import XMLAStoreListItem from "./ListItems/XMLAStoreListItem.vue";
+import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
 
 const storeManager = useStoreManager();
 const map = storeManager.getStoreList();
@@ -44,6 +45,9 @@ onMounted(() => {
         </template>
         <template v-else-if="item.type === 'XMLA'">
           <XMLAStoreListItem :item="item"></XMLAStoreListItem>
+        </template>
+        <template v-if="item.type === 'OGCSTA'">
+          <o-g-c-s-t-a-store-item :item="item"></o-g-c-s-t-a-store-item>
         </template>
       </div>
     </template>
