@@ -14,11 +14,10 @@ import { useStoreManager } from "@/composables/storeManager";
 import type { Store } from "@/stores/Widgets/Store";
 
 import type { XMLAStore } from "@/stores/Widgets/XMLAStore";
-import type {IDataSetSelector} from "@/plugins/charts/widgets/api/DataSetSelector";
-import type {Composer, CSVSelector, Selector} from "@/plugins/charts/widgets/api/ChartdataComposer";
-import {CSVComposer} from "@/plugins/charts/impl/CSVComposer";
+
+import type {Composer, Selector} from "@/plugins/charts/widgets/api/ChartdataComposer";
 import CSVComposerV from "@/plugins/charts/widgets/parts/CSVComposerV.vue";
-import {clone} from "lodash"
+
 import { deepUnref } from 'vue-deepunref';
 import useComposerManager from "@/plugins/charts/composables/ComposerManager";
 
@@ -33,8 +32,6 @@ export interface AxisSettings{
 
 }
 export interface ITChartSettings {
-    baseMapUrl: string;
-    dataSets:IDataSetSelector[];
     composer:Composer<Selector>[];
     axes:{
         x:AxisSettings,
