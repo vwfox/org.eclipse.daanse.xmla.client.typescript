@@ -164,7 +164,10 @@ watch(
                     let aCo = new composerClass();
                     aCo.setSelectorX(composerObj.selectorX);
                     for (let sely in composerObj.selectorY) {
-                        aCo.addSelectorY(composerObj.selectorY[sely],sely);
+                        composerObj.selectorY[sely].forEach(sel=>{
+                            aCo.addSelectorY(sel,sely);
+                        })
+                        //aCo.addSelectorY(composerObj.selectorY[sely],sely);
                     }
 
                     let store = useStoreManager().getStore(
