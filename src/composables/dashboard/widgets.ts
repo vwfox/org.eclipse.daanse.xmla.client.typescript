@@ -8,14 +8,15 @@
   Contributors: Smart City Jena
 
 */
-import { ref, getCurrentInstance } from "vue";
+import { ref, getCurrentInstance, nextTick } from "vue";
 import { enabledWidgets, widgetNames } from "@/components/Widgets";
+import { useStoreManager } from "../storeManager";
 
 declare interface Widget {
-  id: string;
-  component: string;
-  caption: string;
-  state?: any;
+    id: string;
+    component: string;
+    caption: string;
+    state?: any;
 }
 
 // declare interface Control {
@@ -26,49 +27,95 @@ declare interface Widget {
 // }
 
 export function useWidgets() {
-  const instance = getCurrentInstance();
-  const widgets = ref<Widget[]>([]);
+    const instance = getCurrentInstance();
+    const storeManager = useStoreManager();
+    const widgets = ref<Widget[]>([]);
 
-  const widgetsStorage: ISerializable = {
-    getState: () => {
-      const state = {};
+    const widgetsStorage: ISerializable = {
+        getState: () => {
+            const state = {};
 
-      widgets.value.forEach((widget) => {
-        const refs = instance?.refs;
-        if (!refs) return;
+            widgets.value.forEach((widget) => {
+                const refs = instance?.refs;
+                if (!refs) return;
 
-        const componentRef = refs[`${widget.id}_component`] as ISerializable[];
-        state[widget.id] = componentRef[0].getState();
+                const componentRef = refs[
+                    `${widget.id}_component`
+                ] as (ISerializable & IReactiveWidget)[];
+                state[widget.id] = componentRef[0].getState();
+                state[widget.id].type = widget.component;
 
-        const wrapperRef = refs[`${widget.id}_wrapper`] as ISerializable[];
-        state[`${widget.id}_wrapper`] = wrapperRef[0].getState();
-      });
+                if (componentRef[0].store) {
+                    state[widget.id].store = componentRef[0].store.id;
+                }
 
-      return JSON.stringify(state);
-    },
-    loadState: (state) => {
-      console.warn("Not implemented", state);
-    },
-  };
+                const wrapperRef = refs[
+                    `${widget.id}_wrapper`
+                ] as ISerializable[];
+                state[`${widget.id}_wrapper`] = wrapperRef[0].getState();
+            });
 
-  const addWidget = (component: string, id: string) => {
-    widgets.value.push({
-      id,
-      component,
-      caption: "Test",
-    });
-  };
+            return JSON.stringify(state);
+        },
+        loadState: (state) => {
+            const parsed = JSON.parse(state);
 
-  const removeWidget = (id: string) => {
-    widgets.value = widgets.value.filter((widget) => widget.id !== id);
-  };
+            Object.keys(parsed).forEach(async (key) => {
+                if (key.includes("_wrapper")) return;
+                widgets.value.push({
+                    id: key,
+                    component: parsed[key].type,
+                    caption: "Test",
+                });
+                delete parsed[key].type;
 
-  return {
-    widgets,
-    widgetsStorage,
-    addWidget,
-    enabledWidgets,
-    widgetNames,
-    removeWidget,
-  };
+                await nextTick();
+                const ref = instance?.refs[
+                    `${key}_component`
+                ]?.[0] as ISerializable & IReactiveWidget;
+                const refWrapper = instance?.refs[
+                    `${key}_wrapper`
+                    ]?.[0] as ISerializable & IReactiveWidget;
+                if (ref) {
+                    if (parsed[key].store) {
+                        const store = storeManager.getStore(parsed[key].store);
+                        ref.setStore(store);
+                    }
+
+                    Object.keys(parsed[key]).forEach((setting) => {
+                        console.log(parsed[key][setting], setting);
+                        ref.setSetting(setting, parsed[key][setting]);
+                    });
+                }
+                if(refWrapper && parsed[key+'_wrapper']){
+                    Object.keys(parsed[key+'_wrapper']).forEach((setting) => {
+                        console.log(parsed[key+'_wrapper'][setting], setting);
+                        refWrapper.setSetting(setting, parsed[key+'_wrapper'][setting]);
+                    });
+                }
+            });
+            console.log(parsed);
+        },
+    };
+
+    const addWidget = (component: string, id: string) => {
+        widgets.value.push({
+            id,
+            component,
+            caption: "Test",
+        });
+    };
+
+    const removeWidget = (id: string) => {
+        widgets.value = widgets.value.filter((widget) => widget.id !== id);
+    };
+
+    return {
+        widgets,
+        widgetsStorage,
+        addWidget,
+        enabledWidgets,
+        widgetNames,
+        removeWidget,
+    };
 }

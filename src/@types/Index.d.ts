@@ -1,37 +1,57 @@
+/*
+Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+This program and the accompanying materials are made
+available under the terms of the Eclipse Public License 2.0
+which is available at https://www.eclipse.org/legal/epl-2.0/
+SPDX-License-Identifier: EPL-2.0
+
+Contributors: Smart City Jena
+*/
+
 declare interface ISerializable {
-  getState: () => string;
-  loadState: (state: string, eventBus?: any) => void;
+    getState: () => any;
+    loadState: (state: any, eventBus?: any) => void;
 }
 
-declare interface IDatasource {
-  id: string;
-  caption: string;
-  url: string;
-  type: "REST" | "XMLA" | "CSV" | "JSON" | "MQTT" | string;
-  getData: (params: any) => Promise<any>;
+declare interface IDatasource extends ISerializable {
+    id: string;
+    caption: string;
+    url: string;
+    type: "REST" | "XMLA" | "CSV" | "JSON" | "MQTT" | string;
+    getData: (params: any) => Promise<any>;
+}
+
+interface IReactiveWidget {
+    store: IStore;
+    setStore: (store: IStore) => void;
+    setSetting: (key: string, value: any) => void;
 }
 
 interface IStore {
-  id: string;
-  caption: string;
-  events: IStoreEvents[];
-  type: "REST" | "XMLA" | string;
-  datasourceId?: string | null;
-  datasourceIds?: string[] | null;
-  getData: (options?:any) => Promise<any>;
+    id: string;
+    caption: string;
+    events: IStoreEvents[];
+    type: string;
+    datasourceId: string | null;
+    setDatasource: (datasourceId: string) => void;
+    getDatasource: () => IDatasource;
+    getData: (params?: any) => Promise<any>;
+    setOptions: (options: IStoreParams) => void;
+    updateParam: (paramName: string, value: string) => void;
+    updateEvents: (events: IStoreEvents[]) => void;
 }
 
 interface EventBus {
-  emit: (string, any?) => void;
-  on: (string, Function) => void;
-  off: (string, Function) => void;
+    emit: (string, any?) => void;
+    on: (string, Function) => void;
+    off: (string, Function) => void;
 }
 
 interface IStoreParams {
-  [key: string]: any;
+    [key: string]: any;
 }
 
 interface IStoreEvents {
-  name: string;
-  action: string;
+    name: string;
+    action: string;
 }

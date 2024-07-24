@@ -9,60 +9,71 @@ Contributors: Smart City Jena
 
 -->
 <script setup lang="ts">
+export interface IInputSettingsProps {
+    label?: string;
+    availableEvents?: string[];
+    events?: EventItem[];
+}
+
 import { inject, ref, type Ref } from "vue";
+import { useSettings } from "@/composables/widgets/settings";
+import { useSerialization } from "@/composables/widgets/serialization";
 import InputSettings from "./InputSettings.vue";
-import type { Component } from 'vue';
-import type { ComponentProps, EventItem } from "@/@types/controls";
+import type { EventItem } from "@/@types/controls";
 
-const settings: Component = InputSettings;
-
+const settingsComponent = InputSettings;
 const EventBus = inject("customEventBus") as any;
 
-const label: Ref<string> = ref("Sample input");
-const availableEvents: string[] = ["Blur", "Input"];
 const inputVal: Ref<string> = ref("");
-  
-const events: Ref<EventItem[]> = ref([
-  {
-    name: "Next page",
-    trigger: "Input",
-  },
-]);
+
+const props = withDefaults(defineProps<IInputSettingsProps>(), {
+    label: "Next page",
+    availableEvents: (): string[] => ["Blur", "Input"],
+    events: (): EventItem[] => [
+        {
+            name: "Next page",
+            trigger: "Input",
+        },
+    ],
+});
+
+const { settings, setSetting } = useSettings<typeof props>(props);
+const { getState } = useSerialization(settings);
 
 const input = () => {
-  events.value.forEach((e: EventItem) => {
-    if (e.trigger === "Input") {
-      console.log(`${e.name} emited`);
-      EventBus.emit(e.name);
-    }
-  });
+    settings.value.events.forEach((e: EventItem) => {
+        if (e.trigger === "Input") {
+            console.log(`${e.name} emited`);
+            EventBus.emit(e.name);
+        }
+    });
 };
 
 const blur = () => {
-  events.value.forEach((e: EventItem) => {
-    if (e.trigger === "Blur") {
-      console.log(`${e.name} emited`);
-      EventBus.emit(e.name, inputVal.value);
-    }
-  });
+    settings.value.events.forEach((e: EventItem) => {
+        if (e.trigger === "Blur") {
+            console.log(`${e.name} emited`);
+            EventBus.emit(e.name, inputVal.value);
+        }
+    });
 };
 
-defineExpose({ label, events, availableEvents, settings }) as unknown as ComponentProps;
+defineExpose({ setSetting, settings, settingsComponent, getState });
 </script>
 
 <template>
-  <va-input
-    class="input-control"
-    :label="label"
-    @blur="blur"
-    v-model="inputVal"
-    @update:modelValue="input"
-  ></va-input>
+    <va-input
+        class="input-control"
+        :label="settings.label"
+        @blur="blur"
+        v-model="inputVal"
+        @update:modelValue="input"
+    ></va-input>
 </template>
 
 <style scoped>
 .input-control {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 </style>

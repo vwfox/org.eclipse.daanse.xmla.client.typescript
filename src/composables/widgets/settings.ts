@@ -8,27 +8,45 @@ SPDX-License-Identifier: EPL-2.0
 Contributors: Smart City Jena
 
 */
-import {ref, type Ref, watch} from "vue";
+import  {isRef, ref, type Ref, watch} from "vue";
 
 export function useSettings<Type>(props: any) {
-  const settings = ref({},) as Ref<Type>;
+    const settings = ref({}) as Ref<Type>;
 
-  Object.keys(props).forEach((key) => {
-    settings.value[key] = props[key];
-  });
-
-  watch(props,()=>  {
     Object.keys(props).forEach((key) => {
-      settings.value[key] = props[key];
+        settings.value[key] = props[key];
     });
-  })
 
-  const setSetting = (key, value) => {
-    settings.value[key] = value;
-  };
+    const setSetting = (key, value) => {
+        const keyArr = key.split(".");
+        let iter:any = settings.value;
 
-  return {
-    settings,
-    setSetting,
-  };
+
+        keyArr.forEach((akey,index,array) => {
+
+            if (!(akey in iter)){
+                iter[akey]={}
+            }
+            if (typeof iter[akey] === "object" && index!=(array.length-1)) {
+
+                iter = iter[akey];
+
+            } else {
+                iter[akey] = value;
+            }
+        });
+
+        settings.value = {...settings.value};
+    };
+
+    watch(props, () => {
+        Object.keys(props).forEach((key) => {
+            settings.value[key] = props[key];
+        });
+    });
+
+    return {
+        settings,
+        setSetting,
+    };
 }

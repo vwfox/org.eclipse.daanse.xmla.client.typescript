@@ -9,24 +9,25 @@ Contributors: Smart City Jena
 
 -->
 <script lang="ts" setup>
-interface ITextSettings {
-  text: string;
-  fontSize: number;
-  fontColor: string;
-  fontWeight: string;
-  textDecoration: string;
-  horizontalAlign: string;
-  verticalAlign: string;
+export interface ITextSettings {
+    text: string;
+    fontSize: number;
+    fontColor: string;
+    fontWeight: string;
+    textDecoration: string;
+    horizontalAlign: string;
+    verticalAlign: string;
 }
 
-interface ITextSettingsProps {
-  text?: string;
-  fontSize?: number;
-  fontColor?: string;
-  fontWeight?: string;
-  textDecoration?: string;
-  horizontalAlign?: string;
-  verticalAlign?: string;
+export interface ITextSettingsProps {
+    text?: string;
+    fontSize?: number;
+    fontColor?: string;
+    fontWeight?: string;
+    fontStyle?: string;
+    textDecoration?: string;
+    horizontalAlign?: string;
+    verticalAlign?: string;
 }
 
 import { computed } from "vue";
@@ -43,6 +44,7 @@ const props = withDefaults(defineProps<ITextSettingsProps>(), {
   fontSize: 12,
   fontColor: "#000",
   fontWeight: "normal",
+  fontStyle: "normal",
   textDecoration: "None",
   horizontalAlign: "Left",
   verticalAlign: "Top",
@@ -53,88 +55,72 @@ const { store, data, setStore } = useStore<Store>();
 const { getState } = useSerialization(settings);
 
 defineExpose({
-  setSetting,
-  settings,
-  settingsComponent,
-  store,
-  setStore,
-  getState,
-});
-
-const textDecorationStyle = computed(() => {
-  switch (settings.value.textDecoration) {
-    case "Underline solid":
-      return "underline solid";
-    case "Underline dashed":
-      return "underline dashed";
-    case "Underline wavy":
-      return "underline wavy";
-    case "Line-through":
-      return "line-through";
-    case "Overline":
-      return "overline";
-    default:
-      return "none";
-  }
+    setSetting,
+    settings,
+    settingsComponent,
+    store,
+    setStore,
+    getState,
 });
 
 const parsedText = computed(() => {
-  let processedString = settings.value.text;
-  const regex = /{(.*?)}/g;
-  const parts = processedString.match(regex);
+    let processedString = settings.value.text;
+    const regex = /{(.*?)}/g;
+    const parts = processedString.match(regex);
 
-  if (!parts || !data.value) {
+    if (!parts || !data.value) {
+        return processedString;
+    }
+
+    parts.forEach((element: string) => {
+        const trimmedString = element.replace("{", "").replace("}", "");
+        const dataField = trimmedString.split(".");
+
+        const res = dataField.reduce((acc: any, field) => {
+            return acc[field];
+        }, data.value);
+
+        processedString = processedString.replace(element, res);
+    });
     return processedString;
-  }
-
-  parts.forEach((element: string) => {
-    const trimmedString = element.replace("{", "").replace("}", "");
-    const dataField = trimmedString.split(".");
-
-    const res = dataField.reduce((acc: any, field) => {
-      return acc[field];
-    }, data.value);
-
-    processedString = processedString.replace(element, res);
-  });
-  return processedString;
 });
 </script>
 
 <template>
-  <div
-    class="text-container"
-    :style="{
-      'justify-content':
-        settings.verticalAlign === 'Top'
-          ? 'flex-start'
-          : settings.verticalAlign === 'Center'
-            ? 'center'
-            : 'flex-end',
-    }"
-  >
-    <div class="component">
-      {{ parsedText }}
+    <div
+        class="text-container"
+        :style="{
+            'justify-content':
+                settings.verticalAlign === 'Top'
+                    ? 'flex-start'
+                    : settings.verticalAlign === 'Center'
+                      ? 'center'
+                      : 'flex-end',
+        }"
+    >
+        <div class="component">
+            {{ parsedText }}
+        </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
 .text-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  gap: 1rem;
-  align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    align-items: stretch;
 }
 
 .component {
-  font-size: v-bind(settings.fontSize + "px");
-  color: v-bind(settings.fontColor);
-  text-align: v-bind(settings.horizontalAlign);
-  font-weight: v-bind(settings.fontWeight);
-  text-decoration: v-bind(textDecorationStyle);
-  overflow: hidden;
+    font-size: v-bind(settings.fontSize + "px");
+    color: v-bind(settings.fontColor);
+    text-align: v-bind(settings.horizontalAlign);
+    font-weight: v-bind(settings.fontWeight);
+    font-style: v-bind(settings.fontStyle);
+    text-decoration: v-bind(settings.textDecoration);
+    overflow: hidden;
 }
 </style>
