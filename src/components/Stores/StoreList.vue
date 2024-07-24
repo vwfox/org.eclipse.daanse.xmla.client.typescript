@@ -20,7 +20,7 @@ const { t } = useI18n();
 const storeManager = useStoreManager();
 const map = storeManager.getStoreList();
 const list = ref([] as IStore[]);
-const tabs = ["REST", "XMLA","CSV"];
+const tabs = ["REST", "XMLA","CSV","OGCSTA"];
 const currentTab = ref(0);
 let filteredList = ref([] as IStore[]);
 
