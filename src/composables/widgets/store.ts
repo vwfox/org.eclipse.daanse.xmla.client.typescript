@@ -13,14 +13,17 @@ import { ref, type Ref, inject } from "vue";
 import type { TinyEmitter } from "tiny-emitter";
 
 export function useStore<Type extends IStore>(
-    eventBus: TinyEmitter,
     updateFn?,
     watcher?,
+    eventBus?: TinyEmitter
 ) {
     const data = ref({});
     const store = ref(null) as unknown as Ref<Type>;
-    const EventBus = eventBus;
+    let EventBus= inject("customEventBus") as TinyEmitter;
 
+    if(eventBus){
+        EventBus = eventBus;
+    }
     if (!updateFn) {
         updateFn = async () => {
             if (!store) return;

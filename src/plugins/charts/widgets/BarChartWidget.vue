@@ -44,6 +44,8 @@ import type { TinyEmitter } from "tiny-emitter";
 import useChartDataComposer from "@/plugins/charts/composables/ChartDataComposer";
 import { CSVComposer } from "@/plugins/charts/impl/CSVComposer";
 import { XMLAComposer } from "@/plugins/charts/impl/XMLAComposer";
+import {deepUnref} from "vue-deepunref";
+import useComposerManager from "@/plugins/charts/composables/ComposerManager";
 
 //import * as dateFns from 'date-fns';
 //import * as  dateFnsAdapter  from 'chartjs-adapter-date-fns';
@@ -106,7 +108,7 @@ const { getDataFilterer } = useDataSetSelector();
 const stores = ref([]);
 const setStore = (store: Store) => {
     console.log("setStore");
-    const storeData = useStore<Store>(undefined, undefined, eventbus);
+    const storeData = useStore<Store>(undefined, undefined,eventbus);
     storeData.setStore(store);
     stores.value.push(storeData);
     return storeData;
@@ -151,23 +153,27 @@ watch(
         if (composers && composers.length > 0) {
             let InitializedComposerds = [];
             composers.forEach((composer) => {
-                if (composer instanceof CSVComposer) {
+                let composerClass = null;
+                if((composer as any).type){ //not instanciated
+                     composerClass = useComposerManager().getComposerForStoreType((composer as any).type)
+                }
+                if (composer instanceof composerClass) {
                     return;
                 } else {
                     let composerObj = composer as any;
-                    let csvCo = new CSVComposer();
-                    csvCo.setSelectorX(composerObj.selectorX);
-                    for (let sely of composerObj.selectorY) {
-                        csvCo.addSelectorY(sely);
+                    let aCo = new composerClass();
+                    aCo.setSelectorX(composerObj.selectorX);
+                    for (let sely in composerObj.selectorY) {
+                        aCo.addSelectorY(composerObj.selectorY[sely],sely);
                     }
 
                     let store = useStoreManager().getStore(
                         composerObj.store.id,
                     );
                     let store2 = setStore(store as Store);
-                    csvCo.setStore(store2.store as IStore);
-                    csvCo.setData(store2.data);
-                    InitializedComposerds.push(csvCo);
+                    aCo.setStore(store2.store as IStore);
+                    aCo.setData(store2.data);
+                    InitializedComposerds.push(aCo);
                 }
             });
 
