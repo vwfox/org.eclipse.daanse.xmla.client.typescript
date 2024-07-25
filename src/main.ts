@@ -199,6 +199,9 @@ useDatasourceManager().registerDataSource(MQTTDatasource);
 useStoreManager().registerStoreType(XMLAStore);
 useStoreManager().registerStoreType(Store);
 
+
+
+
 app.use(TestPlugin);
 app.use(Chart);
 app.mount("#app");
