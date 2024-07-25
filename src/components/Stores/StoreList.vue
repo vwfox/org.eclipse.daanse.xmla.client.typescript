@@ -14,12 +14,13 @@ import { useStoreManager } from "../../composables/storeManager";
 import { onMounted, ref, watch } from "vue";
 import StoreListItem from "./ListItems/StoreListItem.vue";
 import XMLAStoreListItem from "./ListItems/XMLAStoreListItem.vue";
+import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
 
 const { t } = useI18n();
 const storeManager = useStoreManager();
 const map = storeManager.getStoreList();
 const list = ref([] as IStore[]);
-const tabs = ["REST", "XMLA","CSV"];
+const tabs = ["REST", "XMLA","CSV","STA"];
 const currentTab = ref(0);
 let filteredList = ref([] as IStore[]);
 
@@ -83,6 +84,14 @@ watch([() => list.value, () => currentTab.value], ([newList, _]) => {
                         "
                     >
                         <CSVStoreListItem :item="item"></CSVStoreListItem>
+                    </template>
+                    <template
+                        v-else-if="
+                            item.type === 'STA' &&
+                            item.type === tabs[currentTab]
+                        "
+                    >
+                        <OGCSTAStoreItem :item="item"></OGCSTAStoreItem>
                     </template>
                 </div>
             </template>
