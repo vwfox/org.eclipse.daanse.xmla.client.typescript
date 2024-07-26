@@ -20,7 +20,7 @@ const { t } = useI18n();
 const storeManager = useStoreManager();
 const map = storeManager.getStoreList();
 const list = ref([] as IStore[]);
-const tabs = ["REST", "XMLA","CSV","STA"];
+const tabs = ["REST", "XMLA","CSV","OGCSTA"];
 const currentTab = ref(0);
 let filteredList = ref([] as IStore[]);
 
@@ -87,7 +87,7 @@ watch([() => list.value, () => currentTab.value], ([newList, _]) => {
                     </template>
                     <template
                         v-else-if="
-                            item.type === 'STA' &&
+                            item.type === 'OGCSTA' &&
                             item.type === tabs[currentTab]
                         "
                     >

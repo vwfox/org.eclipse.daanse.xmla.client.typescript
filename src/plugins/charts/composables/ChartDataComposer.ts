@@ -43,7 +43,9 @@ const useChartDataComposer = () => {
 
             let data:AxisData[] = []
             composers.value.forEach(composer=>{
-                data = [...data,...composer.getDataY().value];
+                if(composer.getDataY()) {
+                    data = [...data, ...composer.getDataY().value];
+                }
             });
             return data
 
