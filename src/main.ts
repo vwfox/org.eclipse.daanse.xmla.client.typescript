@@ -190,6 +190,7 @@ app.use(
                     primary: "#133370",
                 },
             },
+            //@ts-ignore
             icons: createIconsConfig({ fonts }),
         },
     }),
