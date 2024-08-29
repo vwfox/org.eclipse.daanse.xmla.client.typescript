@@ -24,7 +24,9 @@ const useChartDataComposer = () => {
 
             let data:(string|number)[] = []
             composers.value.forEach(composer=>{
-                data = [...composer.getDataX().value.data];
+                if(composer.getDataX) {
+                    data = [...composer.getDataX().value.data];
+                }
             });
             //unique
             data =data.filter((value, index, array)=>{
@@ -43,8 +45,8 @@ const useChartDataComposer = () => {
 
             let data:AxisData[] = []
             composers.value.forEach(composer=>{
-                if(composer.getDataY()) {
-                    data = [...data, ...composer.getDataY().value];
+                if(composer.getDataY){
+                    data = [...data,...composer.getDataY().value];
                 }
             });
             return data

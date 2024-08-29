@@ -2,8 +2,8 @@
 
 
 import {reactive, ref, toRaw} from "vue";
-import type {IRenderer} from "@/plugins/TestPlugin/widgets/api/Renderer";
-import RenderPropertyListItemThing from "@/plugins/TestPlugin/widgets/parts/RenderPropertyListItemThing.vue";
+import type {IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import RenderPropertyListItemThing from "@/plugins/OGCSTA/widgets/parts/RenderPropertyListItemThing.vue";
 
 
 const model  = defineModel<IRenderer[]|undefined>({

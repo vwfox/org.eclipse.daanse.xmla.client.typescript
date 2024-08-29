@@ -2,9 +2,9 @@
 
 import {ref} from "vue";
 import {useSettings} from "@/composables/widgets/settings";
-import type {IDataPoint} from "@/plugins/TestPlugin/widgets/api/Datapoint";
+import type {IDataPoint} from "@/plugins/OGCSTA/widgets/api/Datapoint";
 import ValueUnitDataLabelRendererSettings
-  from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
+  from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
 
 export interface IUnitPoint{
   unit:string

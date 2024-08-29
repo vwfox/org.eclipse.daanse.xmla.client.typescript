@@ -8,9 +8,9 @@ import type {IChartComponent} from "chart.js/dist/core/core.typedRegistry";
 import {deepUnref} from "vue-deepunref";
 import {isEqual} from "lodash";
 import type CSVStore from "@/plugins/charts/stores/CSVStore";
-import StaStore from "@/plugins/TestPlugin/stores/StaStore";
+import StaStore from "@/plugins/OGCSTA/stores/StaStore";
 import {computedAsync} from "@vueuse/core";
-import type {Datastream, Thing} from "@/plugins/TestPlugin/dataSources/STAClient";
+import type {Datastream, Thing} from "@/plugins/OGCSTA/dataSources/STAClient";
 
     const model = defineModel<Composer<Selector>>()
 

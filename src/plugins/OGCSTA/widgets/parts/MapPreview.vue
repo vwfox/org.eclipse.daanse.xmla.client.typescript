@@ -4,7 +4,7 @@ import {LGeoJson, LMap, LTileLayer} from "@vue-leaflet/vue-leaflet";
 import geoJsonExample from './geoJsonExample.json';
 import {computed, ref, watch} from "vue";
 import {useSettings} from "@/composables/widgets/settings";
-import type {IMapProps} from "@/plugins/TestPlugin/widgets/api/MapPreview";
+import type {IMapProps} from "@/plugins/OGCSTA/widgets/api/MapPreview";
 const baseMapUrl =  "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
 const zoom = 5;
 const attribution = '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';

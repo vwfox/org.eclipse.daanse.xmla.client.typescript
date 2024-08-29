@@ -1,25 +1,34 @@
 import {useDatasourceManager} from "@/composables/datasourceManager";
-import type {IOGCSTA} from "@/plugins/TestPlugin/dataSources/STADataSource";
-import type {Datastream} from "@/plugins/TestPlugin/dataSources/STAClient";
+import type {IOGCSTA} from "@/plugins/OGCSTA/dataSources/STADataSource";
+import type {Datastream} from "@/plugins/OGCSTA/dataSources/STAClient";
+import BaseStore from "@/stores/Widgets/BaseStore";
 
-export default class StaStore implements IStore,ISerializable{
+export default class StaStore  extends BaseStore implements IStore,ISerializable{
     public static TYPE = 'OGCSTA';
-    id: string;
-    caption: string;
+
     datasourceId: string | null = null;
     events: IStoreEvents[] = [];
     type= StaStore.TYPE;
     data:IOGCSTA = {};
 
-    private eventBus:EventBus;
-    private datasourceManager: any;
-    constructor(id, caption, eventBus: EventBus) {
-        this.id = id;
-        this.caption = caption;
-        this.eventBus = eventBus;
-        this.datasourceManager = useDatasourceManager();
 
+    private datasourceManager = useDatasourceManager();
+
+    constructor(id, caption, eventBus: EventBus) {
+        super(id,caption,eventBus);
     }
+
+    getDatasource (){
+        return this.datasourceManager.getDatasource(this.datasourceId);
+    };
+    setOptions(options: IStoreParams){
+
+    };
+    updateParam(paramName: string, value: string){
+    };
+    updateEvents(events: IStoreEvents[]){
+
+    };
 
     addDatasource(datasourceId: string): void {
         this.datasourceId = datasourceId;
@@ -51,7 +60,13 @@ export default class StaStore implements IStore,ISerializable{
                 return this.data.locations?.map(location=>location.Things).flat()
             }else {
                 await this.getData();
-                return this.data!.locations.map(location=>location.Things).flat()
+                if(this.data){
+                    //@ts-ignore
+                    return this.data!.locations.map(location=>location.Things).flat()
+                }else {
+                    return {}
+                }
+
             }
     }
 

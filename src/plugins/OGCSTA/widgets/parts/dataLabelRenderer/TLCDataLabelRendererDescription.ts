@@ -1,5 +1,5 @@
-import type {IdataDataPointDescription} from "@/plugins/TestPlugin/composables/IdataDataPointDescription";
-import TLCDataLabelRenderer from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/TLCDataLabelRenderer.vue";
+import type {IdataDataPointDescription} from "@/plugins/OGCSTA/composables/IdataDataPointDescription";
+import TLCDataLabelRenderer from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/TLCDataLabelRenderer.vue";
 import type {Component} from "vue";
 
 export default class TLCDataLabelRendererDescription implements IdataDataPointDescription{

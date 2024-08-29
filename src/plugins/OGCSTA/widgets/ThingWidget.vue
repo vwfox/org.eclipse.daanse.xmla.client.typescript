@@ -11,12 +11,9 @@ Contributors: Smart City Jena
 <script lang="ts" setup>
 import {LGeoJson, LIcon, LMap, LMarker, LTileLayer} from "@vue-leaflet/vue-leaflet";
 
-
-//@ts-ignore
-import CustomMarker from 'vue-leaflet-custom-marker';
 import {
  type Location
-} from "@/plugins/TestPlugin/dataSources/STAClient";
+} from "@/plugins/OGCSTA/dataSources/STAClient";
 
 interface IThingWidgetProps {
   baseMapUrl?: string;
@@ -27,7 +24,7 @@ interface IThingWidgetProps {
 
 }
 import {pointOnFeature} from '@turf/point-on-feature';
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import {computed, inject, onMounted, reactive, ref, watch} from "vue";
 import ThingWidgetSettings from "./ThingWidgetSettings.vue";
 import { useSettings } from "@/composables/widgets/settings";
 import { useStore } from "@/composables/widgets/store";
@@ -35,14 +32,15 @@ import { useSerialization } from "@/composables/widgets/serialization";
 import type { Store } from "@/stores/Widgets/Store";
 import {resolve} from "@/utils/helpers";
 import IconWidget from "@/components/Widgets/Icon/IconWidget.vue";
-import type {IRenderer} from "@/plugins/TestPlugin/widgets/api/Renderer";
-import {useComparator} from "@/plugins/TestPlugin/composables/comparator";
-import {useDataPointRegistry} from "@/plugins/TestPlugin/composables/datapointRegistry";
-import StaStore from "@/plugins/TestPlugin/stores/StaStore";
-import {useUtils} from "@/plugins/TestPlugin/composables/utils";
+import type {IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import {useComparator} from "@/plugins/OGCSTA/composables/comparator";
+import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
+import StaStore from "@/plugins/OGCSTA/stores/StaStore";
+import {useUtils} from "@/plugins/OGCSTA/composables/utils";
 import L, {divIcon, DivIcon, point} from "leaflet";
 import {LMarkerClusterGroup} from "vue-leaflet-markercluster";
 import "vue-leaflet-markercluster/dist/style.css";
+import type {TinyEmitter} from "tiny-emitter";
 
 
 const settingsComponent = ThingWidgetSettings;
@@ -56,7 +54,8 @@ const props = withDefaults(defineProps<IThingWidgetProps>(), reactive({
 }));
 const map = ref(null);
 const { settings, setSetting } = useSettings<typeof props>(props);
-const { store, data, setStore } = useStore<StaStore>();
+const eventbus = inject("customEventBus") as TinyEmitter;
+const { store, data, setStore } = useStore<StaStore>(eventbus);
 const { getState } = useSerialization(settings);
 const thingsLayer = ref(null);
 const {compareDatastream,compareThing} = useComparator();
@@ -302,7 +301,6 @@ const c = ()=>{
 
 <template>
   <div class="cmap_container">
-      {{settings}}
     <l-map id="map" ref="map" :zoom="zoom" :center="center"  :max-zoom="21" @move="mapmove"style="height: 100%" :useGlobalLeaflet="true">
       <l-tile-layer :url="baseMapUrl" :attribution="attribution" :options="{maxNativeZoom:19,
         maxZoom:25}"></l-tile-layer>

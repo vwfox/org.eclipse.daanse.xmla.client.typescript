@@ -2,10 +2,10 @@
 
 
 import {useSettings} from "@/composables/widgets/settings";
-import type {IDataPoint} from "@/plugins/TestPlugin/widgets/api/Datapoint";
+import type {IDataPoint} from "@/plugins/OGCSTA/widgets/api/Datapoint";
 
 import TLCDataLabelRendererSettings
-  from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/TLCDataLabelRendererSettings.vue";
+  from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/TLCDataLabelRendererSettings.vue";
 import type {Component} from "vue";
 
 

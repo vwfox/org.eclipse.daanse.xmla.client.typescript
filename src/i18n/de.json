@@ -3,7 +3,7 @@
     "loading": "Wird geladen",
     "connect": "Verbinde dich mit dem Würfel"
   },
-  
+
   "DashboardNavigation": {
     "designer": "Designerin",
     "dashboard": "Armaturenbrett",
@@ -121,6 +121,7 @@
     "RichTextWidget": "Rich Text Widget",
     "TableWidget": "Tabellen Widget",
     "PivotTableWidget": "Pivot Tabelle Widget",
+    "BarChartWidget": "Bar Chart Widget",
     "SwitchControl": "Schalter Steuerung",
     "SelectControl": "Auswahl Steuerung",
     "DateControl": "Datums Steuerung",
@@ -212,7 +213,7 @@
     "horizontalRule": "horizontal rule",
     "hardBreak": "hard break",
     "undo": "undo",
-    "redo": "redo" 
+    "redo": "redo"
   },
 
   "TableWidget": {
@@ -349,5 +350,16 @@
     "addWidgetButton": "Add widget",
     "loading": "Loading...",
     "addRestDatasourceButton": "Add REST datasource"
+  },
+
+  "vuestic": {
+    "toggleDropdown": "toggle",
+    "select": "select",
+    "openColorPicker": "color",
+    "noOptions": "No options",
+    "selectRowByIndex": "select",
+      "uploadFile": "File Upload",
+      "ok": "ok",
+      "cancel": "abbrechen"
   }
 }

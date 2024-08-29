@@ -1,7 +1,7 @@
-import type {IdataDataPointDescription} from "@/plugins/TestPlugin/composables/IdataDataPointDescription";
+import type {IdataDataPointDescription} from "@/plugins/OGCSTA/composables/IdataDataPointDescription";
 import type { Component } from "vue";
 import ValueUnitDataLabelRenderer
-    from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRenderer.vue";
+    from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRenderer.vue";
 
 export default class ValueUnitDataLabelRendererDescription implements IdataDataPointDescription {
     public readonly component: any = ValueUnitDataLabelRenderer;

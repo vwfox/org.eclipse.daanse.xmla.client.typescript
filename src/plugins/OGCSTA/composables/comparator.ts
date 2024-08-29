@@ -1,6 +1,5 @@
-import type {IDSRenderer, IRenderer} from "@/plugins/TestPlugin/widgets/api/Renderer";
-import type {Datastream, Thing} from "@/plugins/TestPlugin/dataSources/STAClient";
-
+import type {IDSRenderer, IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import type {Datastream, Thing} from "@/plugins/OGCSTA/dataSources/STAClient";
 
 
 export function useComparator() {

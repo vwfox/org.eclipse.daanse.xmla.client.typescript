@@ -1,15 +1,15 @@
-import ThingWidget  from './TestPlugin/widgets/ThingWidget.vue';
+import ThingWidget  from './widgets/ThingWidget.vue';
 
 import {enabledWidgets, widgetNames} from "@/components/Widgets";
 import {type StoreManagerI, useStoreManager} from "@/composables/storeManager";
 import {useDatasourceManager} from "@/composables/datasourceManager";
-import {useDataPointRegistry} from "@/plugins/TestPlugin/composables/datapointRegistry";
-import STADataSource from "@/plugins/TestPlugin/dataSources/STADataSource";
-import StaStore from "@/plugins/TestPlugin/stores/StaStore";
+import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
+import STADataSource from "@/plugins/OGCSTA/dataSources/STADataSource";
+import StaStore from "@/plugins/OGCSTA/stores/StaStore";
 import TLCDataLabelRendererDescription
-    from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/TLCDataLabelRendererDescription";
+    from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/TLCDataLabelRendererDescription";
 import ValueUnitDataLabelRendererDescription
-    from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererDescription";
+    from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererDescription";
 import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
 
 

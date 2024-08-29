@@ -69,6 +69,7 @@ import {
     VaTimeInput,
     VaTabs,
     VaTab,
+    VaFileUpload,
     VaForm
 } from "vuestic-ui";
 import "vuestic-ui/css";
@@ -78,7 +79,7 @@ import { router } from "@/router/router";
 import { ref } from "vue";
 
 import VueSmartWidget from "vue-smart-widget";
-import TestPlugin from "@/plugins/TestPlugin";
+import OGCSTA from "@/plugins/OGCSTA/OGCSTA";
 import {useDatasourceManager} from "@/composables/datasourceManager";
 import XMLADatasource from "@/dataSources/XmlaDatasource";
 import RESTDatasource from "@/dataSources/RestDatasource";
@@ -180,6 +181,7 @@ app.use(
             VaTimeInput,
             VaTabs,
             VaTab,
+            VaFileUpload,
             VaForm
         },
         config: {
@@ -203,7 +205,7 @@ useStoreManager().registerStoreType(Store);
 
 
 
-app.use(TestPlugin);
+app.use(OGCSTA);
 app.use(Chart);
 app.use(OGCSTAComposerPlugin);
 app.mount("#app");

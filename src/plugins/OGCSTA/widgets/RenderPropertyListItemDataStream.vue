@@ -4,17 +4,17 @@ import {computed, type ModelRef, reactive, ref, watch} from "vue";
 import IconWidget, {type IIconSettingsProps} from "@/components/Widgets/Icon/IconWidget.vue";
 
 
-import MapSettings from "@/plugins/TestPlugin/widgets/parts/MapSettings.vue";
+import MapSettings from "@/plugins/OGCSTA/widgets/parts/MapSettings.vue";
 import IconWidgetSettings, {type IIconSettings} from "@/components/Widgets/Icon/IconWidgetSettings.vue";
 import {v4} from "uuid";
-import {ERefType, type IDSRenderer} from "@/plugins/TestPlugin/widgets/api/Renderer";
-import MapPreview from "@/plugins/TestPlugin/widgets/parts/MapPreview.vue";
-import type {IMapProps} from "@/plugins/TestPlugin/widgets/api/MapPreview";
+import {ERefType, type IDSRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import MapPreview from "@/plugins/OGCSTA/widgets/parts/MapPreview.vue";
+import type {IMapProps} from "@/plugins/OGCSTA/widgets/api/MapPreview";
 import {
     type IValueUnitDataLabelRendererComonent
-} from "@/plugins/TestPlugin/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
-import {useDataPointRegistry} from "@/plugins/TestPlugin/composables/datapointRegistry";
-import MapPreviewPoint from "@/plugins/TestPlugin/widgets/parts/MapPreviewPoint.vue";
+} from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
+import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
+import MapPreviewPoint from "@/plugins/OGCSTA/widgets/parts/MapPreviewPoint.vue";
 import {LIcon, LMarker} from "@vue-leaflet/vue-leaflet";
 
 

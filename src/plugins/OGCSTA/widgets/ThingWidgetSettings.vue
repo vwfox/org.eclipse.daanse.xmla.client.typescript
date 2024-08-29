@@ -14,7 +14,7 @@ import { useStoreManager } from "@/composables/storeManager";
 import type { Store } from "@/stores/Widgets/Store";
 
 import type { XMLAStore } from "@/stores/Widgets/XMLAStore";
-import RenderPropertyList, {type IRenderer} from "@/plugins/TestPlugin/widgets/parts/RenderPropertyList.vue";
+import RenderPropertyList, {type IRenderer} from "@/plugins/OGCSTA/widgets/parts/RenderPropertyList.vue";
 
 interface IThingWidgetSettings {
   baseMapUrl: string;

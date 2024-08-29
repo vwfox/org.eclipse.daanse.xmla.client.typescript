@@ -1,5 +1,5 @@
 import type {AxisData, Composer, CSVSelector, Selector} from "@/plugins/charts/widgets/api/ChartdataComposer";
-import type {Datastream, Thing} from "@/plugins/TestPlugin/dataSources/STAClient";
+import type {Datastream, Thing} from "@/plugins/OGCSTA/dataSources/STAClient";
 import {computed, type ComputedRef, ref, type Ref} from "vue";
 
 export interface OGGSTASelector extends Selector{

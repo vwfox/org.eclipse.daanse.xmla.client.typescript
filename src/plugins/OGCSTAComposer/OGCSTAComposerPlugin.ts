@@ -1,6 +1,6 @@
-import ThingWidget from "@/plugins/TestPlugin/widgets/ThingWidget.vue";
+import ThingWidget from "@/plugins/OGCSTA/widgets/ThingWidget.vue";
 
-import StaStore from "@/plugins/TestPlugin/stores/StaStore";
+import StaStore from "@/plugins/OGCSTA/stores/StaStore";
 
 import useComposerManager from "@/plugins/charts/composables/ComposerManager";
 import OGSTAComposer from "@/plugins/OGCSTAComposer/composer/OGCSTAComposer";

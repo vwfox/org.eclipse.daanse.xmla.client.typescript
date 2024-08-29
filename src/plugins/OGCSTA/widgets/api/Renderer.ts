@@ -1,4 +1,4 @@
-import type {IMapProps} from "@/plugins/TestPlugin/widgets/api/MapPreview";
+import type {IMapProps} from "@/plugins/OGCSTA/widgets/api/MapPreview";
 // @ts-ignore
 import type {IIconSettings} from "@/components/Widgets/Icon/IconWidgetSettings.vue";
 
