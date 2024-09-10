@@ -3,7 +3,6 @@
 import {computed, type ModelRef, reactive, ref, watch} from "vue";
 import IconWidget, {type IIconSettingsProps} from "@/components/Widgets/Icon/IconWidget.vue";
 
-
 import MapSettings from "@/plugins/OGCSTA/widgets/parts/MapSettings.vue";
 import IconWidgetSettings, {type IIconSettings} from "@/components/Widgets/Icon/IconWidgetSettings.vue";
 import {v4} from "uuid";
@@ -17,52 +16,51 @@ import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegist
 import MapPreviewPoint from "@/plugins/OGCSTA/widgets/parts/MapPreviewPoint.vue";
 import {LIcon, LMarker} from "@vue-leaflet/vue-leaflet";
 
-
 const model: ModelRef<IDSRenderer> = defineModel<IDSRenderer>({
     default:
         () => {
             return (
                 reactive({
-                    datastream: {
-                        prop: '*',
-                        value: '',
-                    },
-                    placement: ERefType.Thing,
-                    renderer: {
-                        point_render_as:'icon',
-                        point_prop:'name',
-                        point: {
-                            currentIcon: '10k',
-                            iconColor: '#545050',
-                            iconSize: 48,
-                            isIconFilled: false,
-                            strokeWeight: 2,
-                            opticSize: 24,
-                            grade: 1
-                        } as IIconSettings,
-                        pointPin: {
-                            color: '#ccc'
+                        datastream: {
+                            prop: '*',
+                            value: '',
                         },
-                        area: {
-                            stroke: true,
-                            color: '#ccc',
-                            weight: 2,
-                            opacity: 1,
-                            lineCap: 'None',
-                            dashOffset: 2,
-                            fill: true,
-                            fillOpacity: 1,
-                            className: ''
-                        } as IMapProps,
-                    },
-                    observation: {
-                        setting: {},
-                        component: 'generalValueUnitDataPointRenderer',
+                        placement: ERefType.Thing,
+                        renderer: {
+                            point_render_as: 'icon',
+                            point_prop: 'name',
+                            point: {
+                                currentIcon: '10k',
+                                iconColor: '#545050',
+                                iconSize: 48,
+                                isIconFilled: false,
+                                strokeWeight: 2,
+                                opticSize: 24,
+                                grade: 1
+                            } as IIconSettings,
+                            pointPin: {
+                                color: '#ccc'
+                            },
+                            area: {
+                                stroke: true,
+                                color: '#ccc',
+                                weight: 2,
+                                opacity: 1,
+                                lineCap: 'None',
+                                dashOffset: 2,
+                                fill: true,
+                                fillOpacity: 1,
+                                className: ''
+                            } as IMapProps,
+                        },
+                        observation: {
+                            setting: {},
+                            component: 'generalValueUnitDataPointRenderer',
 
-                    },
-                    id: v4()
-                } as IDSRenderer
-            ))
+                        },
+                        id: v4()
+                    } as IDSRenderer
+                ))
         }
 });
 const EMIT_ADD_SUB_RENDERER = 'addSubRenderer';
@@ -77,7 +75,6 @@ const emit = defineEmits<{
     (
         e: 'addSubRenderer', renderer: IDSRenderer)
 }>()
-
 
 const thingPropValue = ref('');
 const dsPropValue = ref('')
@@ -104,7 +101,6 @@ const thingsPropOptions = [{
 const iconMapComponent = ref(undefined);
 const MapPrev = ref('');
 const valuedatalabelrenderer = ref<IValueUnitDataLabelRendererComonent | undefined>(undefined);
-
 
 const submit = () => {
     emit(EMIT_ADD_SUB_RENDERER, model.value as IDSRenderer);
@@ -195,32 +191,32 @@ const propName = model.value.renderer.point_prop;
     <div class="row align-start">
 
 
-
         <div class="flex flex-col md6 pa-3">
             <MapPreviewPoint ref="MapPrev2">
 
                 <l-marker
                     :lat-lng="[50.92828047934907,11.587408017353823]">
-                    <l-icon  class-name="someExtraClass">
+                    <l-icon class-name="someExtraClass">
 
 
-                <template v-if="model.renderer.point_render_as=='icon'">
-                <div class="pin icon round">
-                    <div class="inner">
-                        <IconWidget currentIcon="add_location_alt" ref="iconMapComponent" v-bind="model.renderer.point"></IconWidget>
-                    </div>
+                        <template v-if="model.renderer.point_render_as=='icon'">
+                            <div class="pin icon round">
+                                <div class="inner">
+                                    <IconWidget ref="iconMapComponent" currentIcon="add_location_alt"
+                                                v-bind="model.renderer.point"></IconWidget>
+                                </div>
 
-                </div>
+                            </div>
 
 
-                </template>
-                <template v-if="model.renderer.point_render_as=='prop'">
-                    <div class="pin round contain">
-                        <div class="inner">
-                            {{ model.renderer.point_prop }}
-                        </div>
-                    </div>
-                </template>
+                        </template>
+                        <template v-if="model.renderer.point_render_as=='prop'">
+                            <div class="pin round contain">
+                                <div class="inner">
+                                    {{ model.renderer.point_prop }}
+                                </div>
+                            </div>
+                        </template>
                     </l-icon>
                 </l-marker>
             </MapPreviewPoint>
@@ -281,7 +277,8 @@ const propName = model.value.renderer.point_prop;
 
 
     <label id="input-label-240" aria-hidden="true"
-           class="va-input-label va-input-wrapper__label va-input-wrapper__label--outer" style="color: var(--va-primary);">render within </label>
+           class="va-input-label va-input-wrapper__label va-input-wrapper__label--outer"
+           style="color: var(--va-primary);">render within </label>
     <VaOptionList
         v-model="model.placement"
         :options="[ERefType.Thing,ERefType.OberservedArea]"
@@ -308,42 +305,43 @@ const propName = model.value.renderer.point_prop;
 
         </div>
         <div class="row">
-        <div class="flex flex-col md6 pa-3">
-            <MapPreviewPoint ref="MapPrev2">
-
-                <l-marker
-                    :lat-lng="[50.92828047934907,11.587408017353823]">
-                    <l-icon  class-name="someExtraClass">
-
-
-                        <template v-if="model.renderer.point_render_as=='icon'">
-                            <div class="pin icon round">
-                                <div class="inner">
-                                    <IconWidget ref="iconMapComponent2" v-bind="model.renderer.point"></IconWidget>
-                                </div>
-
-                            </div>
-
-
-                        </template>
-                        <template v-if="model.renderer.point_render_as=='prop'">
-                            <div class="pin round contain">
-                                <div class="inner">
-                                    {{ model.renderer.point_prop }}
-                                </div>
-                            </div>
-                        </template>
-                        <component :is="dataPointcomponentDesc.component" ref="valuedatalabelrenderer"
-                                   :data="dataPointcomponentDesc.example" v-bind="model.observation.setting"></component>
-                    </l-icon>
-                </l-marker>
-            </MapPreviewPoint>
-        </div>
             <div class="flex flex-col md6 pa-3">
-            <template v-if="valuedatalabelrenderer">
-                <component :is="valuedatalabelrenderer?.settingsComponent"
-                           v-bind="{component:valuedatalabelrenderer}"></component>
-            </template>
+                <MapPreviewPoint ref="MapPrev2">
+
+                    <l-marker
+                        :lat-lng="[50.92828047934907,11.587408017353823]">
+                        <l-icon class-name="someExtraClass">
+
+
+                            <template v-if="model.renderer.point_render_as=='icon'">
+                                <div class="pin icon round">
+                                    <div class="inner">
+                                        <IconWidget ref="iconMapComponent2" v-bind="model.renderer.point"></IconWidget>
+                                    </div>
+
+                                </div>
+
+
+                            </template>
+                            <template v-if="model.renderer.point_render_as=='prop'">
+                                <div class="pin round contain">
+                                    <div class="inner">
+                                        {{ model.renderer.point_prop }}
+                                    </div>
+                                </div>
+                            </template>
+                            <component :is="dataPointcomponentDesc.component" ref="valuedatalabelrenderer"
+                                       :data="dataPointcomponentDesc.example"
+                                       v-bind="model.observation.setting"></component>
+                        </l-icon>
+                    </l-marker>
+                </MapPreviewPoint>
+            </div>
+            <div class="flex flex-col md6 pa-3">
+                <template v-if="valuedatalabelrenderer">
+                    <component :is="valuedatalabelrenderer?.settingsComponent"
+                               v-bind="{component:valuedatalabelrenderer}"></component>
+                </template>
             </div>
 
         </div>
@@ -352,12 +350,12 @@ const propName = model.value.renderer.point_prop;
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .mb15 {
     margin-bottom: 15px;
 }
 
-.pin{
+.pin {
     width: 45px;
     height: 45px;
     border-radius: 50% 50% 50% 0;
@@ -369,10 +367,11 @@ const propName = model.value.renderer.point_prop;
     margin: -15px 71px 0 -15px;
     box-shadow: -4px -6px 8px #0000005c;
 
-    &.round{
+    &.round {
         border-radius: 50% 50% 50% 50%;
     }
-    &.contain{
+
+    &.contain {
         width: auto;
         height: auto;
         border-radius: 25%;
@@ -380,19 +379,21 @@ const propName = model.value.renderer.point_prop;
         transform: rotate(0deg);
         padding: 4px;
         margin: 0px;
-        .inner{
+
+        .inner {
             width: auto;
-            height:auto;
+            height: auto;
             margin: 0;
-             position: relative;
-             transform: rotate(0deg);
+            position: relative;
+            transform: rotate(0deg);
             border-radius: 17%;
             display: inline-block;
             font-size: 13px;
             padding: 3px;
         }
     }
-    .inner{
+
+    .inner {
         padding: 5px 0 0 0;
         width: 37px;
         height: 37px;
@@ -402,7 +403,8 @@ const propName = model.value.renderer.point_prop;
         transform: rotate(45deg);
         border-radius: 50%;
     }
-    .datapoint{
+
+    .datapoint {
         margin-top: 10px;
         margin-left: -1px;
     }

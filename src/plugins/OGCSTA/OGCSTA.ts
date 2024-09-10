@@ -1,4 +1,4 @@
-import ThingWidget  from './widgets/ThingWidget.vue';
+import ThingWidget from './widgets/ThingWidget.vue';
 
 import {enabledWidgets, widgetNames} from "@/components/Widgets";
 import {type StoreManagerI, useStoreManager} from "@/composables/storeManager";
@@ -12,18 +12,13 @@ import ValueUnitDataLabelRendererDescription
     from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererDescription";
 import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
 
-
-
 export default {
 
     install: (app) => {
-        app.component('OGCSTAStoreItem',OGCSTAStoreItem);
+        app.component('OGCSTAStoreItem', OGCSTAStoreItem);
         app.component(ThingWidget);
-        enabledWidgets['ThingWidget']= ThingWidget;  //ToDo add register Method on widget registery
-        widgetNames.push( { name: "ThingWidget", label: "ThingWidget"});
-
-        //const storemanger = container.get<StoreManagerI>(cid.UseStoreManager); // injection via inverserify
-        //console.log(storemanger.register(...)) //register Store
+        enabledWidgets['ThingWidget'] = ThingWidget;  //ToDo add register Method on widget registery
+        widgetNames.push({name: "ThingWidget", label: "ThingWidget"});
 
         const storeMgr = useStoreManager();
         const dataSourceMgr = useDatasourceManager();
@@ -32,6 +27,5 @@ export default {
         storeMgr.registerStoreType(StaStore);
         useDataPointRegistry().registerDataPointRenderer(new TLCDataLabelRendererDescription())
         useDataPointRegistry().registerDataPointRenderer(new ValueUnitDataLabelRendererDescription())
-
     }
 };

@@ -1,46 +1,45 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {ref} from "vue";
 import {useSettings} from "@/composables/widgets/settings";
 import type {IDataPoint} from "@/plugins/OGCSTA/widgets/api/Datapoint";
 import ValueUnitDataLabelRendererSettings
-  from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
+    from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererSettings.vue";
 
-export interface IUnitPoint{
-  unit:string
-  prefix:string
-  suffix:string
+export interface IUnitPoint {
+    unit: string
+    prefix: string
+    suffix: string
 }
 
-
-const props = withDefaults(defineProps<IDataPoint & IUnitPoint>(),{
-  unit: '',
-  prefix: '',
-  suffix: '',
-  data: ''
+const props = withDefaults(defineProps<IDataPoint & IUnitPoint>(), {
+    unit: '',
+    prefix: '',
+    suffix: '',
+    data: ''
 })
-const { settings, setSetting } = useSettings<typeof props>(props);
+const {settings, setSetting} = useSettings<typeof props>(props);
 
 const settingsComponent = ValueUnitDataLabelRendererSettings;
 
 defineExpose({
-  setSetting,
-  settings,
-  settingsComponent,
-  props
+    setSetting,
+    settings,
+    settingsComponent,
+    props
 });
 
 </script>
 
 <template>
 
-  <div class="datapoint" v-if="data">
-    {{settings.prefix}}{{data}} {{settings.unit}} {{settings.suffix}}
-  </div>
+    <div v-if="data" class="datapoint">
+        {{ settings.prefix }}{{ data }} {{ settings.unit }} {{ settings.suffix }}
+    </div>
 </template>
 
 <style scoped>
-.datapoint{
+.datapoint {
     display: inline-block;
     text-wrap: nowrap;
     position: absolute;

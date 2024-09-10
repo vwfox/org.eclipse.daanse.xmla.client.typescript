@@ -1,37 +1,33 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 
 import {useSettings} from "@/composables/widgets/settings";
 import type {IDataPoint} from "@/plugins/OGCSTA/widgets/api/Datapoint";
 
 import TLCDataLabelRendererSettings
-  from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/TLCDataLabelRendererSettings.vue";
+    from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/TLCDataLabelRendererSettings.vue";
 import type {Component} from "vue";
 
-
-
-
-const props = withDefaults(defineProps<IDataPoint>(),{
-  data: ''
+const props = withDefaults(defineProps<IDataPoint>(), {
+    data: ''
 })
-const { settings, setSetting } = useSettings<typeof props>(props);
+const {settings, setSetting} = useSettings<typeof props>(props);
 
-const settingsComponent:Component = TLCDataLabelRendererSettings;
+const settingsComponent: Component = TLCDataLabelRendererSettings;
 
 defineExpose({
-  setSetting,
-  settings,
-  settingsComponent,
-  props
+    setSetting,
+    settings,
+    settingsComponent,
+    props
 });
 
 </script>
 
 <template>
-
-  <div class="datapoint tlc" v-if="data">
-    {{data}}
-  </div>
+    <div v-if="data" class="datapoint tlc">
+        {{ data }}
+    </div>
 </template>
 
 <style scoped>
