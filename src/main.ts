@@ -70,6 +70,8 @@ import {
     VaTabs,
     VaTab,
     VaFileUpload,
+    VaForm,
+    VaValue
 } from "vuestic-ui";
 import "vuestic-ui/css";
 
@@ -78,6 +80,7 @@ import { router } from "@/router/router";
 import { ref } from "vue";
 
 import VueSmartWidget from "vue-smart-widget";
+import OGCSTA from "@/plugins/OGCSTA/OGCSTA";
 import {useDatasourceManager} from "@/composables/datasourceManager";
 import XMLADatasource from "@/dataSources/XmlaDatasource";
 import RESTDatasource from "@/dataSources/RestDatasource";
@@ -178,7 +181,9 @@ app.use(
             VaTimeInput,
             VaTabs,
             VaTab,
-            VaFileUpload
+            VaFileUpload,
+            VaForm,
+            VaValue
         },
         config: {
             colors: {
@@ -186,6 +191,7 @@ app.use(
                     primary: "#133370",
                 },
             },
+            //@ts-ignore
             icons: createIconsConfig({ fonts }),
         },
     }),
@@ -200,6 +206,9 @@ useStoreManager().registerStoreType(Store);
 
 
 
+
+app.use(OGCSTA);
 app.use(Chart);
+//app.use(OGCSTAComposerPlugin);
 app.mount("#app");
 export default app;
