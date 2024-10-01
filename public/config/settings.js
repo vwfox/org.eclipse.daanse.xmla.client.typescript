@@ -3,12 +3,11 @@
 
     window.__env.settings = {
         "initWithConfigurationURI": {
-            enabled:true,
-            url:"http://localhost:8080/udp/html/dashboard/configs/irgnendnenname.json"
+            enabled:false,
+            url:""
         },
         "viewmodeByDefault":false,
-
-
+        "releaseEndPointUrl": "http://192.168.178.173:8080/udp/rest/dashboard/release"
     };
 
 })(this);
