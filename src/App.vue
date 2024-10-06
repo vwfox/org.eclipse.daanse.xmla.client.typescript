@@ -10,29 +10,51 @@ Contributors: Smart City Jena
 -->
 <script setup lang="ts">
 
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute} from "vue-router";
+import get from 'lodash/get';
+import set from 'lodash/set';
+import NavBarDash from "@/routes/dashboard/NavBarDash.vue";
 let viewmodeByDefault = false;
+
+if(window && window['__env'] && window['__env'].settings){
+    window['__env'].settings = ref(window['__env'].settings);
+}
 if(window && window['__env'] && window['__env'].settings && window['__env'].settings.viewmodeByDefault){
     viewmodeByDefault = window['__env'].settings.viewmodeByDefault;
 }
+const settings =  window['__env'].settings;
+
 const viewmode= ref<boolean>(viewmodeByDefault);
 const route = useRoute()
+watch(()=>settings,(val)=>{
+    console.log('env change detected')
+    console.log(val)
+},{deep:true,immediate:true});
 watch(()=>route.query,(val)=>{
-    if(val){
-        if(Object.keys(val).includes('viewmode')){
-            viewmode.value=true;
+    for(let [querykey,queryval] of Object.entries(val)){
+        const splittQuery = querykey.split('.');
+        if(splittQuery[0]=='config'){
+            if(queryval=='true'){
+                (queryval as boolean)=true;
+            }
+            if(queryval=='false'){
+                (queryval as boolean) =false;
+            }
+            settings.value=set(settings.value,splittQuery.splice(1),queryval)
+
+            console.info( querykey +'set to ' +queryval + ' by queryparam');
         }
-        if(Object.keys(val).includes('noviewmode')){
-            viewmode.value=false;
-        }
+
+
     }
 },{immediate:true})
+
 
 </script>
 
 <template>
-    <div class="sidebar" v-if="!viewmode">
+    <div class="sidebar" v-if="!(settings.visuals.hideMenu)">
         <va-sidebar hoverable minimized-width="55px" class="colored-sidebar">
             <va-sidebar-item
                 :active="$route.name === 'designer'"

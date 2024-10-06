@@ -1,0 +1,22 @@
+{
+  "configId":"RemoteExample~1",
+  "initWithConfigurationURI": {
+    "enabled":false,
+    "url":""
+  },
+  "releaseEndPointUrl": "http://192.168.178.173:8080/udp/rest/dashboard/release",
+  "viewmodeByDefault":true,
+  "visuals":{
+    "hideHeader":false,
+    "hideMenu":false,
+    "hideEdit":false,
+    "hideSaveLoad":false,
+    "hideComponentsSettings":false,
+    "hideAppSettings":false
+  },
+  "appSettings":{
+    "backgroundColor":"",
+    "language":"de",
+    "darkmode": false
+  }
+}

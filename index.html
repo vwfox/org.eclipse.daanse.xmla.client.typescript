@@ -6,22 +6,25 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="./config/settings.js" async></script>
     <script>window.global = window;</script>
-    <script type="module">
+    <script type="module" async>
         import process from "process";
         import { Buffer } from "buffer";
         import EventEmitter from "events";
         import util from "util";
+        import ConfigLoader from "@/utils/configLoader/configLoader";
 
         window.Buffer = Buffer;
         window.process = process;
         window.EventEmitter = EventEmitter;
         window.util = util;
+        window.ConfigLoader = ConfigLoader.init();
     </script>
   </head>
   <body>
     <div id="app"></div>
-    <script src="./config/settings.js"></script>
-    <script type="module" src="/src/main.ts"></script>
+
+    <script type="module" src="/src/main.ts" defer></script>
   </body>
 </html>

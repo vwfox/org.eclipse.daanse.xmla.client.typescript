@@ -262,7 +262,7 @@ const c = () => {
                 key="jena"
                 url="https://map.jena.de/mapproxy/wms"
                 name="wmsLayer.name"
-                layers="Stadtplangit"
+                layers="Stadtplan"
                 attribution="wmsLayer.attribution"
                 format="image/png"
                 layer-type="base"

@@ -28,7 +28,7 @@
             "hideEdit":true,
             "hideSaveLoad":true,
             "hideComponentsSettings":true,
-            "hideAppSettings":true
+            "hideAppSettings":true,
         },
         "appSettings":{
             "backgroundColor":"",

@@ -4,9 +4,10 @@ services:
     build:
       context: .
       dockerfile: ./Docker/Dockerfile
+    volumes:
+      - ./settings.js:/home/nonroot/docker/artifact/config/settings.js
     ports:
       - "8080:8080"
     environment:
       - INFO_CHECK_URI=http://192.168.0.122:3001/info
       - INFO_BASE_URI=http://192.168.0.122:3001/info.html
-

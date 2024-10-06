@@ -9,7 +9,7 @@ Contributors: Smart City Jena
 
 -->
 <template>
-    <NavBarDash></NavBarDash>
+    <NavBarDash v-if="!(settings.visuals.hideHeader)"></NavBarDash>
     <div class="app-container">
         <div
             class="app-layout-container bg grey padd"
@@ -18,7 +18,7 @@ Contributors: Smart City Jena
                 backgroundColor ? `--app-background: ${backgroundColor}` : ''
             "
         >
-            <div class="layout-settings" v-if="!viewmode">
+            <div class="layout-settings">
                 <div class="buttons-list">
                     <va-button
                         preset="primary"
@@ -26,19 +26,22 @@ Contributors: Smart City Jena
                         :borderColor="editEnabled ? '#4153b5' : ''"
                         icon="edit"
                         @click="toggleEdit"
+                        v-if="!(settings.visuals.hideEdit)"
                     >
                         {{ t("MultilevelDashboardNavigation.edit") }}
                     </va-button>
-                    <va-button
-                        v-for="(button, index) in layoutSettingsButtons"
-                        :key="index"
-                        :preset="button.preset"
-                        class="settings-button va-icon-settings"
-                        :icon="button.icon"
-                        @click="button.action"
-                    >
-                        {{ button.label }}
-                    </va-button>
+                    <template  v-for="(button, index) in layoutSettingsButtons">
+                        <va-button
+                            :key="index"
+                            :preset="button.preset"
+                            class="settings-button va-icon-settings"
+                            :icon="button.icon"
+                            v-if="!(settings.visuals[button.condition])"
+                            @click="button.action"
+                        >
+                            {{ button.label }}
+                        </va-button>
+                    </template>
                 </div>
                 <div class="widgets-dropdown">
                     <va-dropdown
@@ -71,6 +74,7 @@ Contributors: Smart City Jena
                                 @mouseup="mouseup"
                                 @mouseover="mouseover"
                                 @mouseleave="mouseleave"
+                                v-if="!((settings.visuals.hideComponentsSettings))"
                             >
                                 {{
                                     t(
@@ -209,7 +213,7 @@ import {
     ref,
     type Ref,
     provide,
-    inject, watch, onMounted,
+    inject, watch, onMounted, computed,
 } from "vue";
 import { useStoreManager } from "@/composables/storeManager";
 import Moveable from "vue3-moveable";
@@ -237,11 +241,6 @@ const loadsaveModal = ref(null) as Ref<any>;
 const loadModalref = ref(null) as Ref<any>;
 
 const editEnabled = ref(false);
-let viewmodeByDefault = false;
-if(window && window['__env'] && window['__env'].settings && window['__env'].settings.viewmodeByDefault){
-    viewmodeByDefault = window['__env'].settings.viewmodeByDefault;
-}
-const viewmode = ref(viewmodeByDefault);
 const showSidebar = ref(false);
 const settingsSection = ref(null as any);
 
@@ -250,7 +249,7 @@ const isDropdownVisible = ref(false);
 const isActiveButton = ref(false);
 const isMouseOver = ref(false);
 const layoutSettingsButtons = ref<
-    Array<{ label: string; preset: string; action: () => void; icon: string }>
+    Array<{ label: string; preset: string; action: () => void; icon: string ,condition:string}>
 >([]);
 
 provide("backgroundColor", backgroundColor);
@@ -378,23 +377,27 @@ layoutSettingsButtons.value.push(
         label: t("MultilevelDashboardNavigation.save"),
         preset: "primary",
         action: saveLayout,
+        condition:"hideSaveLoad",
         icon: "save",
     },
     {
         label: t("MultilevelDashboardNavigation.loadLayout"),
         preset: "primary",
         action: loadLayout,
+        condition:"hideSaveLoad",
         icon: "upload",
     },
     {
         label: t("MultilevelDashboardNavigation.storeList"),
         preset: "primary",
         action: openStoreList,
+        condition:"hideStoreEdit",
         icon: "list",
     },
     {
         label: t("MultilevelDashboardNavigation.appSettings"),
         preset: "primary",
+        condition:"hideAppSettings",
         action: openAppSettings,
         icon: "settings",
     },
@@ -455,24 +458,11 @@ const loadFromUrl = (url)=>{
     });
 }
 const route = useRoute()
-watch(()=>route.query,(val)=>{
-    if(val && val.uri){
-        loadFromUrl(val.url);
-    }
-    if(Object.keys(val).includes('viewmode')){
-            viewmode.value=true;
-    }
-    if(Object.keys(val).includes('noviewmode')){
-        viewmode.value=false;
-    }
-},{immediate:true})
 
-
+const settings =  window['__env'].settings;
 onMounted(()=>{
-    let viewmodeByDefault = false;
-    if(window && window['__env'] && window['__env'].settings && window['__env'].settings.initWithConfigurationURI && window['__env'].settings.initWithConfigurationURI.enabled
-        && window['__env'].settings.initWithConfigurationURI.url){
-        loadFromUrl(window['__env'].settings.initWithConfigurationURI.url)
+    if(settings.value.initWithConfigurationURI.url){
+        loadFromUrl(settings.value.initWithConfigurationURI.url)
     }
 })
 </script>
