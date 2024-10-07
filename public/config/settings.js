@@ -33,6 +33,17 @@
         "appSettings":{
             "backgroundColor":"",
             "language":"de"
+        },
+        "persistanceRepositories":{
+            "localRepositories":[{
+                name:'BrowserFileRepo',
+                url:"file://localhost"
+            }],
+            "restRepositories":[{
+                name:"DIM-Repository",
+                url:"http://dataInMotion.de/udp/rest"
+            }],
+            "gitRepositories":[]
         }
     };
 

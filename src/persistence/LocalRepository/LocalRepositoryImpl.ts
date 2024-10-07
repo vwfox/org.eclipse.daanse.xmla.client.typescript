@@ -1,13 +1,11 @@
-import type {Entity, Repository, WritableRepository} from "@/persistence/api/persistance";
+import type {  Entity,  Repository,  WritableRepository} from "@/persistence/api/persistance";
 import ValidityCheck from "@/persistence/utils/ValidityCheck";
+import {BaseRepository} from "@/persistence/api/BaseRepository";
 
-export default class LocalRepositoryImpl implements WritableRepository{
-    public readonly name: string;
-    public readonly uri: URL;
-
+export default class LocalRepositoryImpl extends BaseRepository implements WritableRepository{
+    public static readonly type  = 'localRepositories';
     constructor(url:URL,name:string){
-        this.uri = url;
-        this.name = name;
+        super(url,name);
     }
     async findAll(): Promise<Entity[]> {
         let ret:Entity[] = [];

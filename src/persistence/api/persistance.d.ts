@@ -1,15 +1,15 @@
+
 export interface RepositoryRegistry {
     register(repo:Repository):void;
     getAvailableReposetories():Promise<Repository[]>;
     findRepositoryByName(name:string):Promise<Repository|undefined>;
     findRepositoryByUri(uri:URL):Promise<Repository|undefined>;
     unregister(url:URL):void;
+    registerRepoType(aclass:typeof BaseRepository):void;
 }
-
 export interface Repository{
-    name:string
-    uri:URL
-
+    readonly name:string;
+    readonly uri:URL;
     getEntityByUri(uri: URL): Promise<Entity | null>;
     findAll(): Promise<Entity[]>;
     findByName(name:string): Promise<Entity[]>;

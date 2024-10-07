@@ -15,6 +15,7 @@ import {useRoute} from "vue-router";
 import get from 'lodash/get';
 import set from 'lodash/set';
 import NavBarDash from "@/routes/dashboard/NavBarDash.vue";
+import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 let viewmodeByDefault = false;
 
 if(window && window['__env'] && window['__env'].settings){
@@ -27,6 +28,7 @@ const settings =  window['__env'].settings;
 
 const viewmode= ref<boolean>(viewmodeByDefault);
 const route = useRoute()
+const repoRepo = useRepositoryRegistry();
 watch(()=>settings,(val)=>{
     console.log('env change detected')
     console.log(val)

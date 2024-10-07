@@ -90,6 +90,9 @@ import {XMLAStore} from "@/stores/Widgets/XMLAStore";
 import {Store} from "@/stores/Widgets/Store";
 import Chart from "@/plugins/charts/Chart";
 import CSVStore from "@/plugins/charts/stores/CSVStore";
+import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
+import LocalRepositoryImpl from "@/persistence/LocalRepository/LocalRepositoryImpl";
+import RestRepositoryImpl from "@/persistence/RestRepository/RestRepository";
 
 //@ts-ignore
 const app = createApp(App);
@@ -203,6 +206,9 @@ useDatasourceManager().registerDataSource(MQTTDatasource);
 
 useStoreManager().registerStoreType(XMLAStore);
 useStoreManager().registerStoreType(Store);
+
+useRepositoryRegistry().registerRepoType(LocalRepositoryImpl);
+useRepositoryRegistry().registerRepoType(RestRepositoryImpl);
 
 
 

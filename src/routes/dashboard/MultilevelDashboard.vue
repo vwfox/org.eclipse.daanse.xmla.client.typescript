@@ -230,9 +230,10 @@ import SaveModal from "@/components/Modals/SaveModal.vue";
 import loadModal from "@/components/Modals/LoadModal.vue";
 import LoadModal from "@/components/Modals/LoadModal.vue";
 import {useRoute} from "vue-router";
+import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 
 const { t } = useI18n();
-
+const repoRepo = useRepositoryRegistry();
 const dsManager = useDatasourceManager();
 const storeManager = useStoreManager();
 const { setOnClick } = useErrorHandler();
