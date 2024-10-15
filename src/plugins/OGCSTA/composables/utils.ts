@@ -19,11 +19,23 @@ export function useUtils() {
         if (!point) return false;
         if (!point.type) return false;
         if (point.type !== 'FeatureCollection') return false;
+
         return true;
+    }
+
+    const transformToGeoJson=(geom:any)=>{
+        if(!geom)return null;
+        if(geom.type == 'Feature' || geom.type == 'FeatureCollection') return geom;
+        if(['Polygon','MultiPolygon','Line','MultiLine','Point','MultiPoint'].includes(geom.type) ){
+            return {"type": "Feature",
+                "properties": {},...geom}
+        } return null;
+
     }
 
     return {
         isFeatureCollection,
-        isPoint
+        isPoint,
+        transformToGeoJson
     }
 }

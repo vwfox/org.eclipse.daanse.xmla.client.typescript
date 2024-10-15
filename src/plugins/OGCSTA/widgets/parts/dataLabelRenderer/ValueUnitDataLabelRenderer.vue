@@ -34,7 +34,10 @@ defineExpose({
 <template>
 
     <div v-if="data" class="datapoint">
-        {{ settings.prefix }}{{ data }} {{ settings.unit }} {{ settings.suffix }}
+        {{ settings.prefix }}{{ props.data }} {{ settings.unit }} {{ settings.suffix }}
+    </div>
+    <div v-else class="datapoint">
+        {{ settings.prefix }} -- {{ settings.unit }} {{ settings.suffix }}
     </div>
 </template>
 

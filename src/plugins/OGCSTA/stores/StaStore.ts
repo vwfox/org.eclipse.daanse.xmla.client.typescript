@@ -56,6 +56,7 @@ export default class StaStore extends BaseStore implements IStore, ISerializable
         console.log(ds["@iot.id"])
         let observations: IOGCSTA = await datasource.getData({datastreams: {ids: [ds["@iot.id"]]}});
         ds.Observations = observations.observations;
+        this.data.observations = observations.observations;
         return ds;
     }
 
