@@ -56,9 +56,17 @@ export default class STADataSource extends DataSource implements IDatasource, IS
         this.baseConfigration = new Configuration({basePath: this.url});
     }
 
-    static transformFromThingLocationDastreamToLocationThingDatastream(things: Thing[]): Location[] {
+    static transformFromThingLocationDastreamToLocationThingDatastream(things: Thing[]):IOGCSTA {
+        const ret:IOGCSTA={locations:[],things:things,datastreams:[]}
         const locations: Location[] = [];
+        let datastreams: Datastream[] = [];
         for (let thing of things ?? []) {
+            if(thing.Datastreams){
+                datastreams = [...datastreams,...thing.Datastreams];
+                for (const datastream of thing.Datastreams ?? []) {
+                    datastream.Thing = thing;
+                }
+            }
             for (const location of thing.Locations ?? []) {
                 if (!location.Things) {
                     location.Things = [];
@@ -83,7 +91,9 @@ export default class STADataSource extends DataSource implements IDatasource, IS
                 }
             }
         }
-        return locations;
+        ret.datastreams = datastreams;
+        ret.locations = locations;
+        return ret;
     }
 
     async getData(options: IOGCSTAOptions) {
@@ -165,8 +175,8 @@ export default class STADataSource extends DataSource implements IDatasource, IS
             listOfPromesis.push((async () => {
                 try {
                     const things = (await new ThingsApi(this.baseConfigration).v11ThingsGet(undefined, undefined, undefined, undefined, 'Datastreams,Locations')).data.value!;
-                    const locations = STADataSource.transformFromThingLocationDastreamToLocationThingDatastream(things);
-                    return {locations: locations};
+                    const all = STADataSource.transformFromThingLocationDastreamToLocationThingDatastream(things);
+                    return all;
                 } catch (e) {
                     if ((e as AxiosError).response?.status == 501) { // Expand not implemented --> Fallback
                         try {
@@ -192,7 +202,7 @@ export default class STADataSource extends DataSource implements IDatasource, IS
                                 }
                             }
                             const locations = STADataSource.transformFromThingLocationDastreamToLocationThingDatastream(things);
-                            return {locations: locations}
+                            return locations
                         } catch (e) {
                             throw (e)
                         }
