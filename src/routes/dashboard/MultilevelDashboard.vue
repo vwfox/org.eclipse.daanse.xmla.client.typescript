@@ -207,30 +207,25 @@ Contributors: Smart City Jena
 <script setup lang="ts">
 import NavBarDash from "./NavBarDash.vue";
 import DashboardControls from "@/components/Dashboard/DashboardControls.vue";
-import {
-    getCurrentInstance,
-    markRaw,
-    ref,
-    type Ref,
-    provide,
-    inject, watch, onMounted, computed,
-} from "vue";
-import { useStoreManager } from "@/composables/storeManager";
+import {getCurrentInstance, inject, markRaw, onMounted, provide, type Ref, ref,} from "vue";
+import {useStoreManager} from "@/composables/storeManager";
 import Moveable from "vue3-moveable";
 import SidebarSettings from "@/components/Sidebar/SidebarSettings.vue";
-import { useDatasourceManager } from "@/composables/datasourceManager";
-import { useMoveableLayout } from "@/composables/dashboard/moveableLayout";
-import { useSerialization } from "@/composables/dashboard/serialization";
-import { useErrorHandler } from "@/composables/dashboard/errorToast";
-import { useWidgets } from "@/composables/dashboard/widgets";
+import {useDatasourceManager} from "@/composables/datasourceManager";
+import {useMoveableLayout} from "@/composables/dashboard/moveableLayout";
+import {useSerialization} from "@/composables/dashboard/serialization";
+import {useErrorHandler} from "@/composables/dashboard/errorToast";
+import {useWidgets} from "@/composables/dashboard/widgets";
 import WidgetWrapper from "@/components/Widgets/WidgetWrapper/WidgetWrapper.vue";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import ErrorHandlingModal from "@/components/Modals/ErrorHandlingModal.vue";
 import SaveModal from "@/components/Modals/SaveModal.vue";
-import loadModal from "@/components/Modals/LoadModal.vue";
-import LoadModal from "@/components/Modals/LoadModal.vue";
+
 import {useRoute} from "vue-router";
 import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
+import LoadModal from "@/components/Modals/LoadSave/LoadModal.vue";
+
+
 
 const { t } = useI18n();
 const repoRepo = useRepositoryRegistry();
@@ -265,8 +260,8 @@ const openErrorModal = (data) => {
 const openLaodSaveModal = (data) => {
      loadsaveModal.value?.run(data);
 };
-const openLaodModal = async () => {
-    return await loadModalref.value?.run();
+const openLaodModal = async (data:{context:string,state:any}) => {
+    return await loadModalref.value?.run(data);
 };
 
 setOnClick(openErrorModal);
@@ -346,9 +341,11 @@ const toggleEdit = () => {
     editEnabled.value = !editEnabled.value;
 };
 
-const saveLayout = () => {
+const saveLayout = async() => {
     const state = getSerializedState();
-    openLaodSaveModal(state);
+    //openLaodSaveModal(state);
+    const retrievedObject = await openLaodModal({context:'SAVE',state:state});
+
     //
     //localStorage.setItem("testLayout", JSON.stringify(state));
 
@@ -356,7 +353,7 @@ const saveLayout = () => {
 };
 
 const loadLayout = async () => {
-    const retrievedObject = await openLaodModal();
+    const retrievedObject = await openLaodModal({context:'LOAD',state:null});
     if(retrievedObject){
         loadState(retrievedObject);
     }

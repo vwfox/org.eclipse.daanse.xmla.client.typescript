@@ -43,7 +43,12 @@
                 name:"DIM-Repository",
                 url:"http://dataInMotion.de/udp/rest"
             }],
-            "gitRepositories":[]
+            "gitRepositories":[
+                {
+                    name:"Github-Repository",
+                    url:"https://github.com/vwfox/xmla_test_persistence",
+                }
+            ]
         }
     };
 

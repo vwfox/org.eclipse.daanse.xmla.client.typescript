@@ -18,7 +18,7 @@ export default interface CommitProviderI{
     readonly fileProvider:FileProviderI;
     readonly owner:string;
     readonly name:string;
-    readonly options?:any;
     getAllCommits(branch:string):Promise<CommitI[]>
     commitFiles(files:Array<FileI|FolderI>,branch:BranchI):Promise<void>
+    setOptions?(options:any);
 }

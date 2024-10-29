@@ -1,5 +1,5 @@
 import type{ RepositoryRegistry,  Repository} from "@/persistence/api/persistance";
-import {onMounted, ref} from "vue";
+import {type Component, onMounted, ref} from "vue";
 import {useApplicationSettingsManager} from "@/composables/applicationSettingsManager";
 import type {BaseRepository} from "@/persistence/api/BaseRepository";
 
@@ -7,6 +7,7 @@ import type {BaseRepository} from "@/persistence/api/BaseRepository";
 
 const availableRepos = ref(new Map<string, Repository>());
 const availableRepoTypes = ref(new Map<string,typeof BaseRepository>());
+const availableRepoTypesViews = ref(new Map<string,Component>());
 let init = false;
 
 export function useRepositoryRegistry():RepositoryRegistry{
@@ -28,6 +29,16 @@ export function useRepositoryRegistry():RepositoryRegistry{
     const registerRepoType = (aclass:typeof BaseRepository)=>{
         availableRepoTypes.value.set(aclass.type,aclass);
     }
+    const registerViewForRepoType = (aclass:typeof BaseRepository,component:  Component)=>{
+        availableRepoTypesViews.value.set(aclass.type,component);
+    }
+    const getViewForRepoType = (aclass:Repository)=>{
+        return availableRepoTypesViews.value.get(Object.getPrototypeOf(aclass).constructor.type);
+    }
+    const isViewForRepoType = (aclass:Repository)=>{
+        return availableRepoTypesViews.value.has(Object.getPrototypeOf(aclass).constructor.type);
+    }
+
     const unregister=(url: URL):void =>{
         availableRepos.value.delete(url.toString());
     }
@@ -58,6 +69,9 @@ export function useRepositoryRegistry():RepositoryRegistry{
         getAvailableReposetories,
         register,
         unregister,
-        registerRepoType
+        registerRepoType,
+        registerViewForRepoType,
+        getViewForRepoType,
+        isViewForRepoType
     }
 }

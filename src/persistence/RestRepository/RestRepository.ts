@@ -9,6 +9,7 @@ export default class RestRepositoryImpl extends BaseRepository implements Writab
     private deleteEndpointPath:String;
     private findEndpointPath:String;
     private findAllEndpointPath:String;
+    private syncEndpointPath:String;
 
 
     constructor(url:URL,
@@ -19,6 +20,7 @@ export default class RestRepositoryImpl extends BaseRepository implements Writab
                         findAllEndpointPath : '',
                         createEndpointPath :  ':id',
                         findEndpointPath :  ':id',
+                        syncEndpointPath:''
                     }) {
         super(url,name);
 
@@ -27,7 +29,32 @@ export default class RestRepositoryImpl extends BaseRepository implements Writab
         this.findAllEndpointPath = settings.findEndpointPath||'';
         this.createEndpointPath =  settings.createEndpointPath||':id';
         this.findEndpointPath =  settings.findEndpointPath||':id';
+        this.syncEndpointPath =  settings.syncEndpointPath||'';
 
+    }
+    async sync(): Promise<Entity[]> {
+        try{
+            const createURL =  new URL(this.uri);
+            createURL.pathname = createURL.pathname + "/" +this.findAllEndpointPath;
+            const res = await fetch(createURL,{method:'HEAD'});
+            if(res.ok){
+                const resArr : Entity[] = [];
+                const data = await res.json();
+                for(const entity of data){
+                    resArr.push({
+                        name:entity.name,
+                        uri:new URL(entity.url),
+                        data:null
+                    })
+                }
+                return resArr;
+            }else {
+                throw new Error(res.statusText);
+            }
+        }catch (e){
+            console.log(e);
+            throw new Error('Resource could not find entities');
+        }
     }
 
     async create(e: Entity): Promise<any> {
@@ -89,17 +116,6 @@ export default class RestRepositoryImpl extends BaseRepository implements Writab
         }
     }
 
-    findByFragment(pathname: string): Promise<Entity[]> {
-        return Promise.resolve([]);
-    }
-
-    findByName(name: string): Promise<Entity[]> {
-        return Promise.resolve([]);
-    }
-
-    findByUri(uri: URL): Promise<Entity[]> {
-        return Promise.resolve([]);
-    }
 
     async getEntityByUri(uri: URL): Promise<Entity | null> {
         try{

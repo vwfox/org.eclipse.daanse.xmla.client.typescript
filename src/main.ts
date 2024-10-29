@@ -71,7 +71,8 @@ import {
     VaTab,
     VaFileUpload,
     VaForm,
-    VaValue
+    VaValue,
+    VaMenuList
 } from "vuestic-ui";
 import "vuestic-ui/css";
 
@@ -93,6 +94,9 @@ import CSVStore from "@/plugins/charts/stores/CSVStore";
 import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 import LocalRepositoryImpl from "@/persistence/LocalRepository/LocalRepositoryImpl";
 import RestRepositoryImpl from "@/persistence/RestRepository/RestRepository";
+import GitRepositoryImpl from "@/persistence/GitRepository/GitRepositoryImpl";
+import GitRepositoryV from "@/persistence/GitRepository/GitRepositoryV.vue";
+import BarChartWidget from "@/plugins/charts/widgets/BarChartWidget.vue";
 
 //@ts-ignore
 const app = createApp(App);
@@ -186,7 +190,8 @@ app.use(
             VaTab,
             VaFileUpload,
             VaForm,
-            VaValue
+            VaValue,
+            VaMenuList
         },
         config: {
             colors: {
@@ -209,7 +214,8 @@ useStoreManager().registerStoreType(Store);
 
 useRepositoryRegistry().registerRepoType(LocalRepositoryImpl);
 useRepositoryRegistry().registerRepoType(RestRepositoryImpl);
-
+useRepositoryRegistry().registerRepoType(GitRepositoryImpl);
+useRepositoryRegistry().registerViewForRepoType(GitRepositoryImpl,GitRepositoryV);
 
 
 

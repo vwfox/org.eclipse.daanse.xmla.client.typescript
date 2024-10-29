@@ -11,3 +11,10 @@ Contributors: Smart City Jena
 export class CastError extends Error {
     // . declare any additional properties or methods .
 }
+
+export class AuthentificationError extends Error {
+    constructor(message: string, public code: number) {
+        super(message);
+        this.name = 'AuthentificationError';
+    }
+}

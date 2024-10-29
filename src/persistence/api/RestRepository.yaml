@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+    title: RestRepository
+    description: RestRepository
+    version: 1.0.0
+servers:
+    -   url: 'https'
+    -   url: 'http'
+security:
+    - basicAuth: []
+paths:
+    /:
+        get:
+            operationId: findAll
+            summary: List All Entities on Repo
+            security:
+                -   basicAuth: [ ]
+            responses:
+                '200':
+                    description: |-
+                        200 response
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Entity"
+                '401':
+                    description: unauthorized
+        head:
+            operationId: sync
+            summary: return Entities wich change on server
+            security:
+                -   basicAuth: [ ]
+            responses:
+                '200':
+                    description: |-
+                        200 response
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Entity"
+                '401':
+                    description: unauthorized
+    /:path:
+        get:
+            operationId: get
+            summary: get Entiti by path on Repo
+            security:
+                -   basicAuth: [ ]
+            responses:
+                '200':
+                    description: |-
+                        200 response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Entity"
+                '401':
+                    description: unauthorized
+                '404':
+                    description: not found
+        post:
+            operationId: create
+            summary: Adds a new Entity
+            security:
+                -   basicAuth: [ ]
+            requestBody:
+                content:
+                    application/json:
+                        schema: # Request body contents
+                            $ref: "#/components/schemas/Entity"
+            responses:
+                '200':
+                    description: created
+                '409':
+                    description: conflict
+                '401':
+                    description: unauthorized
+        put:
+            operationId: update
+            summary: update a new Entity
+            security:
+                -   basicAuth: [ ]
+            requestBody:
+                content:
+                    application/json:
+                        schema: # Request body contents
+                            $ref: "#/components/schemas/Entity"
+            responses:
+                '200':
+                    description: updated
+                '404':
+                    description: not found
+                '401':
+                    description: unauthorized
+
+        delete:
+            operationId: delete
+            summary: delete a new Entity
+            security:
+                -   basicAuth: [ ]
+            requestBody:
+                content:
+                    application/json:
+                        schema: # Request body contents
+                            $ref: "#/components/schemas/Entity"
+            responses:
+                '200':
+                    description: deleted
+                '404':
+                    description: not found
+                '401':
+                    description: unauthorized
+
+components:
+    securitySchemes:
+        basicAuth:
+            type: http
+            scheme: basic
+    schemas:
+        Entity:
+            required:
+                - name
+                - uri
+            type: object
+            properties:
+                name:
+                    type: string
+                uri:
+                    type: string
+                data:
+                    type: string
