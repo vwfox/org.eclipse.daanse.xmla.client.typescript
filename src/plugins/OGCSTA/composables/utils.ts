@@ -14,6 +14,13 @@ export function useUtils() {
 
         return true;
     }
+    const isFeature = (point: any) => {
+        if (!point) return false;
+        if (!point.type) return false;
+        if (point.type !== 'Feature') return false;
+
+        return true;
+    };
 
     const isFeatureCollection = (point: any) => {
         if (!point) return false;
@@ -27,13 +34,15 @@ export function useUtils() {
         if(!geom)return null;
         if(geom.type == 'Feature' || geom.type == 'FeatureCollection') return geom;
         if(['Polygon','MultiPolygon','Line','MultiLine','Point','MultiPoint'].includes(geom.type) ){
-            return {"type": "Feature",
-                "properties": {},...geom}
+            const res = {"type": "Feature",
+                "properties": {},geometry:geom};
+            return res;
         } return null;
 
     }
 
     return {
+        isFeature,
         isFeatureCollection,
         isPoint,
         transformToGeoJson

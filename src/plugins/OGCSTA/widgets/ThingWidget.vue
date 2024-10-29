@@ -20,7 +20,7 @@ import {useStore} from "@/composables/widgets/store";
 import {useSerialization} from "@/composables/widgets/serialization";
 import {resolve} from "@/utils/helpers";
 import IconWidget from "@/components/Widgets/Icon/IconWidget.vue";
-import type {IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import {ERefType, type IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
 import {useComparator} from "@/plugins/OGCSTA/composables/comparator";
 import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
 import StaStore from "@/plugins/OGCSTA/stores/StaStore";
@@ -64,7 +64,7 @@ const {store, data, setStore} = useStore<StaStore>(eventbus);
 const {getState} = useSerialization(settings);
 const thingsLayer = ref(null);
 const {compareDatastream, compareThing} = useComparator();
-const {isPoint, isFeatureCollection, transformToGeoJson} = useUtils();
+const {isPoint, isFeatureCollection, transformToGeoJson,isFeature} = useUtils();
 
 const openThing = ref<object[]>([])
 
@@ -170,7 +170,7 @@ const loadObservationsInView = () => {
                 if (compareDatastream(dataStream, subrender)) {
                     if (dataStream.observedArea) {
 
-                        const featrueObservedArea = feature(transformToGeoJson(toRaw(dataStream.observedArea)) as Polygon);
+                        const featrueObservedArea =(transformToGeoJson(toRaw(dataStream.observedArea)) as Polygon);
 
                         if (booleanContains(bboxFeature, featrueObservedArea)) {
                             catchedDSIds.push(new class extends Task {
@@ -217,7 +217,20 @@ const collectionToPoint = (fc) => {
 const getPoint = (PointOrFeature: any) => {
     if (isPoint(PointOrFeature)) {
         return reverse(PointOrFeature.coordinates)
-    } else if (isFeatureCollection(PointOrFeature)) {
+    } else if (isFeatureCollection(PointOrFeature) || isFeature(PointOrFeature)) {
+        try {
+            let point = pointOnFeature(PointOrFeature)
+            return reverse(point.geometry.coordinates)
+        } catch (e) {
+            return null
+        }
+    }
+    return null;
+}
+const getPointformArea = (PointOrFeature: any) => {
+    if (isPoint(PointOrFeature)) {
+        return reverse(PointOrFeature.coordinates)
+    } else if (isFeatureCollection(PointOrFeature)|| isFeature(PointOrFeature)) {
         try {
             let point = pointOnFeature(PointOrFeature)
             return reverse(point.geometry.coordinates)
@@ -332,11 +345,13 @@ const _generatePointsSpiral = (count, centerPt) => {
                                                     :geojson="transformToGeoJson(datastream.observedArea)" :options="options"
                                                     :options-style="subrenderer.renderer.area"></l-geo-json>
                                         <l-marker
-                                            :lat-lng="getPoint(location.location) as L.LatLngExpression">
+                                            v-if="((subrenderer.placement == ERefType.Thing)?getPoint(location.location):getPointformArea(transformToGeoJson(datastream.observedArea))) as L.LatLngExpression"
+                                            :lat-lng="((subrenderer.placement == ERefType.Thing)?getPoint(location.location):getPointformArea(transformToGeoJson(datastream.observedArea))) as L.LatLngExpression">
                                             <l-icon class-name="someExtraClass">
                                                 <template v-if="subrenderer.renderer.point_render_as=='icon'">
-                                                    <div :style="{marginLeft:_generatePointsSpiral(thing.Datastreams.length,[0,0])
-                                [ind][1]+'px',background:subrenderer.renderer.pointPin.color,'margin-top':_generatePointsSpiral(thing.Datastreams.length,[0,0])[ind][0]+'px'}"
+                                                    <!--<div :style="{marginLeft:_generatePointsSpiral(thing.Datastreams.length,[0,0])
+                                [ind][1]+'px',background:subrenderer.renderer.pointPin.color,'margin-top':_generatePointsSpiral(thing.Datastreams.length,[0,0])[ind][0]+'px'}"-->
+                                                        <div :style="{background:subrenderer.renderer.pointPin.color}"
                                                          class="pin icon round">
                                                         <div class="inner">
                                                             <IconWidget
@@ -354,8 +369,9 @@ const _generatePointsSpiral = (count, centerPt) => {
 
                                                 </template>
                                                 <template v-if="subrenderer.renderer.point_render_as=='prop'">
-                                                    <div :style="{background:subrenderer.renderer.pointPin.color,marginLeft:_generatePointsSpiral(thing.Datastreams.length,[0,0])
-                                             [ind][1]+'px','margin-top':_generatePointsSpiral(thing.Datastreams.length,[0,0])[ind][0]+'px'}"
+                                                    <!--<div :style="{background:subrenderer.renderer.pointPin.color,marginLeft:_generatePointsSpiral(thing.Datastreams.length,[0,0])
+                                             [ind][1]+'px','margin-top':_generatePointsSpiral(thing.Datastreams.length,[0,0])[ind][0]+'px'}"-->
+                                             <div :style="{background:subrenderer.renderer.pointPin.color}"
                                                          class="pin round contain">
                                                         <div class="inner">
                                                             {{ datastream[subrenderer.renderer.point_prop] }}
@@ -434,6 +450,12 @@ const _generatePointsSpiral = (count, centerPt) => {
             font-size: 13px;
             padding: 3px;
         }
+    }
+
+    .datapoint{
+        transform: rotate(45deg);
+        margin-top: 34px;
+        margin-left: -17px;
     }
 
     &.marker {
