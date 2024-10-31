@@ -222,12 +222,13 @@ const { isOpened, run, close } = usePromisifiedModal(auth);
         hide-default-actions
         v-model="isOpened">
         <div class="deleteDailog">
-            <h5 class="va-h5">
-                Please Provide a token for Access The Repo:
-            </h5>
+            <span class="va-h5">
+                Please provide a token to access the Repo:
+            </span><br /><br />
             <VaInput
                 v-model="token"
-                placeholder="Name"
+                class="minwidth100"
+                placeholder="Token"
             />
         </div>
         <template #footer class="footer">
@@ -267,7 +268,9 @@ const { isOpened, run, close } = usePromisifiedModal(auth);
     align-content: center;
     align-items: center;
 }
-
+.minwidth100{
+    min-width: 100%;
+}
 </style>
 
 <style>
