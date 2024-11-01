@@ -46,7 +46,7 @@ defineExpose({
 }
 .datapoint.tlc{
     transform: rotate(-90deg)!important;
-    margin: 22px 0px!important;
+    margin: -11px -28px !important;
 }
 
 </style>

@@ -380,10 +380,19 @@ const _generatePointsSpiral = (count, centerPt) => {
                                                             <component
                                                                 :is="getById(subrenderer.observation.component)?.component"
                                                                 v-if="getById(subrenderer.observation.component)"
-                                                                :data="datastream.Observations[0]?.result||'null'"
-                                                                v-bind="subrenderer.observation.setting"></component>
+                                                                v-bind="{...subrenderer.observation.setting,data:datastream.Observations[0]?.result}"></component>
                                                         </template>
                                                     </div>
+                                                </template>
+                                                <template v-if="subrenderer.renderer.point_render_as=='none'">
+                                                    <!--<div :style="{background:subrenderer.renderer.pointPin.color,marginLeft:_generatePointsSpiral(thing.Datastreams.length,[0,0])
+                                             [ind][1]+'px','margin-top':_generatePointsSpiral(thing.Datastreams.length,[0,0])[ind][0]+'px'}"-->
+                                                    <template v-if="datastream.Observations">
+                                                        <component
+                                                            :is="getById(subrenderer.observation.component)?.component"
+                                                            v-if="getById(subrenderer.observation.component)"
+                                                            v-bind="{...subrenderer.observation.setting,data:datastream.Observations[0]?.result}"></component>
+                                                    </template>
                                                 </template>
 
 
