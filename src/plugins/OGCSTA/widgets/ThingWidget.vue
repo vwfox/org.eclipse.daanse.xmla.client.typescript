@@ -28,12 +28,13 @@ import {useUtils} from "@/plugins/OGCSTA/composables/utils";
 import L, {divIcon, DivIcon, point} from "leaflet";
 import "vue-leaflet-markercluster/dist/style.css";
 import type {TinyEmitter} from "tiny-emitter";
-import {debounce} from "lodash";
+import {debounce, uniq} from "lodash";
 import {feature} from "@turf/helpers";
 import type {Polygon} from "geojson";
 import booleanContains from "@turf/boolean-contains";
 
-import {Task, useTaskManager} from "@/plugins/OGCSTA/composables/tasktimer";
+import {Task,useTaskManager} from "@/plugins/OGCSTA/composables/tasktimer";
+import {useWebWorkerFn} from "@vueuse/core";
 
 interface IThingWidgetProps {
     baseMapUrl?: string;
@@ -128,6 +129,7 @@ watch(settings, () => {
 }, {deep: true})
 watch(data,()=>{
     console.log('data in store changed ');
+    //useTaskManager().setStore(store.value);
     if(mounted)loadObservationsInView();
 })
 const maploaded = ()=>{
@@ -145,7 +147,7 @@ const reverse = (arr: any) => {
 
 }
 
-const mapmove = debounce(async () => {
+const mapmove = debounce( () => {
     loadObservationsInView();
 }, 2000, {leading: false});
 const loadObservationsInView = () => {
@@ -163,8 +165,11 @@ const loadObservationsInView = () => {
     };
     const bboxFeature = feature(geometry);
     const catchedDSIds = [];
+    const taskListByTime:{[key: string]: Datastream[]} = {};
     for (const dataStream: Datastream of data.value['datastreams']) {
         for (const renderer of settings.value.renderer) {
+            const refreshtime = renderer.ObservationrefreshTime;
+            if(!taskListByTime[refreshtime])taskListByTime[refreshtime] = [];
             for (const subrender of renderer.ds_renderer) {
 
                 if (compareDatastream(dataStream, subrender)) {
@@ -173,22 +178,8 @@ const loadObservationsInView = () => {
                         const featrueObservedArea =(transformToGeoJson(toRaw(dataStream.observedArea)) as Polygon);
 
                         if (booleanContains(bboxFeature, featrueObservedArea)) {
-                            catchedDSIds.push(new class extends Task {
-                                readonly id = dataStream["@iot.id"]!.toString();
-                                private handle;
 
-                                invoke() {
-                                    window.clearInterval(this.handle)
-                                }
-
-                                run() {
-                                    console.log('run')
-                                    store.value.getObservations(dataStream)
-                                    this.handle = window.setInterval(async () => {
-                                        await store.value.getObservations(dataStream)
-                                    }, renderer.ObservationrefreshTime * 1000 || 10000000)
-                                }
-                            }())
+                            taskListByTime[refreshtime].push(dataStream)
                             //const ds = (await store.value.getObservations(dataStream));
                             //console.log(ds);
                         }
@@ -201,7 +192,36 @@ const loadObservationsInView = () => {
         }
     }
 
-    useTaskManager().addTasksAndIvnoke(catchedDSIds);
+    const tasks = [];
+    for (const [key, _items] of Object.entries(taskListByTime)) {
+        const items = uniq(_items);
+        if(items.length>0){
+        tasks.push(new class extends Task {
+            readonly id = Math.random().toString();
+            private handle;
+            private
+
+            invoke() {
+                window.clearInterval(this.handle)
+            }
+
+            async run() {
+                console.log('run')
+                console.log(items);
+                store.value.getObservations(items)
+
+                this.handle = window.setInterval(async () => {
+
+                    store.value.getObservations(items)
+
+
+                }, key * 1000 )
+            }
+        }())
+        }
+    }
+
+    useTaskManager().addTasksAndIvnoke(tasks);
 
 
 }
@@ -295,7 +315,7 @@ const _generatePointsSpiral = (count, centerPt) => {
                             <template v-if="isFeatureCollection(location.location)">
                                 <l-geo-json v-if="!isPoint(location.location)" ref="thingsLayer"
                                             :geojson="location.location" :options="options"
-                                            :options-style="renderer.renderer.area"></l-geo-json>
+                                            :options-style="()=>renderer.renderer.area"></l-geo-json>
                             </template>
 
 
@@ -343,7 +363,7 @@ const _generatePointsSpiral = (count, centerPt) => {
                                         v-if="compareDatastream(datastream, subrenderer) /*&& openThing[thing['@iot.id']]*/">
                                         <l-geo-json ref="thingsLayer"
                                                     :geojson="transformToGeoJson(datastream.observedArea)" :options="options"
-                                                    :options-style="subrenderer.renderer.area"></l-geo-json>
+                                                    :options-style="()=>subrenderer.renderer.area"></l-geo-json>
                                         <l-marker
                                             v-if="((subrenderer.placement == ERefType.Thing)?getPoint(location.location):getPointformArea(transformToGeoJson(datastream.observedArea))) as L.LatLngExpression"
                                             :lat-lng="((subrenderer.placement == ERefType.Thing)?getPoint(location.location):getPointformArea(transformToGeoJson(datastream.observedArea))) as L.LatLngExpression">
