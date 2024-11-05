@@ -37,7 +37,7 @@ export default class BranchProvider implements BranchProviderI{
                 repo:this.repo,
             })
             branches.data.map(entry=>{
-                this.branches.push(new Branch(this.owner,this.repo,entry.name,entry.commit.sha,this.commitProivder))
+                this.branches.push(new Branch(this.owner,this.repo,entry.name,entry.commit.sha,this.commitProivder) as unknown as BranchI)
             });
 
             return this.branches;
@@ -76,6 +76,9 @@ export default class BranchProvider implements BranchProviderI{
                 //throw CreateBranchError(e);
             }
 
+    }
+    setOptions(options?:any){
+        this.options  = options;
     }
 
 }

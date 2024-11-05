@@ -77,5 +77,6 @@ header:
     - '.yarnrc.yml'
     - '.storybook/**'
     - 'storybook-static/**'
+    - 'src/plugins/OGCSTA/dataSources/STAClient/**'
 
   comment: always

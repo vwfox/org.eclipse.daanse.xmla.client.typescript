@@ -8,14 +8,59 @@ SPDX-License-Identifier: EPL-2.0
 Contributors: Smart City Jena
 
 -->
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+import {computed, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import get from 'lodash/get';
+import set from 'lodash/set';
+import NavBarDash from "@/routes/dashboard/NavBarDash.vue";
+import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
+let viewmodeByDefault = false;
+
+if(window && window['__env'] && window['__env'].settings){
+    window['__env'].settings = ref(window['__env'].settings);
+}
+if(window && window['__env'] && window['__env'].settings && window['__env'].settings.viewmodeByDefault){
+    viewmodeByDefault = window['__env'].settings.viewmodeByDefault;
+}
+const settings =  window['__env'].settings;
+
+const viewmode= ref<boolean>(viewmodeByDefault);
+const route = useRoute()
+const repoRepo = useRepositoryRegistry();
+watch(()=>settings,(val)=>{
+    console.log('env change detected')
+    console.log(val)
+},{deep:true,immediate:true});
+watch(()=>route.query,(val)=>{
+    for(let [querykey,queryval] of Object.entries(val)){
+        const splittQuery = querykey.split('.');
+        if(splittQuery[0]=='config'){
+            if(queryval=='true'){
+                (queryval as boolean)=true;
+            }
+            if(queryval=='false'){
+                (queryval as boolean) =false;
+            }
+            settings.value=set(settings.value,splittQuery.splice(1),queryval)
+
+            console.info( querykey +'set to ' +queryval + ' by queryparam');
+        }
+
+
+    }
+},{immediate:true})
+
+
+</script>
 
 <template>
-    <div class="sidebar">
+    <div class="sidebar" v-if="!(settings.visuals.hideMenu)">
         <va-sidebar hoverable minimized-width="55px" class="colored-sidebar">
             <va-sidebar-item
                 :active="$route.name === 'designer'"
-                @click="$router.push('/')"
+                @click="$router.push({name:'designer'})"
                 class="pointer"
             >
                 <va-sidebar-item-content>
@@ -27,7 +72,7 @@ Contributors: Smart City Jena
             </va-sidebar-item>
             <va-sidebar-item
                 :active="$route.name === 'dashboard'"
-                @click="$router.push('/dashboard')"
+                @click="$router.push({name:'dashboard'})"
                 class="pointer"
             >
                 <va-sidebar-item-content>
@@ -39,7 +84,7 @@ Contributors: Smart City Jena
             </va-sidebar-item>
             <va-sidebar-item
                 :active="$route.name === 'multilevel-dashboard'"
-                @click="$router.push('/multilevel-dashboard')"
+                @click="$router.push({name:'multilevel-dashboard'})"
                 class="pointer"
             >
                 <va-sidebar-item-content>

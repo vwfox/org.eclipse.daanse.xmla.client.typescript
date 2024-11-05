@@ -1,3 +1,13 @@
+/*
+Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+This program and the accompanying materials are made
+available under the terms of the Eclipse Public License 2.0
+which is available at https://www.eclipse.org/legal/epl-2.0/
+SPDX-License-Identifier: EPL-2.0
+
+Contributors: Smart City Jena
+
+*/
 import imageUrl from './images/RESTFlow.png';
 import { Meta } from "@storybook/blocks";
 
@@ -26,13 +36,13 @@ Responsible for creating request. It builds resource path and body for the reque
 Contains next settings:
 - `caption`
 - `requestTemplate`
-- `params`  
-Parses the `requestTemplate` string and creates list of parameters  
-Example: `requestTemplate` `/products/{page}/{id}` will produce next parameters: `{ page: null, id: null }`  
+- `params`
+Parses the `requestTemplate` string and creates list of parameters
+Example: `requestTemplate` `/products/{page}/{id}` will produce next parameters: `{ page: null, id: null }`
 Params have initial values, this values will be used after component creation, can be reseted via `reset` method
 
-- `events`  
-Listens for events from widgets and controls.  
+- `events`
+Listens for events from widgets and controls.
 Each event is a pair `EventName:Handler`. Handler is an executed js code that gets `params` as function argument, so simple functions may be used to modify parameters from
 
 ```js
@@ -40,7 +50,7 @@ events.forEach((e: { name: string; action: string }) => {
   const cb = (value) => {
     const functionArgs = Object.keys(this.runtimeParams);
     const functionArgsVals = Object.values(this.runtimeParams);
-    
+
     const userEvent = Function(
       ...functionArgs,
       "$value",
@@ -70,8 +80,8 @@ events.forEach((e: { name: string; action: string }) => {
 
 Stores visual settings and is responsible for visual event like resize.
 
-In order for widget to be dynamic it should be connected to the store. Some setting should have a string containing data from store.  
-Example of template: `Price for {title} is {price}`  
+In order for widget to be dynamic it should be connected to the store. Some setting should have a string containing data from store.
+Example of template: `Price for {title} is {price}`
 Can also use arrays: `{images.0}`
 
 Reacts for events from store:

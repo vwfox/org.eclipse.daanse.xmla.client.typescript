@@ -50,9 +50,15 @@ export function resolve(start) {
   }, start);
 }
 export function resolveObj(obj,dotNotatedstring:string) {
-    const replace = dotNotatedstring.replace("\.","<|>");
+    const replace = dotNotatedstring.replace("\\.","<|>");
     try{
-        return replace.split('.').reduce((o,i)=> o[i.replace("<|>",".")], obj)
+        return replace.split('.').reduce((o,i)=>{
+            const aNumber =parseInt(i);
+            if(isFinite(aNumber) && Array.isArray(o)){
+                return o[aNumber];
+            }
+           return  o[i.replace("<|>",".")]
+        } , obj)
     }catch (e){
         return null;
     }
