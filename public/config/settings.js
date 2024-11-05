@@ -1,3 +1,14 @@
+/*
+  Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+  This program and the accompanying materials are made
+  available under the terms of the Eclipse Public License 2.0
+  which is available at https://www.eclipse.org/legal/epl-2.0/
+  SPDX-License-Identifier: EPL-2.0
+
+  Contributors: Smart City Jena
+
+*/
+
 (function(window) {
     window.__env = window.__env || {};
 
@@ -21,7 +32,6 @@
             url:""
         },
         "viewmodeByDefault":false,
-        "releaseEndPointUrl": "http://192.168.178.173:8080/udp/rest/dashboard/release",
         "visuals":{
             "hideHeader":true,
             "hideMenu":true,
@@ -38,17 +48,7 @@
             "localRepositories":[{
                 name:'BrowserFileRepo',
                 url:"file://localhost"
-            }],
-            "restRepositories":[{
-                name:"DIM-Repository",
-                url:"http://dataInMotion.de/udp/rest"
-            }],
-            "gitRepositories":[
-                {
-                    name:"Github-Repository",
-                    url:"https://github.com/vwfox/xmla_test_persistence",
-                }
-            ]
+            }]
         }
     };
 

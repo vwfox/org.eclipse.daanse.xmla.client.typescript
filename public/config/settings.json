@@ -4,7 +4,6 @@
     "enabled":false,
     "url":""
   },
-  "releaseEndPointUrl": "http://192.168.178.173:8080/udp/rest/dashboard/release",
   "viewmodeByDefault":true,
   "visuals":{
     "hideHeader":false,
