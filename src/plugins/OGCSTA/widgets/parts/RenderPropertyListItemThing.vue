@@ -1,3 +1,13 @@
+<!--
+Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+This program and the accompanying materials are made
+available under the terms of the Eclipse Public License 2.0
+which is available at https://www.eclipse.org/legal/epl-2.0/
+SPDX-License-Identifier: EPL-2.0
+
+Contributors: Smart City Jena
+
+-->
 <script lang="ts" setup>
 
 import {computed, type ModelRef, reactive, ref, watch} from "vue";
@@ -54,7 +64,9 @@ const model: ModelRef<IRenderer> = defineModel<IRenderer>({
                     className: ''
                 } as IMapProps,
             },
-            id: v4()
+            id: v4(),
+            ObservationrefreshTime:0,
+            lastUpdate:undefined
         } as IRenderer)
     }
 })
@@ -84,7 +96,7 @@ const pointSelectorOptions = [
 ]
 const thingsPropOptions = [{
     text: 'id',
-    selector: '@iot\.id'
+    selector: '@iot\\.id'
 },
     {
         text: 'name',
@@ -455,7 +467,7 @@ const addContition = () => {
     </div>
 
     <div style="height:25px"></div>
-    <h2>DataLabels</h2>
+    <h2>Datastreams</h2>
     <VaDivider class="mb15"/>
 
 
@@ -502,7 +514,7 @@ const addContition = () => {
         fixed-layout
         max-height="800px"
     >
-        <RenderPropertyListItemDataStream ref="listitem2" v-model="editmodel"
+        <RenderPropertyListItemDataStream ref="listitem2" v-model="editmodel" v-model:ObservationrefreshTime="model.ObservationrefreshTime"
                                           @add-sub-renderer="addSubRenderer"></RenderPropertyListItemDataStream>
 
     </VaModal>

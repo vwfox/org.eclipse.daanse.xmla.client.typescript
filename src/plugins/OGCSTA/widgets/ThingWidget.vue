@@ -11,9 +11,29 @@ Contributors: Smart City Jena
 <script lang="ts" setup>
 import {LGeoJson, LIcon, LMap, LMarker, LTileLayer} from "@vue-leaflet/vue-leaflet";
 
-import {
-    type Location
-} from "@/plugins/OGCSTA/dataSources/STAClient";
+import {type Datastream} from "@/plugins/OGCSTA/dataSources/STAClient";
+import {pointOnFeature} from '@turf/point-on-feature';
+import {computed, inject, onMounted, reactive, ref, toRaw, watch} from "vue";
+import ThingWidgetSettings from "./ThingWidgetSettings.vue";
+import {useSettings} from "@/composables/widgets/settings";
+import {useStore} from "@/composables/widgets/store";
+import {useSerialization} from "@/composables/widgets/serialization";
+import {resolve} from "@/utils/helpers";
+import IconWidget from "@/components/Widgets/Icon/IconWidget.vue";
+import type {IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
+import {useComparator} from "@/plugins/OGCSTA/composables/comparator";
+import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
+import StaStore from "@/plugins/OGCSTA/stores/StaStore";
+import {useUtils} from "@/plugins/OGCSTA/composables/utils";
+import L, {divIcon, DivIcon, point} from "leaflet";
+import "vue-leaflet-markercluster/dist/style.css";
+import type {TinyEmitter} from "tiny-emitter";
+import {debounce} from "lodash";
+import {feature} from "@turf/helpers";
+import type {Polygon} from "geojson";
+import booleanContains from "@turf/boolean-contains";
+
+import {Task, useTaskManager} from "@/plugins/OGCSTA/composables/tasktimer";
 
 interface IThingWidgetProps {
     baseMapUrl?: string;
@@ -24,34 +44,19 @@ interface IThingWidgetProps {
 
 }
 
-import {pointOnFeature} from '@turf/point-on-feature';
-import {computed, inject, onMounted, reactive, ref, watch} from "vue";
-import ThingWidgetSettings from "./ThingWidgetSettings.vue";
-import {useSettings} from "@/composables/widgets/settings";
-import {useStore} from "@/composables/widgets/store";
-import {useSerialization} from "@/composables/widgets/serialization";
-import type {Store} from "@/stores/Widgets/Store";
-import {resolve} from "@/utils/helpers";
-import IconWidget from "@/components/Widgets/Icon/IconWidget.vue";
-import type {IRenderer} from "@/plugins/OGCSTA/widgets/api/Renderer";
-import {useComparator} from "@/plugins/OGCSTA/composables/comparator";
-import {useDataPointRegistry} from "@/plugins/OGCSTA/composables/datapointRegistry";
-import StaStore from "@/plugins/OGCSTA/stores/StaStore";
-import {useUtils} from "@/plugins/OGCSTA/composables/utils";
-import L, {divIcon, DivIcon, point} from "leaflet";
-import {LMarkerClusterGroup} from "vue-leaflet-markercluster";
-import "vue-leaflet-markercluster/dist/style.css";
-import type {TinyEmitter} from "tiny-emitter";
-
 const settingsComponent = ThingWidgetSettings;
 
 const props = withDefaults(defineProps<IThingWidgetProps>(), reactive({
     baseMapUrl: "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+    //baseMapUrl: "https://kartenportal.jena.de/api/v1/legend/pg/qwc_config/kartenportal_start?VERSION=1.3.0&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image%2Fpng&CRS=EPSG%3A25832&SLD_VERSION=1.1.0&LAYERFONTFAMILY=Arial&LAYERFONTSIZE=10&ITEMFONTFAMILY=Arial&ITEMFONTSIZE=10&LAYERTITLE=TRUE&STYLE=legend&ICONLABELSPACE=5&SCALE=62500&WIDTH=1920&HEIGHT=245&BBOX=665124.2607677798%2C5641975.5567279635%2C696874.2607677798%2C5646026.98901963&LAYER=sonstige%20Bildungseinrichtungen&STYLES=default&FILTER=&TYPE=thumbnail",
     zoom: 14,
     attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     center: [50.93115286, 11.60392726],
     renderer: () => []
 }));
+
+let mounted = false;
+
 const map = ref(null);
 const {settings, setSetting} = useSettings<typeof props>(props);
 const eventbus = inject("customEventBus") as TinyEmitter;
@@ -59,8 +64,11 @@ const {store, data, setStore} = useStore<StaStore>(eventbus);
 const {getState} = useSerialization(settings);
 const thingsLayer = ref(null);
 const {compareDatastream, compareThing} = useComparator();
-const {isPoint, isFeatureCollection} = useUtils();
+const {isPoint, isFeatureCollection, transformToGeoJson} = useUtils();
+
 const openThing = ref<object[]>([])
+
+const {getById} = useDataPointRegistry();
 
 defineExpose({
     setSetting,
@@ -70,8 +78,6 @@ defineExpose({
     setStore,
     getState,
 });
-const {getById} = useDataPointRegistry();
-
 onMounted(() => {
 
     const mapDiv = document.getElementById("map");
@@ -83,38 +89,13 @@ onMounted(() => {
     });
 
     resizeObserver.observe(mapDiv);
-})
 
+
+})
 const locations = computed(() => {
     return data.value['locations'];
-
 })
-watch(settings, () => {
-    console.log('settings changed')
-}, {deep: true})
 
-const rendereComp = computed(() => {
-    console.log('comp renderer')
-    return settings.value.renderer;
-})
-const rev = (arr: any) => {
-    return {
-        lat: arr[1],
-        lng: arr[0]
-    }
-}
-const reverse = (arr: any) => {
-    return [arr[1], arr[0]]
-}
-const settings_co = (loc) => {
-
-    return computed(() => {
-        console.log('computed');
-        if (resolve(settings, 'value', 'renderer', 0, 'renderer', 'point')) {
-            return settings.value.renderer[0].renderer.point;
-        } else return null
-    });
-}
 const getStyle = computed(() => {
 
     return (feature) => {
@@ -123,76 +104,7 @@ const getStyle = computed(() => {
         } else return {}
     }
 })
-const mapmove = () => {
-    let inBounds = map.value.leafletObject.getBounds();
 
-    //@ts-ignore
-    if (locations && locations.value) {
-        for (const location: Location of locations.value) {
-
-            if (isPoint(location.location)) {
-                if (inBounds.contains((reverse(location.location.coordinates)))) {
-                    location.Things?.forEach(thing => {
-                        thing.Datastreams?.forEach(async ds => {
-                            if (!ds.Observations) {
-                                ds = (await store.value.getObservations(ds));
-                                console.log(ds);
-                            }
-                        })
-                    });
-                }
-            }
-
-        }
-
-    }
-
-}
-const style = computed(() => {
-
-    return (feature: any) => {
-
-    };
-})
-const getPoints = (renderer) => {
-
-}
-const pointToLayerWrapper = (renderer) => {
-    return (feature, latlng) => {
-
-        const el = new IconWidget().$mount().$el;
-        const outerhtlm = "<div style='background-color:#c30b82;' class='marker-pin'>" +
-            el.outerHTML +
-            "</div>";
-
-        return L.marker(latlng, {
-            icon: new DivIcon({
-
-                html: outerhtlm
-            })
-        });
-    }
-};
-const collectionToPoint = (fc) => {
-    try {
-        let point = pointOnFeature(fc)
-        return reverse(point.geometry.coordinates)
-    } catch (e) {
-        return null
-    }
-}
-const getPoint = (PointOrFeature: any) => {
-    if (isPoint(PointOrFeature)) {
-        return reverse(PointOrFeature.coordinates)
-    } else if (isFeatureCollection(PointOrFeature)) {
-        try {
-            let point = pointOnFeature(PointOrFeature)
-            return reverse(point.geometry.coordinates)
-        } catch (e) {
-            return null
-        }
-    }
-}
 const options = computed(() => {
     return {
         pointToLayer: (feature, latlng) => {
@@ -208,21 +120,113 @@ const options = computed(() => {
         }
     }
 })
-const clusterDrawer = (cluster: any) => {
-    const html = `${cluster.getChildCount()}`
-    const icon = divIcon({
-        className: 'red-cluster',
-        html,
-        iconSize: point(50, 50)
-    })
-    return icon
-}
-const refHolder = ref<Map<string, any>>(new Map<string, any>())
-const setRef = (render, thing) => {
 
-    refHolder.value.set(render.id + '_' + thing['@iot.id'], ref(undefined))
-    return refHolder.value.get(render.id + '_' + thing['@iot.id']);
+watch(settings, () => {
+    console.log('settings changed');
+    if(mounted)loadObservationsInView();
+
+}, {deep: true})
+watch(data,()=>{
+    console.log('data in store changed ');
+    if(mounted)loadObservationsInView();
+})
+const maploaded = ()=>{
+    mounted = true;
 }
+const rev = (arr: any) => {
+    return {
+        lat: arr[1],
+        lng: arr[0]
+    }
+}
+const reverse = (arr: any) => {
+
+    return [arr[1], arr[0]]
+
+}
+
+const mapmove = debounce(async () => {
+    loadObservationsInView();
+}, 2000, {leading: false});
+const loadObservationsInView = () => {
+    let inBounds = map.value.leafletObject.getBounds();
+
+    let geometry: Polygon = {
+        type: "Polygon",
+        coordinates: [[[inBounds._northEast.lng, inBounds._northEast.lat],
+
+            [inBounds._northEast.lng, inBounds._southWest.lat],
+            [inBounds._southWest.lng, inBounds._southWest.lat],
+            [inBounds._southWest.lng, inBounds._northEast.lat],
+            [inBounds._northEast.lng, inBounds._northEast.lat]
+        ]],
+    };
+    const bboxFeature = feature(geometry);
+    const catchedDSIds = [];
+    for (const dataStream: Datastream of data.value['datastreams']) {
+        for (const renderer of settings.value.renderer) {
+            for (const subrender of renderer.ds_renderer) {
+
+                if (compareDatastream(dataStream, subrender)) {
+                    if (dataStream.observedArea) {
+
+                        const featrueObservedArea = feature(transformToGeoJson(toRaw(dataStream.observedArea)) as Polygon);
+
+                        if (booleanContains(bboxFeature, featrueObservedArea)) {
+                            catchedDSIds.push(new class extends Task {
+                                readonly id = dataStream["@iot.id"]!.toString();
+                                private handle;
+
+                                invoke() {
+                                    window.clearInterval(this.handle)
+                                }
+
+                                run() {
+                                    console.log('run')
+                                    store.value.getObservations(dataStream)
+                                    this.handle = window.setInterval(async () => {
+                                        await store.value.getObservations(dataStream)
+                                    }, renderer.ObservationrefreshTime * 1000 || 10000000)
+                                }
+                            }())
+                            //const ds = (await store.value.getObservations(dataStream));
+                            //console.log(ds);
+                        }
+                    } else {
+                        //dataStream.Thing.
+                    }
+                }
+            }
+
+        }
+    }
+
+    useTaskManager().addTasksAndIvnoke(catchedDSIds);
+
+
+}
+const collectionToPoint = (fc) => {
+    try {
+        let point = pointOnFeature(fc)
+        return reverse(point.geometry.coordinates)
+    } catch (e) {
+        return null
+    }
+
+}
+const getPoint = (PointOrFeature: any) => {
+    if (isPoint(PointOrFeature)) {
+        return reverse(PointOrFeature.coordinates)
+    } else if (isFeatureCollection(PointOrFeature)) {
+        try {
+            let point = pointOnFeature(PointOrFeature)
+            return reverse(point.geometry.coordinates)
+        } catch (e) {
+            return null
+        }
+    }
+}
+
 
 const _generatePointsSpiral = (count, centerPt) => {
     let spiderfyDistanceMultiplier = 3,
@@ -235,7 +239,6 @@ const _generatePointsSpiral = (count, centerPt) => {
 
     res.length = count;
 
-
     for (i = count; i >= 0; i--) {
         if (i < count) {
             res[i] = [Math.round(centerPt[0] + legLength * Math.cos(angle)), Math.round(centerPt[1] + legLength * Math.sin(angle))];
@@ -245,18 +248,27 @@ const _generatePointsSpiral = (count, centerPt) => {
     }
     return res;
 }
-const c = () => {
-    alert('c')
-}
+
 </script>
 
 <template>
     <div class="cmap_container">
         <l-map id="map" ref="map" :center="center" :max-zoom="21" :useGlobalLeaflet="true" :zoom="zoom"
                style="height: 100%"
-               @move="mapmove">
+               @move="mapmove"
+                @ready="maploaded">
             <l-tile-layer :attribution="attribution" :options="{maxNativeZoom:19,
         maxZoom:25}" :url="baseMapUrl"></l-tile-layer>
+            <!--<l-wms-tile-layer
+                key="jena"
+                url="https://map.jena.de/mapproxy/wms"
+                name="wmsLayer.name"
+                layers="Stadtplan"
+                attribution="wmsLayer.attribution"
+                format="image/png"
+                layer-type="base"
+            ></l-wms-tile-layer>-->
+
             <!--<l-geo-json  :geojson="location.location"  v-for="location in locations" ref="thingsLayer" :options-style="getStyle"></l-geo-json>-->
             <!-- <v-marker-cluster :options="{spiderfyDistanceMultiplier:3.2,animate:true,animateAddingMarkers:true,zoomToBoundsOnClick:false,disableClusteringAtZoom:18}"
                                ref="clusterRef2">-->
@@ -305,16 +317,20 @@ const c = () => {
                                     </div>-->
                                 </l-icon>
                             </l-marker>
-                            <template v-for="datastream in thing.Datastreams??[]">
+                            <!--<template v-for="datastream in thing.Datastreams??[]">
                                 <l-geo-json v-if="isFeatureCollection(datastream.observedArea)" ref="thingsLayer"
                                             :geojson="datastream.observedArea" :options="options"
                                             :options-style="renderer.renderer.area"></l-geo-json>
-                            </template>
+                            </template>-->
                             <!--<l-marker-cluster-group  :spiderfyOnMaxZoom="1" :spiderfyOnEveryZoom="true" spiderfyDistanceMultiplier="5" :iconCreateFunction="clusterDrawer" :chunkedLoading="true" :ref="setRef(renderer,thing)">-->
                             <template v-for="(datastream,ind) in thing.Datastreams??[]">
                                 <template v-for="subrenderer in renderer.ds_renderer">
+
                                     <template
-                                        v-if="compareDatastream(datastream, subrenderer) && openThing[thing['@iot.id']]">
+                                        v-if="compareDatastream(datastream, subrenderer) /*&& openThing[thing['@iot.id']]*/">
+                                        <l-geo-json ref="thingsLayer"
+                                                    :geojson="transformToGeoJson(datastream.observedArea)" :options="options"
+                                                    :options-style="subrenderer.renderer.area"></l-geo-json>
                                         <l-marker
                                             :lat-lng="getPoint(location.location) as L.LatLngExpression">
                                             <l-icon class-name="someExtraClass">
@@ -330,8 +346,7 @@ const c = () => {
                                                             <component
                                                                 :is="getById(subrenderer.observation.component)?.component"
                                                                 v-if="getById(subrenderer.observation.component)"
-                                                                :data="datastream.Observations[0]?.result||'null'"
-                                                                v-bind="subrenderer.observation.setting"></component>
+                                                                v-bind="{...subrenderer.observation.setting,data:datastream.Observations[0]?.result}"></component>
                                                         </template>
 
                                                     </div>

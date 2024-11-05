@@ -10,13 +10,14 @@ Contributors: Smart City Jena
 */
 import type {FileI} from "@/git_api/api/File";
 import type {FolderI} from "@/git_api/api/Folder";
+import type {CommitI} from "@/git_api/api/Commit";
 
 export interface BranchI{
     repo:string;
     owner:string;
     name:string;
     sha:string;
-    fetchCommits()
-    getCommits()
+    fetchCommits():Promise<CommitI[]>
+    getCommits():CommitI[]
     addCommit(files:Array<FileI|FolderI>,msg:string):Promise<void>
 }
