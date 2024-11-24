@@ -14,4 +14,5 @@ export interface BranchProviderI{
      fetchBranches(): Promise<BranchI[]>
      getBranches():BranchI[];
      addBranch(name:string, sourceBranch:BranchI):Promise<void>;
+     setOptions?(options?:any);
 }

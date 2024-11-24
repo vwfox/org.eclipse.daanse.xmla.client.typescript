@@ -9,7 +9,7 @@ Contributors: Smart City Jena
 
 -->
 <template>
-    <NavBarDash></NavBarDash>
+    <NavBarDash v-if="!(settings.visuals.hideHeader)"></NavBarDash>
     <div class="app-container">
         <div
             class="app-layout-container bg grey padd"
@@ -26,19 +26,22 @@ Contributors: Smart City Jena
                         :borderColor="editEnabled ? '#4153b5' : ''"
                         icon="edit"
                         @click="toggleEdit"
+                        v-if="!(settings.visuals.hideEdit)"
                     >
                         {{ t("MultilevelDashboardNavigation.edit") }}
                     </va-button>
-                    <va-button
-                        v-for="(button, index) in layoutSettingsButtons"
-                        :key="index"
-                        :preset="button.preset"
-                        class="settings-button va-icon-settings"
-                        :icon="button.icon"
-                        @click="button.action"
-                    >
-                        {{ button.label }}
-                    </va-button>
+                    <template  v-for="(button, index) in layoutSettingsButtons">
+                        <va-button
+                            :key="index"
+                            :preset="button.preset"
+                            class="settings-button va-icon-settings"
+                            :icon="button.icon"
+                            v-if="!(settings.visuals[button.condition])"
+                            @click="button.action"
+                        >
+                            {{ button.label }}
+                        </va-button>
+                    </template>
                 </div>
                 <div class="widgets-dropdown">
                     <va-dropdown
@@ -71,6 +74,7 @@ Contributors: Smart City Jena
                                 @mouseup="mouseup"
                                 @mouseover="mouseover"
                                 @mouseleave="mouseleave"
+                                v-if="!((settings.visuals.hideComponentsSettings))"
                             >
                                 {{
                                     t(
@@ -203,31 +207,28 @@ Contributors: Smart City Jena
 <script setup lang="ts">
 import NavBarDash from "./NavBarDash.vue";
 import DashboardControls from "@/components/Dashboard/DashboardControls.vue";
-import {
-    getCurrentInstance,
-    markRaw,
-    ref,
-    type Ref,
-    provide,
-    inject,
-} from "vue";
-import { useStoreManager } from "@/composables/storeManager";
+import {getCurrentInstance, inject, markRaw, onMounted, provide, type Ref, ref,} from "vue";
+import {useStoreManager} from "@/composables/storeManager";
 import Moveable from "vue3-moveable";
 import SidebarSettings from "@/components/Sidebar/SidebarSettings.vue";
-import { useDatasourceManager } from "@/composables/datasourceManager";
-import { useMoveableLayout } from "@/composables/dashboard/moveableLayout";
-import { useSerialization } from "@/composables/dashboard/serialization";
-import { useErrorHandler } from "@/composables/dashboard/errorToast";
-import { useWidgets } from "@/composables/dashboard/widgets";
+import {useDatasourceManager} from "@/composables/datasourceManager";
+import {useMoveableLayout} from "@/composables/dashboard/moveableLayout";
+import {useSerialization} from "@/composables/dashboard/serialization";
+import {useErrorHandler} from "@/composables/dashboard/errorToast";
+import {useWidgets} from "@/composables/dashboard/widgets";
 import WidgetWrapper from "@/components/Widgets/WidgetWrapper/WidgetWrapper.vue";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import ErrorHandlingModal from "@/components/Modals/ErrorHandlingModal.vue";
 import SaveModal from "@/components/Modals/SaveModal.vue";
-import loadModal from "@/components/Modals/LoadModal.vue";
-import LoadModal from "@/components/Modals/LoadModal.vue";
+
+import {useRoute} from "vue-router";
+import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
+import LoadModal from "@/components/Modals/LoadSave/LoadModal.vue";
+
+
 
 const { t } = useI18n();
-
+const repoRepo = useRepositoryRegistry();
 const dsManager = useDatasourceManager();
 const storeManager = useStoreManager();
 const { setOnClick } = useErrorHandler();
@@ -244,7 +245,7 @@ const isDropdownVisible = ref(false);
 const isActiveButton = ref(false);
 const isMouseOver = ref(false);
 const layoutSettingsButtons = ref<
-    Array<{ label: string; preset: string; action: () => void; icon: string }>
+    Array<{ label: string; preset: string; action: () => void; icon: string ,condition:string}>
 >([]);
 
 provide("backgroundColor", backgroundColor);
@@ -259,8 +260,8 @@ const openErrorModal = (data) => {
 const openLaodSaveModal = (data) => {
      loadsaveModal.value?.run(data);
 };
-const openLaodModal = async () => {
-    return await loadModalref.value?.run();
+const openLaodModal = async (data:{context:string,state:any}) => {
+    return await loadModalref.value?.run(data);
 };
 
 setOnClick(openErrorModal);
@@ -340,9 +341,11 @@ const toggleEdit = () => {
     editEnabled.value = !editEnabled.value;
 };
 
-const saveLayout = () => {
+const saveLayout = async() => {
     const state = getSerializedState();
-    openLaodSaveModal(state);
+    //openLaodSaveModal(state);
+    const retrievedObject = await openLaodModal({context:'SAVE',state:state});
+
     //
     //localStorage.setItem("testLayout", JSON.stringify(state));
 
@@ -350,7 +353,7 @@ const saveLayout = () => {
 };
 
 const loadLayout = async () => {
-    const retrievedObject = await openLaodModal();
+    const retrievedObject = await openLaodModal({context:'LOAD',state:null});
     if(retrievedObject){
         loadState(retrievedObject);
     }
@@ -372,23 +375,27 @@ layoutSettingsButtons.value.push(
         label: t("MultilevelDashboardNavigation.save"),
         preset: "primary",
         action: saveLayout,
+        condition:"hideSaveLoad",
         icon: "save",
     },
     {
         label: t("MultilevelDashboardNavigation.loadLayout"),
         preset: "primary",
         action: loadLayout,
+        condition:"hideSaveLoad",
         icon: "upload",
     },
     {
         label: t("MultilevelDashboardNavigation.storeList"),
         preset: "primary",
         action: openStoreList,
+        condition:"hideStoreEdit",
         icon: "list",
     },
     {
         label: t("MultilevelDashboardNavigation.appSettings"),
         preset: "primary",
+        condition:"hideAppSettings",
         action: openAppSettings,
         icon: "settings",
     },
@@ -427,6 +434,35 @@ const deleteWidget = (id) => {
     delete layout.value[id];
     removeWidget(id);
 };
+
+const loadFromUrl = (url)=>{
+    fetch(url as string)
+        .then((response) => response.json())
+        .then(result=>{
+
+            const keys = Object.keys(result);
+            if(keys.includes('layout') &&  keys.includes('stores')  && keys.includes('datasources')  && keys.includes('widgets')){
+                if(result){
+                    loadState(JSON.stringify(result));
+                }
+            }
+            else {
+                throw new Error('Format not suported')
+            }
+
+        }).catch((e)=>{
+        console.log(e);
+        openErrorModal({message:'Could not load Configuration from Endpoint!',name:'Config Error'});
+    });
+}
+const route = useRoute()
+
+const settings =  window['__env'].settings;
+onMounted(()=>{
+    if(settings.value.initWithConfigurationURI.url){
+        loadFromUrl(settings.value.initWithConfigurationURI.url)
+    }
+})
 </script>
 
 <style lang="scss">

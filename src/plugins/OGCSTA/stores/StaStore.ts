@@ -1,3 +1,14 @@
+/*
+  Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+  This program and the accompanying materials are made
+  available under the terms of the Eclipse Public License 2.0
+  which is available at https://www.eclipse.org/legal/epl-2.0/
+  SPDX-License-Identifier: EPL-2.0
+
+  Contributors: Smart City Jena
+
+*/
+
 import {useDatasourceManager} from "@/composables/datasourceManager";
 import type {IOGCSTA} from "@/plugins/OGCSTA/dataSources/STADataSource";
 import type {Datastream} from "@/plugins/OGCSTA/dataSources/STAClient";
@@ -56,6 +67,7 @@ export default class StaStore extends BaseStore implements IStore, ISerializable
         console.log(ds["@iot.id"])
         let observations: IOGCSTA = await datasource.getData({datastreams: {ids: [ds["@iot.id"]]}});
         ds.Observations = observations.observations;
+        this.data.observations = observations.observations;
         return ds;
     }
 

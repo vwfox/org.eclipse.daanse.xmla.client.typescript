@@ -18,6 +18,7 @@ import type {BranchI} from "@/git_api/api/Branch";
 import OktokitMultipleFiles from "octokit-commit-multiple-files";
 import type {FolderI} from "@/git_api/api/Folder";
 import {FileState} from "@/git_api/api/FileState";
+import {AuthentificationError} from "@/git_api/services/common/CastError";
 
 export default class CommitProvider implements CommitProviderI{
 
@@ -25,8 +26,8 @@ export default class CommitProvider implements CommitProviderI{
     readonly fileProvider:FileProviderI;
     readonly owner:string;
     readonly name:string;
-    private readonly _oc;
-    readonly options?:any;
+    private _oc;
+    protected options?:any;
 
     constructor( owner:string,name:string,fileProvider:FileProviderI,options:any=undefined) {
         this.fileProvider = fileProvider;
@@ -102,10 +103,21 @@ export default class CommitProvider implements CommitProviderI{
                     }]
             });
             return
-        }catch (e){
-            console.log(e);
-            return
+        }catch (e:any){
+            console.log(e.code);
+            if(e.status == 404){
+                throw new AuthentificationError(e.message,402);
+            }else{
+                throw e;
+            }
+
         }
+    };
+
+    setOptions(options:any){
+        this.options  = options;
+        const oc = Octokit.plugin(OktokitMultipleFiles);
+        this._oc = new oc(this.options);
     }
 
 }

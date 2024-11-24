@@ -1,3 +1,14 @@
+/*
+  Copyright (c) 2023 Contributors to the  Eclipse Foundation.
+  This program and the accompanying materials are made
+  available under the terms of the Eclipse Public License 2.0
+  which is available at https://www.eclipse.org/legal/epl-2.0/
+  SPDX-License-Identifier: EPL-2.0
+
+  Contributors: Smart City Jena
+
+*/
+
 import type {IMapProps} from "@/plugins/OGCSTA/widgets/api/MapPreview";
 // @ts-ignore
 import type {IIconSettings} from "@/components/Widgets/Icon/IconWidgetSettings.vue";
@@ -47,6 +58,8 @@ export interface IRenderer {
         label: any
     }
     ds_renderer: IDSRenderer[],
+    ObservationrefreshTime?:number|undefined,
+    lastUpdate?:number|undefined,
     id: string;
 
 }
