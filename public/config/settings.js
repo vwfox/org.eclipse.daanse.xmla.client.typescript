@@ -33,12 +33,12 @@
         },
         "viewmodeByDefault":false,
         "visuals":{
-            "hideHeader":true,
-            "hideMenu":true,
-            "hideEdit":true,
-            "hideSaveLoad":true,
-            "hideComponentsSettings":true,
-            "hideAppSettings":true
+            "hideHeader":false,
+            "hideMenu":false,
+            "hideEdit":false,
+            "hideSaveLoad":false,
+            "hideComponentsSettings":false,
+            "hideAppSettings":false
         },
         "appSettings":{
             "backgroundColor":"",
