@@ -22,6 +22,7 @@ import TLCDataLabelRendererDescription
 import ValueUnitDataLabelRendererDescription
     from "@/plugins/OGCSTA/widgets/parts/dataLabelRenderer/ValueUnitDataLabelRendererDescription";
 import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
+import type {Component} from "vue";
 
 export default {
 
@@ -35,7 +36,7 @@ export default {
         const dataSourceMgr = useDatasourceManager();
 
         dataSourceMgr.registerDataSource(STADataSource);
-        storeMgr.registerStoreType(StaStore);
+        storeMgr.registerStoreType(StaStore,OGCSTAStoreItem as unknown as Component);
         useDataPointRegistry().registerDataPointRenderer(new TLCDataLabelRendererDescription())
         useDataPointRegistry().registerDataPointRenderer(new ValueUnitDataLabelRendererDescription())
     }

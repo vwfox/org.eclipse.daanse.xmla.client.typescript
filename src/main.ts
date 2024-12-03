@@ -8,7 +8,7 @@
   Contributors:
 
 */
-import { createApp } from "vue";
+import {type Component, createApp} from "vue";
 import { createPinia } from "pinia";
 import SOAPClient from "./plugins/SOAPClient";
 import EventBus from "./plugins/EventBus";
@@ -97,6 +97,8 @@ import RestRepositoryImpl from "@/persistence/RestRepository/RestRepository";
 import GitRepositoryImpl from "@/persistence/GitRepository/GitRepositoryImpl";
 import GitRepositoryV from "@/persistence/GitRepository/GitRepositoryV.vue";
 import BarChartWidget from "@/plugins/charts/widgets/BarChartWidget.vue";
+import Sparql from "@/plugins/sparql/Sparql";
+import XMLAStoreListItem from "@/components/Stores/ListItems/XMLAStoreListItem.vue";
 
 //@ts-ignore
 const app = createApp(App);
@@ -209,7 +211,7 @@ useDatasourceManager().registerDataSource(RESTDatasource);
 useDatasourceManager().registerDataSource(MQTTDatasource);
 
 
-useStoreManager().registerStoreType(XMLAStore);
+useStoreManager().registerStoreType(XMLAStore,XMLAStoreListItem as unknown as Component);
 useStoreManager().registerStoreType(Store);
 
 useRepositoryRegistry().registerRepoType(LocalRepositoryImpl);
@@ -221,6 +223,8 @@ useRepositoryRegistry().registerViewForRepoType(GitRepositoryImpl,GitRepositoryV
 
 app.use(OGCSTA);
 app.use(Chart);
+app.use(Sparql);
+
 //app.use(OGCSTAComposerPlugin);
 app.mount("#app");
 export default app;

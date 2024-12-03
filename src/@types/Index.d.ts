@@ -36,8 +36,8 @@ interface IStore {
     setDatasource: (datasourceId: string) => void;
     getDatasource: () => IDatasource;
     getData: (params?: any) => Promise<any>;
-    setOptions: (options: IStoreParams) => void;
-    updateParam: (paramName: string, value: string) => void;
+    setOptions: (options: any) => void;
+    updateParam: (paramName: string, value: any) => void;
     updateEvents: (events: IStoreEvents[]) => void;
 }
 

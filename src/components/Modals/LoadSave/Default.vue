@@ -60,7 +60,8 @@ watch(()=>props.repo, async (_new) => {
 },{immediate:true})
 
 const downloadItemById = async (row) => { //@ToDo refactor this
-    let blob = new Blob([(await props.repo.getEntityByUri(row.uri))?.data], {type: "application/json"});
+    const data = (await props.repo.getEntityByUri(row.uri))?.data;
+    let blob = new Blob([JSON.stringify(data)], {type: "application/json"});
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';

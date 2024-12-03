@@ -11,40 +11,23 @@ Contributors: Smart City Jena
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
 import { useStoreManager } from "../../composables/storeManager";
-import { onMounted, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import StoreListItem from "./ListItems/StoreListItem.vue";
 import XMLAStoreListItem from "./ListItems/XMLAStoreListItem.vue";
 import OGCSTAStoreItem from "@/components/Stores/ListItems/OGCSTAStoreItem.vue";
 
 const { t } = useI18n();
 const storeManager = useStoreManager();
-const map = storeManager.getStoreList();
+const map =storeManager.getStoreList();
 const list = ref([] as IStore[]);
-const tabs = ["REST", "XMLA","CSV","OGCSTA"];
+const tabs = computed(()=>{
+    return useStoreManager().getStoreTypes();
+})
 const currentTab = ref(0);
-let filteredList = ref([] as IStore[]);
+const filteredListLength=computed(()=>{
+    return Array.from(map.value.values()).filter(p=>p.type==tabs.value[currentTab.value]).length;
+})
 
-watch(
-    map,
-    () => {
-        list.value = Array.from(map.value, function (entry) {
-            return entry[1];
-        });
-    },
-    { deep: true },
-);
-
-onMounted(() => {
-    list.value = Array.from(map.value, function (entry) {
-        return entry[1];
-    });
-});
-
-watch([() => list.value, () => currentTab.value], ([newList, _]) => {
-    filteredList.value = newList.filter(
-        (item) => item.type === tabs[currentTab.value],
-    );
-});
 </script>
 
 <template>
@@ -55,45 +38,23 @@ watch([() => list.value, () => currentTab.value], ([newList, _]) => {
             </va-tab>
         </template>
         <va-list>
-            <template v-if="filteredList?.length">
-                <div
-                    v-for="(item, index) in filteredList"
-                    :key="index"
-                    class="store-item"
+
+            <template v-if="filteredListLength>0">
+                <template
+                    v-for="[key,item] of map"
+                    :key="item"
+
                 >
                     <template
                         v-if="
-                            item.type === 'REST' &&
                             item.type === tabs[currentTab]
-                        "
-                    >
-                        <store-list-item :item="item"></store-list-item>
+                        ">
+                        <div class="store-item">
+                            <component v-if="useStoreManager().getComponentForStoreType(item.type)" :is="useStoreManager().getComponentForStoreType(item.type)!" :item="item"></component>
+                            <store-list-item v-else :item="item"></store-list-item>
+                        </div>
                     </template>
-                    <template
-                        v-else-if="
-                            item.type === 'XMLA' &&
-                            item.type === tabs[currentTab]
-                        "
-                    >
-                        <XMLAStoreListItem :item="item"></XMLAStoreListItem>
-                    </template>
-                    <template
-                        v-else-if="
-                            item.type === 'CSV' &&
-                            item.type === tabs[currentTab]
-                        "
-                    >
-                        <CSVStoreListItem :item="item"></CSVStoreListItem>
-                    </template>
-                    <template
-                        v-else-if="
-                            item.type === 'OGCSTA' &&
-                            item.type === tabs[currentTab]
-                        "
-                    >
-                        <OGCSTAStoreItem :item="item"></OGCSTAStoreItem>
-                    </template>
-                </div>
+                </template>
             </template>
             <template v-else>{{
                 t("SidebarStoreList.noAvailableStores")

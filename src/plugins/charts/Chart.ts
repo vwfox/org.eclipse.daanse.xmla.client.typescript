@@ -34,7 +34,7 @@ export default {
 
         //const storemanger = container.get<StoreManagerI>(cid.UseStoreManager); // injection via inverserify
         //console.log(storemanger.register(...)) //register Store
-        useStoreManager().registerStoreType(CSVStore);
+        useStoreManager().registerStoreType(CSVStore,CSVStoreListItem as unknown as Component);
         useComposerManager().registerComposer(CSVComposer,CSVComposerV as unknown as Component,CSVStore.TYPE);
         useComposerManager().registerComposer(XMLAComposer,XMLAComposerV as unknown as Component, XMLAStore.TYPE);
 

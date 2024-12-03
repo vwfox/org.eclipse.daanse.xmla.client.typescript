@@ -18,7 +18,7 @@ import { parse } from "csv-parse/browser/esm/sync";
 export default class CSVStore extends BaseStore implements IStore {
     public static readonly TYPE = "CSV";
     private datasourceManager: any;
-    private eventBus: EventBus;
+    public eventBus: EventBus;
 
     public datasourceId: string | null = null;
 

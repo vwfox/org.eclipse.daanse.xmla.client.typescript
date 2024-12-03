@@ -10,7 +10,7 @@
 */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { reactive, type Ref, ref, watch } from "vue";
+import {type Component, reactive, type Ref, ref, watch} from "vue";
 import queryString from "query-string";
 import { optionalArrayToArray } from "@/utils/helpers";
 import { v4, v5 } from "uuid";
@@ -23,6 +23,7 @@ interface BaseStoreClassDerived extends BaseStoreClass {}
 
 const availableStores = ref(new Map<string, IStore & ISerializable>());
 const storeRegistry: Map<string, BaseStoreClassDerived> = new Map();
+const storeComponentRegistry:Map<string, Component> = new Map();
 
 export interface StoreManagerI {
     initStore: {
@@ -32,8 +33,9 @@ export interface StoreManagerI {
     getState: { (): any };
     getStoreList: { (): Ref<Map<string, IStore & ISerializable>> };
     loadState: Function;
-    registerStoreType: { (classOfStoreType: typeof BaseStore): void };
+    registerStoreType: { (classOfStoreType: typeof BaseStore,component?:Component): void };
     getStoreTypes: { (): string[] };
+    getComponentForStoreType(type:string):Component|undefined;
 }
 
 export function useStoreManager(): StoreManagerI {
@@ -96,12 +98,21 @@ export function useStoreManager(): StoreManagerI {
         });
     };
 
-    const registerStoreType = (classOfStoreType: typeof BaseStore) => {
+    const registerStoreType = (classOfStoreType: typeof BaseStore,component?:Component) => {
         storeRegistry.set(classOfStoreType.TYPE, classOfStoreType);
+        if(component){
+            registerStoreComponentForType(classOfStoreType,component);
+        }
     };
     const getStoreTypes = () => {
         return Array.from(storeRegistry.keys());
     };
+    const registerStoreComponentForType = (classOfStoreType: typeof BaseStore,component:Component)=>{
+        storeComponentRegistry.set(classOfStoreType.TYPE,component)
+    }
+    const getComponentForStoreType=(classOfStoreType:string)=>{
+        return storeComponentRegistry.get(classOfStoreType);
+    }
 
     return {
         registerStoreType,
@@ -111,5 +122,6 @@ export function useStoreManager(): StoreManagerI {
         getState,
         loadState,
         getStoreTypes,
+        getComponentForStoreType
     };
 }

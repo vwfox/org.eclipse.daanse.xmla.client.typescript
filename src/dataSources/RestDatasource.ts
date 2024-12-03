@@ -28,8 +28,8 @@ export default class RESTDatasource
         this.caption = caption;
     }
 
-    async getData(resourcePath: string='', raw=false): Promise<any> {
-        const req = await fetch(`${this.url}${resourcePath}`);
+    async getData(resourcePath: string='', raw=false,options={}): Promise<any> {
+        const req = await fetch(`${this.url}${resourcePath}`,options);
 
         if (raw) {
             return await req.text();
