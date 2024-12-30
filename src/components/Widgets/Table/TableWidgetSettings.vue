@@ -126,26 +126,13 @@ const addComposer = (store: IStore) => {
     >
         <div class="settings-container">
             <div>
-                <h3 class="mb-2">{{ t("Widgets.selectStore") }}</h3>
-                <div class="mb-2" v-for="store in stores" :key="store.id">
-                    <va-radio
-                        :model-value="component.store?.id"
-                        @update:model-value="updateStore"
-                        :option="{
-                            text: `${store.caption} ${store.id}`,
-                            id: store.id,
-                        }"
-                        value-by="id"
-                        name="store-radio-group"
-                    />
-                </div>
-
                 <VaDropdown>
                     <template #anchor>
                         <VaButton> Add+ </VaButton>
                     </template>
 
                     <VaDropdownContent>
+
                         <VaList>
                             <template v-for="store in stores">
 
@@ -163,6 +150,8 @@ const addComposer = (store: IStore) => {
                         </VaList>
                     </VaDropdownContent>
                 </VaDropdown>
+                <br/>
+                <br/>
                 <div
                     class="composers"
                     v-for="(composer, i) in component.settings.composer"

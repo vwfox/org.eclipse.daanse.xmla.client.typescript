@@ -29,7 +29,7 @@ const filter = ref("");
 const filterByFields = ref([]);
 
 const currentPage = ref(0);
-const perPage = ref(10);
+const perPage = ref(25);
 
 const filteredItemsAmount = ref(0);
 
@@ -229,16 +229,6 @@ const columns = computed(()=>{
 
 <template>
   <div class="table_container">
-    <div class="filters">
-      <VaInput v-model="filter" placeholder="Filter..." />
-      <VaSelect
-        v-model="filterByFields"
-        placeholder="Select filter fields"
-        :options="headers"
-        value-by="value"
-        multiple
-      />
-    </div>
     <Suspense>
       <va-data-table
         class="table"
@@ -255,12 +245,7 @@ const columns = computed(()=>{
       />
     </Suspense>
     <div class="pagination">
-      <VaInput
-        v-model="perPage"
-        label="Items per page"
-        class="page_input"
-        type="number"
-      />
+
       <VaPagination
         v-model="currentPage"
         :pages="pagesAmount"

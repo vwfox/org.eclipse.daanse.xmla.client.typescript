@@ -33,10 +33,15 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    isExpanded:{
+        type: Boolean,
+        required:false,
+        default:false
+    }
 });
 
 const item = ref(props.item);
-const isExpanded = ref(false);
+const isExpanded = ref(props.isExpanded);
 
 const dsManager = useDatasourceManager();
 const dsmap = dsManager.getDatasourceList();
@@ -158,6 +163,7 @@ watch(
     },
     { deep: true },
 );
+defineExpose({ isExpanded });
 </script>
 
 <template>
@@ -171,7 +177,7 @@ watch(
         </va-icon>
         <va-icon v-else class="material-icons"> expand_less </va-icon>
     </div>
-    <div v-if="isExpanded" class="store-item-content">
+    <div v-if="isExpanded" class="store-item-content csv-store">
         <va-input
             :label="t('SidebarStoreList.caption')"
             v-model="item.caption"
@@ -279,21 +285,17 @@ watch(
             <h2>{{ t("SidebarStoreList.CSVAStoreListItem.delimiter") }}</h2>
 
             <div class="pad">
-                <VaOptionList
+                <VaButtonToggle
                     v-model="parserParams.delimiter"
-                    class="flex"
-                    type="radio"
-                    :options="['|', ';', ',', '-', ' ', 'tab']"
+                    preset="secondary"
+                    border-color="primary"
+                    :options="[{label:'|',value:'|'}, {label:';',value:';'}, {label:',',value:','}, {label:'-',value:'-'}, {label:'space',value:' '}, {label:'tab',value:'  '}]"
                 />
             </div>
             <h2>{{ t("SidebarStoreList.CSVAStoreListItem.header") }}</h2>
-            <div class="pad">
+            <div class="pad row">
                 <VaCheckbox
-                    :label="
-                        t(
-                            'SidebarStoreList.CSVAStoreListItem.header_in_fist_row',
-                        )
-                    "
+                    :label="t('SidebarStoreList.CSVAStoreListItem.header_in_fist_row')"
                     v-model="headers"
                 />
                 <VaCheckbox
@@ -304,14 +306,13 @@ watch(
             <h2>{{ t("SidebarStoreList.CSVAStoreListItem.range") }}</h2>
             <div class="pad row">
                 <VaInput
-                    class="flex flex-col md6"
+
                     :label="t('SidebarStoreList.CSVAStoreListItem.from')"
                     v-model="parserParams.from"
                     type="number"
                 >
                 </VaInput>
                 <VaInput
-                    class="flex flex-col md6"
                     :label="t('SidebarStoreList.CSVAStoreListItem.to')"
                     :modelValue="parserParams.to"
                     @update:modelValue="
@@ -322,29 +323,24 @@ watch(
                 </VaInput>
             </div>
             <h2>{{ t("SidebarStoreList.CSVAStoreListItem.datetime") }}</h2>
-            <div class="pad">
+            <div class="pad row">
                 <VaOptionList
                     v-model="parserParams.unixtimers"
                     :options="item.getHeader()"
                 />
             </div>
-
-            <h2>{{ t("SidebarStoreList.CSVAStoreListItem.preview") }}</h2>
-            <div class="pad">
-                {{ item.datasourceId }}
-                <!--<VaDataTable :items="item" />-->
-            </div>
         </div>
     </div>
 </template>
 <style lang="scss">
-.store-item {
-    .flex {
-        ul {
+.csv-store {
+    .row,.row > ul {
+
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
-        }
+            gap:10px;
+
     }
 }
 .pad {

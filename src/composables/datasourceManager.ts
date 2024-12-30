@@ -106,6 +106,9 @@ export function useDatasourceManager() {
     const registerDataSource = (class_ref: typeof DataSource) => {
         dataSourceRegistry[class_ref.TYPE] = class_ref;
     };
+    const getRegisteredTypes = ()=>{
+        return Object.keys(dataSourceRegistry);
+    }
     const unRegisterDataSource = (class_ref: typeof DataSource) => {
         delete dataSourceRegistry[class_ref.TYPE];
         //dataSourceRegistry.push(class_ref);
@@ -116,6 +119,7 @@ export function useDatasourceManager() {
 
     return {
         getDataSourceRegistry,
+        getRegisteredTypes,
         registerDataSource,
         unRegisterDataSource,
         initDatasource,

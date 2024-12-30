@@ -30,7 +30,7 @@ Contributors: Smart City Jena
                     >
                         {{ t("MultilevelDashboardNavigation.edit") }}
                     </va-button>
-                    <template  v-for="(button, index) in layoutSettingsButtons"  :key="index">
+                    <template  v-for="(button, index) in menuItems"  :key="index">
                         <va-button
 
                             :preset="button.preset"
@@ -201,7 +201,7 @@ Contributors: Smart City Jena
         <ErrorHandlingModal ref="errorHandlingModal" />
         <SaveModal ref="loadsaveModal" />
         <LoadModal ref="loadModalref" />
-        <EndPointfinderModal ref ="endPointfinderRef"></EndPointfinderModal>
+        <!--<EndPointfinderModal ref ="endPointfinderRef"></EndPointfinderModal>-->
     </div>
 </template>
 
@@ -226,6 +226,7 @@ import {useRoute} from "vue-router";
 import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 import LoadModal from "@/components/Modals/LoadSave/LoadModal.vue";
 import EndPointfinderModal from "@/plugins/endpointfinder/modals/EndPointfinderModal.vue";
+import {useMenuItems} from "@/composables/dashboard/menuItems";
 
 
 
@@ -265,9 +266,6 @@ const openLaodSaveModal = (data) => {
 };
 const openLaodModal = async (data:{context:string,state:any}) => {
     return await loadModalref.value?.run(data);
-};
-const openEndPointfinderRef = async () => {
-    return await endPointfinderRef.value?.run();
 };
 
 setOnClick(openErrorModal);
@@ -333,6 +331,9 @@ const {
     moveToTop,
 } = useMoveableLayout();
 
+const {
+    menuItems
+} = useMenuItems()
 const { getSerializedState, loadState } = useSerialization(
     {
         layout: layoutStorage,
@@ -375,10 +376,41 @@ const openAppSettings = () => {
     settingsSection.value = { type: "App" };
     showSidebar.value = true;
 };
-const openendPointFinder = ()=>{
-    openEndPointfinderRef();
-}
-layoutSettingsButtons.value.push(
+
+useMenuItems().addMenuItem({
+    label: t("MultilevelDashboardNavigation.save"),
+    preset: "primary",
+    action: saveLayout,
+    condition:"hideSaveLoad",
+    icon: "save",
+    priority:100
+});
+useMenuItems().addMenuItem({
+    label: t("MultilevelDashboardNavigation.loadLayout"),
+    preset: "primary",
+    action: loadLayout,
+    condition:"hideSaveLoad",
+    icon: "upload",
+    priority:90
+});
+useMenuItems().addMenuItem({
+    label: t("MultilevelDashboardNavigation.storeList"),
+    preset: "primary",
+    action: openStoreList,
+    condition:"hideStoreEdit",
+    icon: "list",
+    priority:80
+});
+
+useMenuItems().addMenuItem({
+    label: t("MultilevelDashboardNavigation.appSettings"),
+    preset: "primary",
+    condition:"hideAppSettings",
+    action: openAppSettings,
+    icon: "settings",
+    priority:10
+});
+/*layoutSettingsButtons.value.push(
     {
         label: t("MultilevelDashboardNavigation.save"),
         preset: "primary",
@@ -414,7 +446,7 @@ layoutSettingsButtons.value.push(
         action: openendPointFinder,
         icon: "travel_explore",
     },
-);
+);*/
 
 const openSettings = (id, wrapperId, type = "Control") => {
     const refs = instance?.refs;

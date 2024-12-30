@@ -4893,6 +4893,11 @@ ansi-to-html@0.7.2:
   dependencies:
     entities "^2.2.0"
 
+any-date-parser@^2.0.1:
+  version "2.0.1"
+  resolved "http://localhost:4873/any-date-parser/-/any-date-parser-2.0.1.tgz#6da11ac2c26ff579c92dfeb9ee82f331488fa1e2"
+  integrity sha512-zSp0VvWHiZw+YrdD3+xvhe9ugBCZFLHpDgJH1ipsbgouL1lRGM7vBdTWWcq0TZDDIuKUVMfcT3ivFx/pP9PCeQ==
+
 anymatch@~3.1.2:
   version "3.1.3"
   resolved "https://registry.npmjs.org/anymatch/-/anymatch-3.1.3.tgz"
@@ -10577,6 +10582,11 @@ monotone-convex-hull-2d@^1.0.1:
   integrity sha512-ixQ3qdXTVHvR7eAoOjKY8kGxl9YjOFtzi7qOjwmFFPfBqZHVOjUFOBy/Dk9dusamRSPJe9ggyfSypRbs0Bl8BA==
   dependencies:
     robust-orientation "^1.1.3"
+
+mount-vue-component@^0.10.2:
+  version "0.10.2"
+  resolved "http://localhost:4873/mount-vue-component/-/mount-vue-component-0.10.2.tgz#de4f2ccb50a42c13824830349d2510787c44dd6e"
+  integrity sha512-oighx0My03ArLOoTV/kLTJnrBwKdQMvn8uRP+u02rGkgkLiX1LycaHzFGib7mUwkyjp3q3uzVgwHjLZqM6rxyA==
 
 moveable@~0.51.2:
   version "0.51.2"

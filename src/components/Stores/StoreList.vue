@@ -110,7 +110,7 @@ const filteredListLength=computed(()=>{
 
 .store-item {
     padding: 0;
-    border: 1px solid silver;
+    /*border: 1px solid silver;*/
     margin-top: 8px;
     display: flex;
     flex-direction: column;

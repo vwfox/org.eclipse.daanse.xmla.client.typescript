@@ -1,4 +1,3 @@
-
 /*
    Copyright (c) 2023 Contributors to the  Eclipse Foundation.
    This program and the accompanying materials are made
@@ -10,14 +9,15 @@
 
  */
 
-    import { useDatasourceManager } from "@/composables/datasourceManager";
+import {useDatasourceManager} from "@/composables/datasourceManager";
 import type RESTDatasource from "@/dataSources/RestDatasource";
 import BaseStore from "@/stores/Widgets/BaseStore";
-import { useErrorHandler } from "@/composables/dashboard/errorToast";
+import {useErrorHandler} from "@/composables/dashboard/errorToast";
 import {parse} from "csv-parse/browser/esm/sync";
 import moment from "moment";
+import parser from "any-date-parser";
 
-export default class CSVStore extends BaseStore implements IStore  {
+export default class CSVStore extends BaseStore implements IStore {
     public static readonly TYPE = 'CSV';
     private datasourceManager: any;
     public eventBus: EventBus;
@@ -31,23 +31,35 @@ export default class CSVStore extends BaseStore implements IStore  {
     private runtimeParams: IStoreParams = {};
     private errorToast: any;
 
-    private unixtimers:any = [];
-    private cast =  (value, context) => {
-            if(context.header){
-        this.unixtimers = [];
-        return value
+    private unixtimers: any = [];
+    private cast = (value, context) => {
+        if (context.header) {
+            this.unixtimers = [];
+            return value
+        }
+
+        if (this.parserParams.unixtimers && this.parserParams.unixtimers.includes(context.column)) {
+
+
+
+            let date = parser.fromString(value);
+            if(date.isValid()){
+                return date;
+            }
+            let date2 = new Date(parseInt(value) * 1000);
+            if(!Number.isNaN(date2.valueOf())){
+                return date2;
             }
 
-        if(this.parserParams.unixtimers && this.parserParams.unixtimers.includes(context.column) ){
-            return  new Date(parseInt(value)*1000)
+            return value;
         }
-        if(!context.quoting){
+        if (!context.quoting) {
             return ~~value
         }
 
         return value;
     };
-    private columns = (header)=>{
+    private columns = (header) => {
         this.header = header;
         return header
     };
@@ -56,17 +68,17 @@ export default class CSVStore extends BaseStore implements IStore  {
         cast: this.cast,
         cast_date: true,
         unixtimers: [],
-    columns:this.columns,
-    skip_empty_lines: true,
-    from:1,
-    to:undefined,
-    delimiter:','
+        columns: this.columns,
+        skip_empty_lines: true,
+        from: 1,
+        to: undefined,
+        delimiter: ','
     }
-    private header:string[] = [];
+    private header: string[] = [];
     public type = CSVStore.TYPE;
 
     constructor(id: string, caption: string, eventBus: EventBus) {
-        super(id,caption,eventBus);
+        super(id, caption, eventBus);
         this.datasourceManager = useDatasourceManager();
         this.eventBus = eventBus;
         this.requestTemplate = "/products/{pageNum}";
@@ -77,7 +89,7 @@ export default class CSVStore extends BaseStore implements IStore  {
     }
 
     calculateParams(): void {
-        const cachedParams = { ...this.params };
+        const cachedParams = {...this.params};
         this.params = {};
 
         const params = this.requestTemplate.match(/[^{}]+(?=})/g) || [];
@@ -85,7 +97,7 @@ export default class CSVStore extends BaseStore implements IStore  {
             this.params[name] = cachedParams[name] || null;
         });
 
-        this.runtimeParams = { ...this.params };
+        this.runtimeParams = {...this.params};
     }
 
     updateParam(paramName: string, value: string): void {
@@ -104,7 +116,7 @@ export default class CSVStore extends BaseStore implements IStore  {
         this.registerForDataSourceEvents();
     }
 
-    async getData(parseOnly=false): Promise<string> {
+    async getData(parseOnly = false): Promise<string> {
         try {
             let requestTemplate = this.requestTemplate;
 
@@ -118,7 +130,7 @@ export default class CSVStore extends BaseStore implements IStore  {
             });
 
             const datasource = this.datasourceManager.getDatasource(this.datasourceId);
-            const astring = (await datasource?.getData(requestTemplate,true)) as string;
+            const astring = (await datasource?.getData(requestTemplate, true)) as string;
 
             let json = parse(astring, this.parserParams);
             /*let mapa = {}
@@ -130,7 +142,7 @@ export default class CSVStore extends BaseStore implements IStore  {
             //let keys = json[0].map(e=>e['zeit']);
 
             return json;
-        } catch(e) {
+        } catch (e) {
             return this.errorToast.handleErrorToast(e);
         }
     }
@@ -143,7 +155,7 @@ export default class CSVStore extends BaseStore implements IStore  {
         return this.datasourceManager.getDatasource(this.datasourceId);
     }
 
-    setOptions({ caption = "", requestTemplate = "" ,parserParams={}}): void {
+    setOptions({caption = "", requestTemplate = "", parserParams = {}}): void {
         this.caption = caption;
         this.requestTemplate = requestTemplate;
         this.parserParams = parserParams;
@@ -151,7 +163,8 @@ export default class CSVStore extends BaseStore implements IStore  {
         console.log("EMITED UPDATE", this.id);
         this.eventBus.emit(`UPDATE:${this.id}`);
     }
-    setParseParams(parserParams){
+
+    setParseParams(parserParams) {
         this.parserParams = parserParams;
         this.parserParams['cast'] = this.cast;
         this.parserParams['cast_date'] = true;
@@ -163,6 +176,7 @@ export default class CSVStore extends BaseStore implements IStore  {
         this.getData();
         this.eventBus.emit(`UPDATE:${this.id}`);
     }
+
     updateEvents(events) {
         console.log(events);
         this.initedEvents.forEach((e) => {
@@ -213,10 +227,11 @@ export default class CSVStore extends BaseStore implements IStore  {
         // }
     }
 
-    getHeader(){
+    getHeader() {
         return this.header;
     }
-    getParserParams(){
+
+    getParserParams() {
         return this.parserParams;
     }
 
@@ -228,7 +243,7 @@ export default class CSVStore extends BaseStore implements IStore  {
             events: this.events,
             datasourceId: this.datasourceId,
             params: this.params,
-            parserParams:this.parserParams,
+            parserParams: this.parserParams,
             type: "CSV",
         };
     }
@@ -240,14 +255,13 @@ export default class CSVStore extends BaseStore implements IStore  {
         this.events = state.events;
         this.datasourceId = state.datasourceId;
         this.params = state.params;
-        if(state.parserParams){
+        if (state.parserParams) {
             this.parserParams = state.parserParams;
-            this.parserParams['columns']=this.columns;
-            this.parserParams['cast']=this.cast;
+            this.parserParams['columns'] = this.columns;
+            this.parserParams['cast'] = this.cast;
         }
         this.calculateParams();
         this.updateEvents(this.events);
     }
-
 
 }

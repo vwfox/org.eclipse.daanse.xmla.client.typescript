@@ -48,7 +48,13 @@
             "localRepositories":[{
                 name:'BrowserFileRepo',
                 url:"file://localhost"
-            }]
+            }],
+            "gitRepositories":[
+                {
+                    name:"Github-Repository",
+                    url:"https://github.com/de-jena/daanse-dash",
+                }
+            ]
         }
     };
 

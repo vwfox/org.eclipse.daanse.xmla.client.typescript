@@ -27,6 +27,7 @@ import {
     VaSplit,
     VaImage,
     VaModal,
+    VaCard,
     VaCardTitle,
     VaCardContent,
     VaCardActions,
@@ -72,7 +73,8 @@ import {
     VaFileUpload,
     VaForm,
     VaValue,
-    VaMenuList
+    VaMenuList,
+    VaVirtualScroller
 } from "vuestic-ui";
 import "vuestic-ui/css";
 
@@ -99,13 +101,15 @@ import GitRepositoryV from "@/persistence/GitRepository/GitRepositoryV.vue";
 import BarChartWidget from "@/plugins/charts/widgets/BarChartWidget.vue";
 import Sparql from "@/plugins/sparql/Sparql";
 import XMLAStoreListItem from "@/components/Stores/ListItems/XMLAStoreListItem.vue";
+import EndpointFinder from "@/plugins/endpointfinder/EndpointFinder";
+import StoreListItem from "@/components/Stores/ListItems/StoreListItem.vue";
 
 //@ts-ignore
 const app = createApp(App);
 
 const pinia = createPinia();
 
-const i18n = createI18n({
+export const i18n = createI18n({
     legacy: false,
     locale: localStorage.getItem("language") || defaultLocale,
     fallbackLocale: "en",
@@ -148,6 +152,7 @@ app.use(
             VaSplit,
             VaImage,
             VaModal,
+            VaCard,
             VaCardTitle,
             VaCardContent,
             VaCardActions,
@@ -193,7 +198,8 @@ app.use(
             VaFileUpload,
             VaForm,
             VaValue,
-            VaMenuList
+            VaMenuList,
+            VaVirtualScroller
         },
         config: {
             colors: {
@@ -212,7 +218,7 @@ useDatasourceManager().registerDataSource(MQTTDatasource);
 
 
 useStoreManager().registerStoreType(XMLAStore,XMLAStoreListItem as unknown as Component);
-useStoreManager().registerStoreType(Store);
+useStoreManager().registerStoreType(Store,StoreListItem as unknown as Component);
 
 useRepositoryRegistry().registerRepoType(LocalRepositoryImpl);
 useRepositoryRegistry().registerRepoType(RestRepositoryImpl);
@@ -225,6 +231,9 @@ app.use(OGCSTA);
 app.use(Chart);
 app.use(Sparql);
 
+
+app.use(EndpointFinder);
 //app.use(OGCSTAComposerPlugin);
 app.mount("#app");
+
 export default app;

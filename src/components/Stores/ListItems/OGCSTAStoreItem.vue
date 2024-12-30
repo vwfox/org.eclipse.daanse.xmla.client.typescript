@@ -31,10 +31,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+    isExpanded:{
+        type: Boolean,
+        required:false,
+        default:false
+    }
 });
 
 const item = ref(props.item);
-const isExpanded = ref(false);
+const isExpanded = ref(props.isExpanded);
 
 const dsManager = useDatasourceManager();
 const dsmap = dsManager.getDatasourceList();
