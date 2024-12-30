@@ -22,6 +22,9 @@ import { deepUnref } from "vue-deepunref";
 import { isEqual } from "lodash";
 import type CSVStore from "@/plugins/charts/stores/CSVStore";
 import type {ITableComponent} from "@/components/Widgets/Table/TableWidgetSettings.vue";
+import type SparqlStore from "@/plugins/sparql/store/SparqlStore";
+import {computedAsync} from "@vueuse/core";
+import SparqlComposer from "@/plugins/sparql/composer/SparqlComposer";
 
 const model = defineModel<Composer<Selector>>();
 model.value?.getSelectorX();
@@ -65,10 +68,15 @@ watch(
 const ySel = computed(() => {
     return (model.value?.getSelectorsY() as CSVSelector[]).map((e) => e.header);
 });
-const headers = computed(() => {
-    return (model.value?.getStore() as CSVStore).getHeader().map((head) => {
-        return { header: head, id: uuidv4() };
-    });
+const headers = computedAsync(async () => {
+
+    const data = await (model.value?.getStore() as SparqlStore).getData();
+    if(data['head'] && data['head']['vars']){
+        return [...data['head']['vars'].map(e=>{
+            return {header:e};
+        }),{header:SparqlComposer.POSITIONHEADER}]
+    }
+    else return [];
 });
 
 const updateSelectorY = (val, head, name) => {

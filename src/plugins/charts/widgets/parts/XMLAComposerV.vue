@@ -16,6 +16,7 @@ import FilterSelectionModal from "@/components/Modals/FilterSelectionModal.vue";
 import type { AxisSettings } from "@/plugins/charts/widgets/BarChartWidgetSettings.vue";
 import type { IChartComponent } from "chart.js/dist/core/core.typedRegistry";
 import type { XMLAComposer } from "../../impl/XMLAComposer";
+import type {ITableComponent} from "@/components/Widgets/Table/TableWidgetSettings.vue";
 
 const measureSelectionModal = ref() as Ref<any>;
 const axisSelectionModal = ref() as Ref<any>;
@@ -28,7 +29,7 @@ const store = ref(model.value.getStore());
 
 const props = defineProps<{
     axes: { [key: string]: AxisSettings };
-    component: IChartComponent;
+    component: IChartComponent|ITableComponent;
 }>();
 
 // const selectedMeasures = ref([] as MDSchemaMeasure[]);

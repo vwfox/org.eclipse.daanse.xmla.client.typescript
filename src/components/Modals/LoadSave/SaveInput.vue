@@ -9,7 +9,7 @@ Contributors: Smart City Jena
 
 -->
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import type {Entity, Repository} from "@/persistence/api/persistance";
 
 
@@ -34,6 +34,7 @@ const isSameName = computed(()=>{
     if(files.value == undefined) return false;
     return (files.value!.find(f=>(f.name == nameForSaving.value)))!=undefined;
 })
+
 const save=()=>{
    const fu = new URL(props.repo.uri);
    fu.pathname = nameForSaving.value+'.json';

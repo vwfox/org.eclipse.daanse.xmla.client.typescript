@@ -16,7 +16,7 @@ import {controlOrMetaSymbol} from "@storybook/manager-api";
 import {useToast} from "vuestic-ui";
 import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 import {computedAsync} from "@vueuse/core";
-import type {Entity, Repository} from "@/persistence/api/persistance";
+import type {Entity, Repository, WritableRepository} from "@/persistence/api/persistance";
 import Default from "@/components/Modals/LoadSave/Default.vue";
 import type {BaseRepository} from "@/persistence/api/BaseRepository";
 
@@ -89,10 +89,12 @@ const cancel = () => {
     save_Ename.value = '';
     upload.value = undefined;
     deleteFile.value = undefined;
+
     //date.value = new Date();
 }
 
 const release = () => {
+    console.log('release')
     if (uploadFile.value) {
         fetch(releaseEndPointUrl.value + '/' + uploadFile.value, {
             method: 'POST',
@@ -112,11 +114,43 @@ const release = () => {
     }
 }
 
-const sameName = computed(() => {
-    return Object.keys(localStorage).includes(save_Ename.value)
+const sameName = computedAsync(async () => {
+    const fu = new URL((selectedRepo.value as Repository).uri);
+    fu.pathname = save_Ename.value+'.json';
+    const entity_exists = await (selectedRepo.value as Repository).getEntityByUri(fu)
+    return entity_exists != null
 })
-const save = ()=>{
+const save = async ()=>{
+    if(selectedRepo){
+        const fu = new URL((selectedRepo.value as Repository).uri);
+        fu.pathname = save_Ename.value+'.json';
+        const content = upload.value[0] as File
+        const data = await content.text();
+        let e = {
+            name:save_Ename.value,
+            uri:fu,
+            data:data
+        } as Entity;
+        try {
+            if(sameName.value){
+                await (selectedRepo.value as WritableRepository).update(e);
+            }else {
+                await (selectedRepo.value as WritableRepository).create(e);
+            }
 
+
+            notify({message: 'Upload successfull', color: 'success'});
+        }catch (e){
+            console.log(e)
+            notify({message: 'Upload failed', color: 'danger'});
+        }finally{
+            cancel();
+            isOpened.value = false;
+
+
+        }
+
+    }
 
 }
 const urlDialog = ref(false);

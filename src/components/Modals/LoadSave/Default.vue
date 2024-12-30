@@ -30,6 +30,7 @@ const savedData = ref<Entity[]>([]);
 const saveInputComponent = ref();
 const deleteFile = ref(undefined);
 const sureDelete = ref(false);
+const saveUploadFile = ref(false);
 const columns = ref([
     {key: 'icon', label: 'icon'},
     {key: 'name', label: 'file'},
@@ -58,6 +59,8 @@ watch(()=>props.repo, async (_new) => {
     }
     else savedData.value = [];
 },{immediate:true})
+
+
 
 const downloadItemById = async (row) => { //@ToDo refactor this
     const data = (await props.repo.getEntityByUri(row.uri))?.data;
@@ -139,6 +142,15 @@ const sdelete = async () => { //@Todo check if Repo is WritableRepository
         await (props.repo as WritableRepository).delete(deleteFile.value as Entity);
     }
     cancel();
+    try {
+        isTableLoading.value = true;
+        savedData.value = await (props.repo as Repository).findAll();
+    }catch (e){
+        savedData.value = [];
+    }
+    finally {
+        isTableLoading.value = false;
+    }
 }
 </script>
 

@@ -16,7 +16,8 @@
     "loadLayout": "Load Layout",
     "storeList": "Store List",
     "appSettings": "App settings",
-    "addWidgetButton": "Add"
+    "addWidgetButton": "Add",
+    "endpointFinder": "endpointFinder"
   },
 
   "AppSidebarSettings": {
@@ -371,6 +372,9 @@
     "selectRowByIndex": "select",
       "uploadFile": "upload File",
       "ok": "ok",
-      "cancel": "cancel"
+      "cancel": "cancel",
+      "next": "next",
+      "back": "back",
+      "finish": "finish"
   }
 }

@@ -13,6 +13,10 @@ import {useDatasourceManager} from "@/composables/datasourceManager";
 import type {IOGCSTA} from "@/plugins/OGCSTA/dataSources/STADataSource";
 import type {Datastream} from "@/plugins/OGCSTA/dataSources/STAClient";
 import BaseStore from "@/stores/Widgets/BaseStore";
+import {EResourceSetImpl,URI} from "org.eclipse.daanse.endpointfinder.core/src/ecore"
+import type {DocumentRoot} from "org.eclipse.daanse.endpointfinder.core/src/models/results/src";
+import {ResultsPackageImpl} from "org.eclipse.daanse.endpointfinder.core/src/models/results/src/ResultsPackageImpl";
+import {Parser} from 'sparqljs'
 
 export type ISparqlStoreOptions = {
     query:string
@@ -24,7 +28,7 @@ export default class SparqlStore extends BaseStore implements IStore, ISerializa
     datasourceId: string | null = null;
     events: IStoreEvents[] = [];
     type = SparqlStore.TYPE;
-    data: IOGCSTA = {};
+    data:DocumentRoot|undefined;
 
     public params: IStoreParams = {
         query:undefined
@@ -67,11 +71,39 @@ export default class SparqlStore extends BaseStore implements IStore, ISerializa
     }
 
     async getData(options = undefined): Promise<any> {
-        const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+        try{
+            //const parser = new Parser();
 
-        const newData = await datasource.getData(options);
-        this.data = newData;
-        return this.data;
+            const datasource = this.datasourceManager.getDatasource(this.datasourceId);
+
+            //const res = new EResourceSetImpl();
+            // @ts-ignore
+            //const rsp = new ResultsPackageImpl();
+            //res.getPackageRegistry().registerPackage(rsp);
+
+
+
+
+            let encodedValue = 'query='+encodeURIComponent(this.params.query);
+
+
+
+
+            const newData = await datasource.getData('',false,{method:'POST',body:encodedValue,headers:
+                    { 'User-Agent': 'org.eclipse.daanse.datafinder.sparql/1.0','Accept': 'application/json','Content-Type': 'application/x-www-form-urlencoded'}});
+            //const instance =res.createResource(new URI('instance.xml'));
+            //const stringResponse = newData.replace("<?xml version='1.0' encoding='UTF-8'?>",'');
+            //console.log(parser.parse(newData));
+
+            //instance.loadFromString(stringResponse)
+            //console.log()
+            //const data  = instance.eContents().get(0) as DocumentRoot// res.eContents();
+            this.data = newData;
+        }catch (e){
+            this.data = undefined;
+        }
+
+        return  this.data;
     }
 
 

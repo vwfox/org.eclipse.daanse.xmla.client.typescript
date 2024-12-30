@@ -30,9 +30,9 @@ Contributors: Smart City Jena
                     >
                         {{ t("MultilevelDashboardNavigation.edit") }}
                     </va-button>
-                    <template  v-for="(button, index) in layoutSettingsButtons">
+                    <template  v-for="(button, index) in layoutSettingsButtons"  :key="index">
                         <va-button
-                            :key="index"
+
                             :preset="button.preset"
                             class="settings-button va-icon-settings"
                             :icon="button.icon"
@@ -201,6 +201,7 @@ Contributors: Smart City Jena
         <ErrorHandlingModal ref="errorHandlingModal" />
         <SaveModal ref="loadsaveModal" />
         <LoadModal ref="loadModalref" />
+        <EndPointfinderModal ref ="endPointfinderRef"></EndPointfinderModal>
     </div>
 </template>
 
@@ -224,6 +225,7 @@ import SaveModal from "@/components/Modals/SaveModal.vue";
 import {useRoute} from "vue-router";
 import {useRepositoryRegistry} from "@/persistence/RepositoryRegistry/RepositoryRegistryImpl";
 import LoadModal from "@/components/Modals/LoadSave/LoadModal.vue";
+import EndPointfinderModal from "@/plugins/endpointfinder/modals/EndPointfinderModal.vue";
 
 
 
@@ -235,6 +237,7 @@ const { setOnClick } = useErrorHandler();
 const errorHandlingModal = ref(null) as Ref<any>;
 const loadsaveModal = ref(null) as Ref<any>;
 const loadModalref = ref(null) as Ref<any>;
+const endPointfinderRef = ref(null) as Ref<any>;
 
 const editEnabled = ref(false);
 const showSidebar = ref(false);
@@ -262,6 +265,9 @@ const openLaodSaveModal = (data) => {
 };
 const openLaodModal = async (data:{context:string,state:any}) => {
     return await loadModalref.value?.run(data);
+};
+const openEndPointfinderRef = async () => {
+    return await endPointfinderRef.value?.run();
 };
 
 setOnClick(openErrorModal);
@@ -369,7 +375,9 @@ const openAppSettings = () => {
     settingsSection.value = { type: "App" };
     showSidebar.value = true;
 };
-
+const openendPointFinder = ()=>{
+    openEndPointfinderRef();
+}
 layoutSettingsButtons.value.push(
     {
         label: t("MultilevelDashboardNavigation.save"),
@@ -399,6 +407,13 @@ layoutSettingsButtons.value.push(
         action: openAppSettings,
         icon: "settings",
     },
+    {
+        label: t("MultilevelDashboardNavigation.endpointFinder"),
+        preset: "primary",
+        condition:"hideEndpointFinder",
+        action: openendPointFinder,
+        icon: "travel_explore",
+    },
 );
 
 const openSettings = (id, wrapperId, type = "Control") => {
@@ -421,6 +436,7 @@ const openSettings = (id, wrapperId, type = "Control") => {
     });
     showSidebar.value = true;
 };
+
 
 const deleteWidget = (id) => {
     if (

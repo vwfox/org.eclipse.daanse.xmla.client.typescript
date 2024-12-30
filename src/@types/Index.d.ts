@@ -18,7 +18,7 @@ declare interface IDatasource extends ISerializable {
     caption: string;
     url: string;
     type: "REST" | "XMLA" | "CSV" | "JSON" | "MQTT" | string;
-    getData: (params: any) => Promise<any>;
+    getData: (...params: any) => Promise<any>;
 }
 
 interface IReactiveWidget {

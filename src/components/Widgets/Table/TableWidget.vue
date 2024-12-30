@@ -10,9 +10,19 @@ Contributors: Smart City Jena
 -->
 <script lang="ts" setup>
 import { parse } from "csv-parse/browser/esm/sync";
-import { onMounted, ref, computed } from "vue";
+import {onMounted, ref, computed, inject, watch} from "vue";
+import TableWidgetSettings, {type ITableSettings} from "@/components/Widgets/Table/TableWidgetSettings.vue";
+import type {TinyEmitter} from "tiny-emitter";
+import {useSettings} from "@/composables/widgets/settings";
+import {useStore} from "@/composables/widgets/store";
+import type {Store} from "@/stores/Widgets/Store";
+import {useSerialization} from "@/composables/widgets/serialization";
+import type {Composer, Selector} from "@/plugins/charts/widgets/api/ChartdataComposer";
+import useChartDataComposer from "@/plugins/charts/composables/ChartDataComposer";
+import useComposerManager from "@/plugins/charts/composables/ComposerManager";
+import {useStoreManager} from "@/composables/storeManager";
 
-const data = ref([]);
+const data2 = ref([]);
 const headers = ref([]);
 
 const filter = ref("");
@@ -20,8 +30,57 @@ const filterByFields = ref([]);
 
 const currentPage = ref(0);
 const perPage = ref(10);
-const columns = ref([]);
+
 const filteredItemsAmount = ref(0);
+
+const dataComposer = useChartDataComposer();
+
+const props = withDefaults(defineProps<ITableSettings>(), {
+    pagesize:20,
+   composer:[] as Composer<any>[],
+    axes: {
+        x: {
+            text: "X",
+            position: "bottom",
+            type: "timeseries",
+            offsetAfterAutoskip: true,
+            backgroundColor: "#fff",
+            stacked: false,
+            weight: 2,
+            reverse: false,
+            display: true,
+            grid: {
+                display: true,
+                color: "#ccc",
+                thickness: 1,
+                tickMarksColor: "#ccc",
+            },
+            ticks: {
+                color: "#000",
+                source: "data",
+            }
+        },
+        y: {
+            text: "Y",
+            position: "left",
+            type: "linear",
+            backgroundColor: "#fff",
+            stacked: false,
+            weight: 2,
+            reverse: false,
+            display: true,
+            grid: {
+                display: true,
+                color: "#ccc",
+                thickness: 1,
+                tickMarksColor: "#ccc",
+            },
+            ticks: {
+                color: "#000",
+            }
+        },
+    },
+}as any);
 
 onMounted(async () => {
   const request = await fetch(
@@ -37,7 +96,7 @@ onMounted(async () => {
     };
   });
 
-  data.value = [...parse(csvContent, { columns: true })];
+  data2.value = [...parse(csvContent, { columns: true })];
   currentPage.value = 1;
   perPage.value = 10;
 });
@@ -63,7 +122,111 @@ const customFilteringFn = (source, cellData) => {
 
   return filterRegex.test(source);
 };
+const eventbus = inject("customEventBus") as TinyEmitter;
+const { settings, setSetting } = useSettings<typeof props>(props);
+const { store, data } = useStore<Store>(eventbus);
+const { getState } = useSerialization(settings);
+const settingsComponent = TableWidgetSettings;
+const stores = ref([]);
+const setStore =(store:Store)=>{
+    console.log('setStore')
+    const storeData = useStore<Store>(eventbus,undefined,undefined);
+    storeData.setStore(store)
+    stores.value.push(storeData)
+    return storeData;
+};
+defineExpose({
+    setSetting,
+    settings,
+    settingsComponent,
+    getState,
+    store,
+    setStore,
+});
+
+dataComposer.setComposers(settings.value.composer);
+watch(()=>settings.value.composer,(composers)=>{
+        if(composers && composers.length>0){
+            let InitializedComposerds =[];
+            composers.forEach((composer)=>{
+                let composerClass = null;
+                if((composer as any).store.type){ //not instanciated
+                    composerClass = useComposerManager().getComposerForStoreType((composer as any).store.type)
+                }
+                if (composer instanceof composerClass) {
+                    return;
+                } else {
+                    let composerObj = composer as any;
+                    let aCo = new composerClass();
+
+                    let store = useStoreManager().getStore(
+                        composerObj.store.id,
+                    );
+                    let configuredStore = setStore(store as Store);
+                    aCo.setStore(configuredStore.store.value);
+                    aCo.setData(configuredStore.data);
+                    aCo.restoreState(composerObj);
+
+                    InitializedComposerds.push(aCo);
+                }
+
+            });
+
+            if (InitializedComposerds.length > 0) {
+                setSetting("composer", InitializedComposerds);
+            }
+            //@ts-ignore
+            /* props.composer = InitializedComposerds;
+
+                             let store = useStoreManager().getStore(
+                                 composerObj.store.id,
+                             );
+                             let store2 = setStore(store as Store);
+                             csvCo.setStore(store2.store as IStore);
+                             csvCo.setData(store2.data);
+                             InitializedComposerds.push(csvCo);
+                         }
+                     }
+                 });
+
+                 if (InitializedComposerds.length > 0) {
+                     setSetting("composer", InitializedComposerds);
+                 }
+                 //@ts-ignore
+                 /* props.composer = InitializedComposerds;
+
+             settings.value.composer = InitializedComposerds;
+             settings.value = settings.value;*/
+        }
+        dataComposer.setComposers(settings.value.composer);
+    },
+);
+const getTableFromY = computed(()=>{
+
+    const data = dataComposer.getDataForAxesY().value;
+
+    if(data.length === 0) return [];
+    let arrOfResults=[];
+    const lengthofTable = data[0].data.length;
+    let pointer = 0;
+
+    while(pointer<lengthofTable){
+        let linebject = {};
+
+        data.forEach(axis=>{
+            linebject[axis.title] = axis.data[pointer].y;
+        });
+        arrOfResults.push(linebject);
+        pointer++;
+    }
+    return arrOfResults;
+
+})
+const columns = computed(()=>{
+    return dataComposer.getDataForAxesY().value.map(e=>e.title);
+})
 </script>
+
 <template>
   <div class="table_container">
     <div class="filters">
@@ -79,11 +242,10 @@ const customFilteringFn = (source, cellData) => {
     <Suspense>
       <va-data-table
         class="table"
-        :items="data"
+        :items="getTableFromY"
         sticky-header
         :per-page="-(-perPage)"
         :current-page="currentPage"
-        :columns="columns"
         :filter="filter"
         :filter-method="customFilteringFn"
         @filtered="
